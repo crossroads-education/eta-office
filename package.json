@@ -1,0 +1,30 @@
+{
+  "name": "eta-office",
+  "version": "0.0.1",
+  "description": "Employee pages for Eta.",
+  "homepage": "http://github.com/crossroads-education/eta-office/",
+  "repository": "https://github.com/crossroads-education/eta-office.git",
+  "license": "MIT",
+  "author": {
+    "name": "Crossroads Education",
+    "url": "http://crossroadseducation.org"
+  },
+  "private": false,
+  "contributors": [
+    {
+      "name": "Luke Brown",
+      "email": "lukbrown@iupui.edu"
+    },
+    {
+      "name": "Alex Hicks",
+      "email": "aldahick@iupui.edu",
+      "url": "http://alexhicks.net"
+    }
+  ],
+  "dependencies": {
+    "eta-lib": "git+https://git@github.com/crossroads-education/eta-lib.git"
+  },
+  "engines": {
+    "node": ">=4.4.0"
+  }
+}
