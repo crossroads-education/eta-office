@@ -1,0 +1,49 @@
+{
+  "Scheduling": {
+    "Master Schedule": {
+      "url": "schedule"
+    },
+    "Personal Availability": {
+      "url": "availability"
+    }
+  },
+  "Profile": {
+    "url": "profile"
+  },
+  "Reference": {
+    "Policies": {
+      "url": "policy/index"
+    },
+    "Contact List": {
+      "url": "contact"
+    },
+    "Front Desk Log": {
+      "url": "log/front",
+      "permission": "access/log/front"
+    }
+  },
+  "Management": {
+    "permission": "access/manager/general",
+    "Human Resources": {
+      "permission": "access/manager/hr",
+      "Hiring Portal": {
+        "url": "manager/hire"
+      },
+      "Current Employees": {
+        "url": "manager/employees"
+      }
+    },
+    "Systems": {
+      "permission": "access/manager/system",
+      "Center Management": {
+        "url": "manager/centers"
+      },
+      "Edit Positions": {
+        "url": "manager/positions"
+      },
+      "Login Credentials": {
+        "url": "manager/logins"
+      }
+    }
+  }
+}
