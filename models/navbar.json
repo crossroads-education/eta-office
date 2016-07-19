@@ -1,4 +1,7 @@
 {
+  "Profile": {
+    "url": "profile"
+  },
   "Scheduling": {
     "Master Schedule": {
       "url": "schedule"
@@ -6,9 +9,6 @@
     "Personal Availability": {
       "url": "availability"
     }
-  },
-  "Profile": {
-    "url": "profile"
   },
   "Reference": {
     "Policies": {
