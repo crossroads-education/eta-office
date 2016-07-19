@@ -1,0 +1,13 @@
+.navbar {
+    min-height: 0px;
+    height: 30px;
+}
+
+.nav > li > a {
+    font-size: 15px !important;
+    padding: 5px 15px !important;
+}
+
+.dropdown-menu > li > a {
+    font-size: 12px !important;
+}
