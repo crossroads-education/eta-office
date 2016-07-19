@@ -1,0 +1,70 @@
+link(rel="stylesheet",href=baseurl + "css/templates/schedule.css")
+div
+    if hasMultiple
+        div.schedule-filter-row.row
+            div.col-xs-4.center-vertical
+                - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                each day, index in days
+                    - var isSelected = filters.day == index ? {"selected": true} : {};
+                    span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index)&attributes(isSelected) &nbsp; #{day.toUpperCase()} &nbsp;
+            div.col-xs-3.center-vertical
+                | SORT BY
+                select.schedule-filter-link.border-rounded(data-param="sort")
+                    - var sortFilters = ["name", "hours", "total hours"];
+                    each sortFilter in sortFilters
+                        - var isSelected = filters.sort == sortFilter ? {"selected": true} : {}
+                        option(value=sortFilter)&attributes(isSelected) #{sortFilter.toUpperCase()}
+            div.col-xs-3.center-vertical
+                input.border-rounded.normal-input(type="text",placeholder="SEARCH")
+    div.schedule-filter-row.row
+        div.col-xs-4.center-vertical
+            if hasMultiple
+                select.border-rounded.input-filter(data-filter="positions")
+                    option(value="") ALL
+                    for position in schedulePositions
+                        option(value=position) #{position.toUpperCase()}
+                select.border-rounded.input-filter(data-filter="categories")
+                    option(value="") ALL
+                    for category in scheduleCategories
+                        option(value=category) #{category.toUpperCase()}
+        div.col-xs-3.center-vertical
+            if !hasMultiple || (isManager && useManager)
+                | PALETTE
+                select.border-rounded#schedule-palette
+                    for location, name in locationPalette
+                        option(value=location) #{name}
+            | &nbsp; TERM
+            select.schedule-filter-link.border-rounded#schedule-term(data-param="term")
+                for term in terms
+                    - var isSelected = filters.term == term.id ? {"selected": true} : {}
+                    option(value=term.id)&attributes(isSelected) #{term.name.toUpperCase()}
+        div.col-xs-3.center-vertical
+            if isManager && !useManager
+                span.schedule-filter-link(data-param="manager", data-value="yes")
+                    button.border-rounded MANAGER ACCESS
+    div.schedule-box
+        div.schedule-row
+            div.schedule-left-col
+            div.schedule-cell-row.schedule-header-row
+                for hour in hours
+                    div.schedule-cell.schedule-header-cell #{hour}:00
+        for row in rows
+            - var column = 0
+            div.schedule-row.schedule-row-filterable&attributes(row.filterables)
+                div.schedule-left-col
+                    div.schedule-label #{row.label}
+                    div.schedule-hours #{row.dayTotal} / #{row.weekTotal}
+                div.schedule-cell-row(data-userid=row.userid)
+                    for hour in row.hours
+                        div.schedule-cell
+                            for slot in hour.slots
+                                div.schedule-cell-quarter(
+                                    data-row=row.id,
+                                    data-cell=hour.id,
+                                    data-quarter=slot.id,
+                                    data-column=column,
+                                    data-previous-color="none",
+                                    data-location=slot.center,
+                                    data-available=slot.isAvailable,
+                                    data-time=slot.time)
+                                - column++
