@@ -1,0 +1,29 @@
+div#errors {
+    font-weight: bold;
+    color: red;
+}
+
+div#success {
+    font-weight: bold;
+    color: green;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+label {
+    cursor: default !important;
+}
+
+select, input[type="checkbox"], .slider-handle {
+    cursor: pointer !important;
+}
+
+.info-field {
+    max-width: 30%;
+}
+
+select.info-field {
+    margin-bottom: 15px;
+}

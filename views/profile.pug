@@ -1,0 +1,50 @@
+extends ./include/layout.pug
+
+block body
+    h4 Profile: #{employee.firstName} #{employee.lastName}
+    div.hidden#errors
+    div.hidden#success Your profile was updated successfully.
+    div#info-container
+        label Badge Name
+            input.info-field(type="text", name="badgeName", value=employee.badgeName)
+        label Non-IUPUI Email
+            input.info-field(type="email", name="altEmail", value=employee.altEmail)
+        label Phone Number
+            input.info-field(type="tel", name="phone", value=employee.phone)
+        label Emergency Contact Name
+            input.info-field(type="text", name="emergencyName", value=employee.emergencyName)
+        label Emergency Contact Phone Number
+            input.info-field(type="tel", name="emergencyPhone", value=employee.emergencyPhone)
+        label Emergency Contact Relationship
+            input.info-field(type="text", name="emergencyRelationship", value=employee.emergencyRelationship)
+        label Work-Study Eligible?
+            - var isChecked = employee.workStudy === 1 ? {"checked": "checked"} : {};
+            input.info-field(type="checkbox", name="workStudy")&attributes(isChecked)
+        label International Student?
+            - var isChecked = employee.international === 1 ? {"checked": "checked"} : {};
+            input.info-field(type="checkbox", name="international")&attributes(isChecked)
+        label Shirt Size
+            br
+            select.info-field(name="shirt")
+                for size in shirtSizes
+                    - var isSelected = employee.shirt == size ? {"selected": "selected"} : {};
+                    option(value=size)&attributes(isSelected) #{size}
+        label Hoodie Size
+            br
+            select.info-field(name="hoodie")
+                for size in shirtSizes
+                    - var isSelected = employee.hoodie == size ? {"selected": "selected"} : {};
+                    option(value=size)&attributes(isSelected) #{size}
+        label Education / Biography (maximum 400 characters)
+            textarea.info-field(name="biography", maxlength="400") !{employee.biography}
+        label Preferences / Notes (maximum 300 characters)
+            textarea.info-field(name="notes", maxlength="300") !{employee.notes}
+        label Minimum / Maximum Desired Hours
+            br
+            - var value = JSON.stringify([employee.minHours, employee.maxHours]);
+            span.bold #{minHours} &nbsp; &nbsp;
+            input.info-field.info-slider#hours-slider(name="hours", type="number", data-slider-min=minHours, data-slider-max=maxHours, data-slider-value=value)
+            span.bold &nbsp; &nbsp; #{maxHours}
+        label Email Signature
+            textarea.info-field(readonly, rows=signature.split("\n").length + 1) !{signature}
+        button.iu-button(type="submit") Update Information
