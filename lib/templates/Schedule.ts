@@ -1,4 +1,29 @@
 /**
+Parent models must define "usePermissions": true in their JSON file.
+There are some variables that must be implemented by the parent model.
+scheduleRowType : string; // "person" | "day"
+scheduleRows : eta.Row[]; // schedule data
+scheduleFilters : {
+    day : number; // 0-6 day (0=Sunday)
+    sort : string; // see "sortables" for possible values
+    position : string; // position name
+    category : string; // position category
+    term : number; // term ID
+};
+scheduleLocationPalette : {[name : string] : centerCode}; // for editing
+scheduleMode : string; // "manager" | "availability" | "view"
+scheduleHours : string[]; // hours available to view/edit in schedule (format: HHa|p)
+*/
+
+/*
+Template model provides:
+schedulePositionNames : string[];
+schedulePositionCategories : string[];
+scheduleTerms : Term[];
+permissions : PermissionUser;
+*/
+
+/**
 Represents a group of slots with some metadata.
 Can be a person or a day.
 */
