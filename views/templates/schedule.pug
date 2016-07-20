@@ -1,70 +1,94 @@
+mixin schedule-empty-hour(rowID, column)
+    div.schedule-cell
+        - var count = 0
+        while count < 4
+            div.schedule-cell-quarter(
+                data-row=rowID,
+                data-cell=-1,
+                data-quarter=count,
+                data-column=column,
+                data-previous-color="none",
+                data-location="",
+                data-available="false",
+                data-time="00:00:00")
+            - column++
+            - count++
 link(rel="stylesheet",href=baseurl + "css/templates/schedule.css")
 div
-    if hasMultiple
+    if scheduleRowType == "person"
         div.schedule-filter-row.row
             div.col-xs-4.center-vertical
                 - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                 each day, index in days
-                    - var isSelected = filters.day == index ? {"selected": true} : {};
+                    - var isSelected = scheduleFilters.day == index ? {"selected": "selected"} : {};
                     span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index)&attributes(isSelected) &nbsp; #{day.toUpperCase()} &nbsp;
             div.col-xs-3.center-vertical
                 | SORT BY
                 select.schedule-filter-link.border-rounded(data-param="sort")
-                    - var sortFilters = ["name", "hours", "total hours"];
-                    each sortFilter in sortFilters
-                        - var isSelected = filters.sort == sortFilter ? {"selected": true} : {}
-                        option(value=sortFilter)&attributes(isSelected) #{sortFilter.toUpperCase()}
+                    - var sortables = ["name", "hours", "total hours"];
+                    each sortable in sortables
+                        - var isSelected = scheduleFilters.sort == sortable ? {"selected": "selected"} : {}
+                        option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
             div.col-xs-3.center-vertical
                 input.border-rounded.normal-input(type="text",placeholder="SEARCH")
     div.schedule-filter-row.row
         div.col-xs-4.center-vertical
-            if hasMultiple
-                select.border-rounded.input-filter(data-filter="positions")
+            if scheduleRowType == "person"
+                select.border-rounded.input-filter(data-filter="position-names")
                     option(value="") ALL
-                    for position in schedulePositions
-                        option(value=position) #{position.toUpperCase()}
-                select.border-rounded.input-filter(data-filter="categories")
+                    //- TODO: Add filters here
+                    for position in schedulePositionNames
+                        - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
+                        option(value=position)&attributes(isSelected) #{position.toUpperCase()}
+                select.border-rounded.input-filter(data-filter="position-categories")
                     option(value="") ALL
-                    for category in scheduleCategories
-                        option(value=category) #{category.toUpperCase()}
+                    //- TODO: Add filters here
+                    for category in schedulePositionCategories
+                        - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
+                        option(value=category)&attributes(isSelected) #{category.toUpperCase()}
         div.col-xs-3.center-vertical
-            if !hasMultiple || (isManager && useManager)
+            if scheduleRowType == "day" || (permissions.has("edit/schedule/master") && scheduleMode == "manager")
                 | PALETTE
                 select.border-rounded#schedule-palette
-                    for location, name in locationPalette
+                    for location, name in scheduleLocationPalette
                         option(value=location) #{name}
             | &nbsp; TERM
             select.schedule-filter-link.border-rounded#schedule-term(data-param="term")
-                for term in terms
-                    - var isSelected = filters.term == term.id ? {"selected": true} : {}
+                for term in scheduleTerms
+                    - var isSelected = scheduleFilters.term == term.id ? {"selected": true} : {}
                     option(value=term.id)&attributes(isSelected) #{term.name.toUpperCase()}
         div.col-xs-3.center-vertical
-            if isManager && !useManager
-                span.schedule-filter-link(data-param="manager", data-value="yes")
+            if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
+                span.schedule-filter-link(data-param="edit", data-value="yes")
                     button.border-rounded MANAGER ACCESS
     div.schedule-box
         div.schedule-row
             div.schedule-left-col
             div.schedule-cell-row.schedule-header-row
-                for hour in hours
-                    div.schedule-cell.schedule-header-cell #{hour}:00
-        for row in rows
+                for hour in scheduleHours
+                    div.schedule-cell.schedule-header-cell #{hour}
+        for row, rowID in scheduleRows
             - var column = 0
             div.schedule-row.schedule-row-filterable&attributes(row.filterables)
                 div.schedule-left-col
                     div.schedule-label #{row.label}
                     div.schedule-hours #{row.dayTotal} / #{row.weekTotal}
                 div.schedule-cell-row(data-userid=row.userid)
-                    for hour in row.hours
+                    +schedule-empty-hour(rowID, column)
+                    - column += 4
+                    for hour, hourID in row.slots
                         div.schedule-cell
-                            for slot in hour.slots
+                            for slot, slotID in hour
+                                - var location = slot.center == -1 ? (slot.isAvailable ? "AV" : "UV") : slot.center
                                 div.schedule-cell-quarter(
-                                    data-row=row.id,
-                                    data-cell=hour.id,
-                                    data-quarter=slot.id,
+                                    data-row=rowID,
+                                    data-cell=hourID,
+                                    data-quarter=slotID,
                                     data-column=column,
                                     data-previous-color="none",
-                                    data-location=slot.center,
+                                    data-location=location,
                                     data-available=slot.isAvailable,
                                     data-time=slot.time)
                                 - column++
+                    +schedule-empty-hour(rowID, column)
+                    - column += 4

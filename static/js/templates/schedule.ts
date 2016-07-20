@@ -1,10 +1,9 @@
 /// <amd-dependency path="jquery-ui"/>
-/// <amd-dependency path="../lib/helpers/HelperUrl"/>
 /// <reference path="../typings/index.d.ts"/>
 
-import {HelperUrl} from "../lib/helpers/HelperUrl";
+import {HelperUrl} from "../lib/helpers/HelperUrl.js";
 
-export module schedule {
+export module TemplateSchedule {
 
     var cellCount : number;
 
@@ -20,7 +19,6 @@ export module schedule {
     Inactive means that the quarter has no style associated with it, active vice versa.
     */
     function setActive(element : JQuery, colorClass : string, isActive : boolean) : void {
-        element.attr("data-changed", "true");
         if (colorClass == "UV") {
             element.html(isActive ? "X" : "");
             return;
@@ -105,7 +103,9 @@ export module schedule {
     }
 
     function onSelect(event : Event, ui : {selecting? : Element}) : void {
-        setActive($(ui.selecting).not(".keep" + $("#schedule-palette").val()), $("#schedule-palette").val(), true);
+        let element : JQuery = $(ui.selecting).not(".keep" + $("#schedule-palette").val());
+        setActive(element, $("#schedule-palette").val(), true);
+        element.attr("data-changed", "true");
     }
 
     function onSelectFinish(event : Event, ui : {selected? : Element}) : void {
@@ -118,7 +118,9 @@ export module schedule {
     }
 
     function onUnselect(event : Event, ui : {unselecting? : Element}) : void {
-        setActive($(ui.unselecting).not(".keepSelect"), $("#schedule-palette").val(), false);
+        let element : JQuery = $(ui.unselecting).not(".keepSelect");
+        setActive(element, $("#schedule-palette").val(), false);
+        element.attr("data-changed", "true");
         $(ui.unselecting).not(".keep" + $("#schedule-palette").val()).removeClass("keepSelect");
     }
 

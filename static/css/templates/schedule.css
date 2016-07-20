@@ -135,31 +135,31 @@ button.border-rounded {
 /* Colors for different scheduling locations/states */
 /* MAC Regular */
 .schedule-cell-quarter.MA {
-    background-color: green;
+    background-color: #56A042;
 }
 /* MAC Online */
 .schedule-cell-quarter.MO {
-    background-color: blue;
+    background-color: #4B4084;
 }
 /* STAT Regular */
 .schedule-cell-quarter.ST {
-    background-color: yellow;
+    background-color: #BEA84E;
 }
 /* STAT Online */
 .schedule-cell-quarter.SO {
-    background-color: red;
+    background-color: #B74B58;
 }
 /* Available */
 .schedule-cell-quarter.AV {
-    background-color: white;
+    background-color: #FFFFFF;
 }
 /* Unavailable */
 .schedule-cell-quarter.UV {
-    background-color: gray;
+    background-color: #AAAAAA;
 }
 /* Inactive */
 .schedule-cell-quarter.inactive {
-    background-color: black;
+    background-color: #000000;
 }
 
 /* Rounded borders */

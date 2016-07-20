@@ -1,3 +1,4 @@
 {
-  "templates": ["term-select", "schedule"]
+  "models": ["/templates/schedule"],
+  "usePermissions": true
 }
