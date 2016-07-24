@@ -13,15 +13,19 @@ mixin schedule-empty-hour(rowID, column)
                 data-time="00:00:00")
             - column++
             - count++
+
 link(rel="stylesheet",href=baseurl + "css/templates/schedule.css")
 div
+    div.hidden#schedule-error
+    div.hidden#schedule-message
+    input#row-type(type="hidden", value=scheduleRowType)
     if scheduleRowType == "person"
         div.schedule-filter-row.row
             div.col-xs-4.center-vertical
                 - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                 each day, index in days
-                    - var isSelected = scheduleFilters.day == index ? {"selected": "selected"} : {};
-                    span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index)&attributes(isSelected) &nbsp; #{day.toUpperCase()} &nbsp;
+                    - var className = scheduleFilters.day == index ? "border-rounded" : "";
+                    span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index, class=className) &nbsp; #{day.toUpperCase()} &nbsp;
             div.col-xs-3.center-vertical
                 | SORT BY
                 select.schedule-filter-link.border-rounded(data-param="sort")
@@ -61,6 +65,8 @@ div
             if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
                 span.schedule-filter-link(data-param="edit", data-value="yes")
                     button.border-rounded MANAGER ACCESS
+            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
+                button.btn.btn-success.btn-schedule-submit Submit
     div.schedule-box
         div.schedule-row
             div.schedule-left-col
@@ -79,7 +85,7 @@ div
                     for hour, hourID in row.slots
                         div.schedule-cell
                             for slot, slotID in hour
-                                - var location = slot.center == -1 ? (slot.isAvailable ? "AV" : "UV") : slot.center
+                                - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
                                 div.schedule-cell-quarter(
                                     data-row=rowID,
                                     data-cell=hourID,

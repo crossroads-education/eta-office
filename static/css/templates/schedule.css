@@ -1,3 +1,11 @@
+#schedule-error {
+    color: red;
+}
+
+#schedule-message {
+    color: #56A042;
+}
+
 .schedule-filter-cell:hover {
     cursor: pointer;
 }
@@ -28,6 +36,11 @@ button.border-rounded {
     background-color: white;
 }
 
+.schedule-filter-cell.border-rounded {
+    border-radius: 6px;
+    background-color: #CACACA;
+}
+
 .normal-input {
     margin-bottom: 0;
 }
@@ -44,7 +57,7 @@ button.border-rounded {
 /* Container for rows */
 .schedule-row {
     width: 100%;
-    height: 20px;
+    height: 22px;
     padding: 0;
 }
 
@@ -132,6 +145,16 @@ button.border-rounded {
     z-index: 10;
 }
 
+/*Scheduled but not available*/
+.schedule-cell-quarter:not(.AV):not(.UV):not(.CL):not([data-available]):before {
+    content: "x";
+    display: block;
+    width: 100%;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+}
+
 /* Colors for different scheduling locations/states */
 /* MAC Regular */
 .schedule-cell-quarter.MA {
@@ -151,7 +174,7 @@ button.border-rounded {
 }
 /* Available */
 .schedule-cell-quarter.AV {
-    background-color: #FFFFFF;
+    /*background-color: #FFFFFF;*/
 }
 /* Unavailable */
 .schedule-cell-quarter.UV {

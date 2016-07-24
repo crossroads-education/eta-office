@@ -5,7 +5,8 @@ import {HelperUrl} from "../lib/helpers/HelperUrl.js";
 
 export module TemplateSchedule {
 
-    var cellCount : number;
+    let cellCount : number;
+    let currentRow : number = -1;
 
     /**
     Gets a specific quarter element by row and column
@@ -19,13 +20,6 @@ export module TemplateSchedule {
     Inactive means that the quarter has no style associated with it, active vice versa.
     */
     function setActive(element : JQuery, colorClass : string, isActive : boolean) : void {
-        if (colorClass == "UV") {
-            element.html(isActive ? "X" : "");
-            return;
-        } else if (colorClass == "AV") {
-            element.html(isActive ? "" : "X");
-            return;
-        }
         let previousColor : string = element.attr("data-previous-color");
         if (previousColor != colorClass && previousColor != "none") {
             element.removeClass(previousColor);
@@ -62,8 +56,8 @@ export module TemplateSchedule {
     }
 
     function onPageSetup(index : number, element : HTMLElement) : void {
-        var cell : number = Number(element.getAttribute("data-cell"));
-        var quarter : number = Number(element.getAttribute("data-quarter"));
+        let cell : number = Number(element.getAttribute("data-cell"));
+        let quarter : number = Number(element.getAttribute("data-quarter"));
         if (cell == -1) {
             element.className += " inactive";
             if (quarter == 0) {
@@ -72,11 +66,11 @@ export module TemplateSchedule {
                 element.className += " last";
             }
         }
-        var location : string = element.getAttribute("data-location");
+        let location : string = element.getAttribute("data-location");
         if (location != "") {
             setActive($(element), location, true);
         }
-        var isAvailable : string = element.getAttribute("data-available");
+        let isAvailable : string = element.getAttribute("data-available");
         if (isAvailable == "false") {
             element.innerHTML = "X";
         }
@@ -95,36 +89,51 @@ export module TemplateSchedule {
             }
         });
         if (shouldFilter) {
-            console.log(selector);
             $(selector).hide();
-        } else {
-            console.log("No filter required");
         }
     }
 
     function onSelect(event : Event, ui : {selecting? : Element}) : void {
-        let element : JQuery = $(ui.selecting).not(".keep" + $("#schedule-palette").val());
-        setActive(element, $("#schedule-palette").val(), true);
+        if (currentRow == -1) {
+            currentRow = $(ui.selecting).data("row");
+        }
+        let selector : string = "[data-row='" + currentRow + "']";
+        let palette : string = $("#schedule-palette").val();
+        if ($("#row-type").val() == "person") {
+            selector += ":not(.UV)";
+            if (palette != "CL") {
+                selector += "[data-available]";
+            }
+        }
+        let element : JQuery = $(ui.selecting).closest(selector).not(".keep" + $("#schedule-palette").val());
+        setActive(element, palette, true);
         element.attr("data-changed", "true");
     }
 
     function onSelectFinish(event : Event, ui : {selected? : Element}) : void {
-        var className : string = $("#schedule-palette").val();
-        ui.selected.className += " keepSelect";
-        if (className == "AV" || className == "UV") {
-            return;
-        }
-        ui.selected.className += " keep" + className + " " + className;
+        let className : string = $("#schedule-palette").val();
+        let selected : JQuery = $(ui.selected).closest("[data-row='" + currentRow + "']");
+        selected.addClass("keepSelect");
+        // if (className == "AV" || className == "UV") {
+        //     return;
+        // }
+        selected.addClass(" keep" + className + " " + className);
+        currentRow = -1;
     }
 
     function onUnselect(event : Event, ui : {unselecting? : Element}) : void {
-        let element : JQuery = $(ui.unselecting).not(".keepSelect");
+        // currentRow = $(ui.unselecting).data("row");
+        let selector : string = "[data-row='" + currentRow + "']";
+        if ($("#row-type").val() == "person") {
+            selector += ":not(.AV .UV)";
+        }
+        let element : JQuery = $(ui.unselecting).closest(selector).not(".keepSelect");
         setActive(element, $("#schedule-palette").val(), false);
         element.attr("data-changed", "true");
-        $(ui.unselecting).not(".keep" + $("#schedule-palette").val()).removeClass("keepSelect");
+        $(ui.unselecting).closest("[data-row='" + currentRow + "']").not(".keep" + $("#schedule-palette").val()).removeClass("keepSelect");
     }
 
-    function onFilterLink() {
+    function onFilterLink() : void {
         let value : string = this.value;
         if (value == undefined) {
             value = this.getAttribute("data-value");
@@ -160,5 +169,6 @@ export module TemplateSchedule {
                 unselecting: onUnselect
             });
         }
+        filter(); // some values are set by server on load, and .on(change) doesn't recognize them
     });
 }

@@ -5,6 +5,10 @@ import * as express from "express";
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+        if (req.query.edit && !req.session["permissions"].has("edit/schedule/master")) {
+            callback({errcode: eta.http.Forbidden});
+            return;
+        }
         let rows : schedule.Row[] = [];
         let filters : {[key : string] : any} = req.query; // filterable names should be the same as GET parameter names
         if (!filters["term"]) {
@@ -15,6 +19,9 @@ export class Model implements eta.Model {
         }
         if (!filters["day"]) {
             filters["day"] = new Date().getDay();
+        }
+        if (!filters["sort"]) {
+            filters["sort"] = "name";
         }
         let sql : string = `
             SELECT
@@ -106,6 +113,9 @@ export class Model implements eta.Model {
                     let allHoursOpen : string[] = eta.time.fillTimes(openHourDate, closeHourDate, eta.time.span1Hour, "ht");
                     for (let i : number = 0; i < raw.length; i++) {
                         let rowIndex : number = -1;
+                        if (raw[i].hour >= hours.close || raw[i].open < hours.open) {
+                            continue;
+                        }
                         for (let k : number = 0; k < rows.length; k++) {
                             if (rows[k].userid == raw[i].id) {
                                 rowIndex = k;
@@ -131,7 +141,9 @@ export class Model implements eta.Model {
                                     "data-position-categories": positionRows[positionIndex].categories.split(",")
                                 },
                                 "total": raw[i].totalHours,
-                                "slots": []
+                                "slots": [],
+                                "isAvailable": false,
+                                "isScheduled": false
                             });
                         }
                         let hourIndex : number = raw[i].hour - hours["open"];
@@ -141,22 +153,36 @@ export class Model implements eta.Model {
                         }
                         rows[rowIndex].slots[hourIndex][minuteIndex] = {
                             "isAvailable": raw[i].isAvailable == 1,
-                            "center": raw[i].centerCode ? raw[i].centerCode : "UV",
+                            "center": raw[i].centerCode ? raw[i].centerCode : -1,
                             "time": raw[i].time
                         };
+
+                        if (rows[rowIndex].slots[hourIndex][minuteIndex].isAvailable) {
+                            rows[rowIndex].isAvailable = true;
+                        }
+                        if (rows[rowIndex].slots[hourIndex][minuteIndex].center != -1) {
+                            rows[rowIndex].isScheduled = true;
+                        }
                     }
                     eta.center.getAll((centers : eta.Center[]) => {
                         if (centers == null) {
                             callback({errcode: eta.http.InternalError});
                             return;
                         }
-                        let locationPalette : {[key : string] : string} = {};
+                        let locationPalette : {[key : string] : string} = {
+                            "Clear": "CL"
+                        };
                         for (let i : number = 0; i < centers.length; i++) {
                             if (centers[i].address != "") {
                                 locationPalette[centers[i].shorthand] = centers[i].code;
                             }
                         }
                         for (let i : number = 0; i < rows.length; i++) {
+                            if (!req.query.edit && !rows[i].isScheduled) {
+                                rows.splice(i, 1);
+                                i--;
+                                continue; // ensuring no OOB if this was the last element
+                            }
                             for (let k : number = 0; k < hours["close"] - hours["open"]; k++) {
                                 if (!rows[i].slots[k]) {
                                     // eta.logger.warn(`Slot [${i}][${k}] is non-existent! (${rows[i].slots[k]})`);
@@ -171,6 +197,16 @@ export class Model implements eta.Model {
                                         };
                                     }
                                 }
+                            }
+                        }
+
+                        if (filters["sort"]) {
+                            if (filters["sort"] == "name") {
+                                rows.sort((a : schedule.Row, b : schedule.Row) : number => {
+                                    let tokensA : string[] = a.label.split(" ");
+                                    let tokensB : string[] = b.label.split(" ");
+                                    return tokensA[tokensA.length - 1].localeCompare(tokensB[tokensB.length - 1]);
+                                })
                             }
                         }
                         callback({
