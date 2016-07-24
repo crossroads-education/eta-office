@@ -1,3 +1,7 @@
 {
-  "css": ["https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.1.1/css/bootstrap-slider.min.css"]
+  "css": [
+    "https://assets.iu.edu/web/2.x/css/global.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.1.1/css/bootstrap-slider.min.css"
+  ],
+  "permissions": ["access/profile"]
 }
