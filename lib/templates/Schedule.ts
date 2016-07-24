@@ -53,6 +53,16 @@ export interface Row {
     Indexes: hour (from 0), minutes / 15 (0, 15, 30, 45)
     */
     slots : Slot[][];
+
+    /**
+    If the row has any available slots
+    */
+    isAvailable : boolean;
+
+    /**
+    If the row has any scheduled slots (center != -1)
+    */
+    isScheduled : boolean;
 }
 
 /**
@@ -61,8 +71,9 @@ Represents a 15-minute segment within a hour.
 export interface Slot {
     /**
     Center ID. If not scheduled, should be -1.
+    Can be center code - if not scheduled, should be UV or AV. Empty slots should be UV.
     */
-    center : number;
+    center : number | string;
 
     /**
     Whether this is marked available
