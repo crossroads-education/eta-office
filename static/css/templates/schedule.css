@@ -146,7 +146,7 @@ button.border-rounded {
 }
 
 /*Scheduled but not available*/
-.schedule-cell-quarter:not(.AV):not(.UV):not(.CL):not([data-available]):before {
+.schedule-cell-quarter:not(.AV):not(.UV):not(.CL):not(.inactive):not([data-available]):before {
     content: "x";
     display: block;
     width: 100%;

@@ -1,0 +1,5 @@
+{
+  "models": ["/templates/schedule"],
+  "permissions": ["access/schedule/availability"],
+  "usePermissions": true
+}

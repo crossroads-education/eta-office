@@ -25,6 +25,17 @@ export module TemplateSchedule {
             element.removeClass(previousColor);
         }
         element.removeClass("first last keep" + previousColor);
+        // if (isActive) {
+        //     if (colorClass == "AV") {
+        //         element.attr("data-available", "true");
+        //     } else if (colorClass == "UV") {
+        //         element.removeAttr("data-available");
+        //     } else {
+        //         element.addClass("active " + colorClass);
+        //     }
+        // } else {
+        //     element.removeClass("active " + colorClass);
+        // }
         element[isActive ? "addClass" : "removeClass"]("active " + colorClass);
         let row : number = Number(element.attr("data-row"));
         let column : number = Number(element.attr("data-column"));
@@ -56,23 +67,29 @@ export module TemplateSchedule {
     }
 
     function onPageSetup(index : number, element : HTMLElement) : void {
-        let cell : number = Number(element.getAttribute("data-cell"));
-        let quarter : number = Number(element.getAttribute("data-quarter"));
-        if (cell == -1) {
-            element.className += " inactive";
-            if (quarter == 0) {
-                element.className += " first";
-            } else if (quarter == 3) {
-                element.className += " last";
-            }
+        let $this = $(this);
+        let time : string = $this.attr("data-time");
+        if (time == "00:00:00") {
+            $this.addClass("inactive");
+            return;
         }
-        let location : string = element.getAttribute("data-location");
+        let location : string = $this.attr("data-location");
         if (location != "") {
-            setActive($(element), location, true);
+            setActive($this, location, true);
         }
-        let isAvailable : string = element.getAttribute("data-available");
-        if (isAvailable == "false") {
-            element.innerHTML = "X";
+    }
+
+    function onInactiveSetup(index : number, element : HTMLElement) : void {
+        let $this = $(this);
+        let row : number = $this.data("row");
+        let col : number = $this.data("column");
+        let $before : JQuery = getQuarter(row, col - 1);
+        let $after : JQuery = getQuarter(row, col + 1);
+        if ($before.length == 0 || !$before.hasClass("inactive")) {
+            $this.addClass("first");
+        }
+        if ($after.length == 0 || !$after.hasClass("inactive")) {
+            $this.addClass("last");
         }
     }
 
@@ -147,6 +164,7 @@ export module TemplateSchedule {
         // Initialize cell quarters
         // First and last cells are inactive
         $(".schedule-cell-quarter").each(onPageSetup);
+        $(".schedule-cell-quarter.inactive").each(onInactiveSetup);
 
         $(".input-filter").on("change", () => {
             filter();

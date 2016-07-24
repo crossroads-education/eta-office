@@ -185,7 +185,6 @@ export class Model implements eta.Model {
                             }
                             for (let k : number = 0; k < hours["close"] - hours["open"]; k++) {
                                 if (!rows[i].slots[k]) {
-                                    // eta.logger.warn(`Slot [${i}][${k}] is non-existent! (${rows[i].slots[k]})`);
                                     rows[i].slots[k] = [];
                                 }
                                 for (let j : number = 0; j < 4; j++) {

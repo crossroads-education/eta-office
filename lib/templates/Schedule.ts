@@ -34,6 +34,11 @@ export interface Row {
     userid? : string;
 
     /**
+    If this represents a day, the index (0=Sunday)
+    */
+    day? : number;
+
+    /**
     Person: name
     Day: full day name (Monday, Tuesday...)
     */
