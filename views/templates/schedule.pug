@@ -79,7 +79,7 @@ div
                 div.schedule-left-col
                     div.schedule-label #{row.label}
                     div.schedule-hours #{row.dayTotal} / #{row.weekTotal}
-                div.schedule-cell-row(data-userid=row.userid)
+                div.schedule-cell-row(data-userid=row.userid, data-day=row.day)
                     +schedule-empty-hour(rowID, column)
                     - column += 4
                     for hour, hourID in row.slots

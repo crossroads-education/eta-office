@@ -25,17 +25,6 @@ export module TemplateSchedule {
             element.removeClass(previousColor);
         }
         element.removeClass("first last keep" + previousColor);
-        // if (isActive) {
-        //     if (colorClass == "AV") {
-        //         element.attr("data-available", "true");
-        //     } else if (colorClass == "UV") {
-        //         element.removeAttr("data-available");
-        //     } else {
-        //         element.addClass("active " + colorClass);
-        //     }
-        // } else {
-        //     element.removeClass("active " + colorClass);
-        // }
         element[isActive ? "addClass" : "removeClass"]("active " + colorClass);
         let row : number = Number(element.attr("data-row"));
         let column : number = Number(element.attr("data-column"));
