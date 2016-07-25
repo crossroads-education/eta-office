@@ -20,7 +20,7 @@ div
     div.hidden#schedule-message
     input#row-type(type="hidden", value=scheduleRowType)
     if scheduleRowType == "person"
-        div.schedule-filter-row.row
+        div.schedule-filter-row
             div.col-xs-4.center-vertical
                 - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                 each day, index in days
@@ -35,7 +35,7 @@ div
                         option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
             div.col-xs-3.center-vertical
                 input.border-rounded.normal-input(type="text",placeholder="SEARCH")
-    div.schedule-filter-row.row
+    div.schedule-filter-row
         div.col-xs-4.center-vertical
             if scheduleRowType == "person"
                 select.border-rounded.input-filter(data-filter="position-names")
@@ -69,17 +69,17 @@ div
                 button.btn.btn-success.btn-schedule-submit Submit
     div.schedule-box
         div.schedule-row
-            div.schedule-left-col
-            div.schedule-cell-row.schedule-header-row
+            div.schedule-left-col.col-md-2
+            div.schedule-cell-row.schedule-header-row.col-md-10
                 for hour in scheduleHours
-                    div.schedule-cell.schedule-header-cell #{hour}
+                    div.schedule-cell.schedule-header-cell.col-md-2 #{hour}
         for row, rowID in scheduleRows
             - var column = 0
             div.schedule-row.schedule-row-filterable&attributes(row.filterables)
-                div.schedule-left-col
+                div.schedule-left-col.col-md-2
                     div.schedule-label #{row.label}
-                    div.schedule-hours #{row.dayTotal} / #{row.weekTotal}
-                div.schedule-cell-row(data-userid=row.userid, data-day=row.day)
+                    //- div.schedule-hours #{row.dayTotal} / #{row.weekTotal}
+                div.schedule-cell-row.col-md-10(data-userid=row.userid, data-day=row.day)
                     +schedule-empty-hour(rowID, column)
                     - column += 4
                     for hour, hourID in row.slots
