@@ -21,9 +21,12 @@ mixin position-count-table(start, end, data)
                 td #{data[i].count}
 
 mixin employee-block(employee)
-    div
-        div.text-center
-            span.employee-name #{employee.firstName} #{employee.lastName}
+    div.employee-block(data-toggle="modal", data-target="#modal")
+        div.text-center.employee-header
+            img.employee-photo(width="100", height="100", data-username=employee.username)
+            - var lastNameTokens = employee.lastName.split(" ");
+            span.employee-name #{employee.firstName.split(" ")[0]} #{lastNameTokens[lastNameTokens.length - 1]}
+    br
 
 block body
     - var sizes = ["S", "M", "L", "XL", "XXL"];
@@ -38,32 +41,54 @@ block body
             div
                 input.form-control#input-filter(type="text")
             div
-                select.input-filter.border-rounded(data-filter="position-name")
+                select.input-filter.border-rounded(data-filter="positionName")
+                    option(value="") All
                     each name in selectPositionNames
-                        option(value=name) #{name}
-                select.input-filter.border-rounded(data-filter="position-category")
+                        - var isSelected = filters.positionName == name ? {"selected": "selected"} : {};
+                        option(value=name)&attributes(isSelected) #{name}
+                select.input-filter.border-rounded(data-filter="positionCategory")
+                    option(value="") All
                     each category in selectPositionCategories
-                        option(value=category) #{category}
+                        - var isSelected = filters.positionCategory == category ? {"selected": "selected"} : {};
+                        option(value=category)&attributes(isSelected) #{category}
         - var midway = Math.floor(positionCounts.length / 2);
         div.header-block.col-xs-2
             +position-count-table(0, midway, positionCounts)
         div.header-block.col-xs-2
             +position-count-table(midway, positionCounts.length, positionCounts)
+    div.modal.fade#modal(tabindex="-1")
+        div.modal-dialog
+            div.modal-content
+                div.modal-header
+                    button.close(type="button", data-dismiss="modal") &times;
+                    div
+                        img.employee-photo#modal-photo(width="100", height="100")
+                        span.employee-name.modal-title#modal-title
+                div.modal-body
+                div.modal-footer
+                    button.btn.btn-primary Save Changes
     div
-        span #{employeeCount}
-        div.col-xs-6
+        div.col-xs-4
             -
                 var length = employees.length;
-                if (length % 2 == 0) {
+                if (length % 3 == 0) {
                     length -= 1;
                 }
-            - for (var i = 0; i < length; i += 2)
+            - for (var i = 0; i < length; i += 3)
                 +employee-block(employees[i])
-        div.col-xs-6
+        div.col-xs-4
             -
                 var length = employees.length;
-                if (length % 2 == 1) {
+                if (length % 3 == 1) {
                     length -= 1;
                 }
-            - for (var i = 1; i < length; i += 2)
+            - for (var i = 1; i < length; i += 3)
+                +employee-block(employees[i])
+        div.col-xs-4
+            -
+                var length = employees.length;
+                if (length % 3 == 2) {
+                    length -= 1;
+                }
+            - for (var i = 2; i < length; i += 3)
                 +employee-block(employees[i])

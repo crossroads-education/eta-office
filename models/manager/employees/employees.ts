@@ -68,6 +68,16 @@ export class Model implements eta.Model {
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
+                let params : string[] = [];
+                let whereSql : string = "Employee.current = 1";
+                if (req.query.positionName && req.query.positionName != "") {
+                    whereSql += " AND Position.name = ?";
+                    params.push(req.query.positionName);
+                }
+                if (req.query.positionCategory && req.query.positionCategory != "") {
+                    whereSql += " AND Position.category = ?";
+                    params.push(req.query.positionCategory);
+                }
                 sql = `
                     SELECT
                         Position.name,
@@ -76,7 +86,15 @@ export class Model implements eta.Model {
                         EmployeePosition.end,
                         Employee.*,
                         Person.firstName,
-                        Person.lastName
+                        Person.lastName,
+                        Person.username,
+                        (
+                            EmployeePosition.start <= CURDATE() AND
+                            (
+                                ISNULL(EmployeePosition.end) OR
+                                EmployeePosition.end >= CURDATE()
+                            )
+                        ) AS positionCurrent
                     FROM
                         EmployeePosition
                             LEFT JOIN Employee ON
@@ -86,9 +104,9 @@ export class Model implements eta.Model {
                             LEFT JOIN Position ON
                                 EmployeePosition.position = Position.id
                     WHERE
-                        Employee.current = 1
+                        ${whereSql}
                     ORDER BY Person.lastName, Person.firstName`;
-                eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+                eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
                         callback({errcode: eta.http.InternalError});
@@ -99,12 +117,16 @@ export class Model implements eta.Model {
                         let id : string = rows[i].id;
                         if (!rawEmployees[id]) {
                             rawEmployees[id] = eta.object.copy(rows[i]);
+                            rawEmployees[id].matchesFilter = !!rawEmployees[id].positionCurrent;
                             rawEmployees[id].positions = [];
+                            rawEmployees[id].positionNames = [];
+                            rawEmployees[id].positionCategories = [];
                             delete
                                 rawEmployees[id].name,
                                 rawEmployees[id].category,
                                 rawEmployees[id].start,
-                                rawEmployees[id].end;
+                                rawEmployees[id].end,
+                                rawEmployees[id].positionCurrent;
                         }
                         rawEmployees[id].positions.push({
                             "name": rows[i].name,
@@ -112,10 +134,17 @@ export class Model implements eta.Model {
                             "start": rows[i].start,
                             "end": rows[i].end
                         });
+                        rawEmployees[id].positionNames.push(rows[i].name);
+                        rawEmployees[id].positionCategories.push(rows[i].category);
+                        if (rows[i].positionCurrent) {
+                            rawEmployees[id].matchesFilter = true;
+                        }
                     }
                     let employees : any[] = [];
-                    for (let i in rawEmployees) {
-                        employees.push(rawEmployees[i]);
+                    for (let i in rawEmployees) { // converting from object to array
+                        if (rawEmployees[i].matchesFilter) {
+                            employees.push(rawEmployees[i]);
+                        }
                     }
                     employees.sort((a : any, b : any) : number => {
                         if (a.lastName == b.lastName) {
@@ -126,7 +155,8 @@ export class Model implements eta.Model {
                     callback({
                         "employees": employees,
                         "positionCounts": positionCounts,
-                        "shirtSizes": shirtSizes
+                        "shirtSizes": shirtSizes,
+                        "filters": req.query
                     });
                 });
             });
