@@ -1,0 +1,21 @@
+div.header-bar {
+    padding-top: 10px;
+}
+
+div.header-block div {
+    margin-bottom: 10px;
+}
+
+table.table {
+    border-width: 1px;
+    border-color: lightgray;
+    border-style: solid;
+    border-collapse: separate;
+    border-radius: 4px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+span.employee-name {
+    font-weight: 600;
+    font-size: 2.5em;
+}

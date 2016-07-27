@@ -1,0 +1,69 @@
+extends ../include/layout.pug
+
+mixin shirt-size-table(type)
+    table.table.table-condensed.table-striped
+        tr
+            th #{type} Size
+            th Count
+        each size in sizes
+            tr
+                td #{size}
+                td #{shirtSizes[size][type.toLowerCase() + "Count"]}
+
+mixin position-count-table(start, end, data)
+    table.table.table-condensed.table-striped
+        tr
+            th Position
+            th Count
+        - for (var i = start; i < end; i++)
+            tr
+                td #{data[i].name}
+                td #{data[i].count}
+
+mixin employee-block(employee)
+    div
+        div.text-center
+            span.employee-name #{employee.firstName} #{employee.lastName}
+
+block body
+    - var sizes = ["S", "M", "L", "XL", "XXL"];
+    div.header-bar.row
+        div.header-block.col-xs-2
+            +shirt-size-table("Shirt")
+        div.header-block.col-xs-2
+            +shirt-size-table("Hoodie")
+        div.header-block.col-xs-4.text-center
+            div
+                button.btn.btn-primary.btn-header Front Desk Log
+            div
+                input.form-control#input-filter(type="text")
+            div
+                select.input-filter.border-rounded(data-filter="position-name")
+                    each name in selectPositionNames
+                        option(value=name) #{name}
+                select.input-filter.border-rounded(data-filter="position-category")
+                    each category in selectPositionCategories
+                        option(value=category) #{category}
+        - var midway = Math.floor(positionCounts.length / 2);
+        div.header-block.col-xs-2
+            +position-count-table(0, midway, positionCounts)
+        div.header-block.col-xs-2
+            +position-count-table(midway, positionCounts.length, positionCounts)
+    div
+        span #{employeeCount}
+        div.col-xs-6
+            -
+                var length = employees.length;
+                if (length % 2 == 0) {
+                    length -= 1;
+                }
+            - for (var i = 0; i < length; i += 2)
+                +employee-block(employees[i])
+        div.col-xs-6
+            -
+                var length = employees.length;
+                if (length % 2 == 1) {
+                    length -= 1;
+                }
+            - for (var i = 1; i < length; i += 2)
+                +employee-block(employees[i])

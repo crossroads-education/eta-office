@@ -22,20 +22,6 @@
     margin-bottom: 5px;
 }
 
-.border-rounded {
-    border-radius: 4px;
-    border: 1px solid #AAAAAA;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    text-indent: 1px;
-    text-overflow: '';
-    padding: 3px;
-}
-
-button.border-rounded {
-    background-color: white;
-}
-
 .schedule-filter-cell.border-rounded {
     border-radius: 6px;
     background-color: #CACACA;
