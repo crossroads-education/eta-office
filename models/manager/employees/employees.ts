@@ -68,16 +68,6 @@ export class Model implements eta.Model {
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
-                let params : string[] = [];
-                let whereSql : string = "Employee.current = 1";
-                if (req.query.positionName && req.query.positionName != "") {
-                    whereSql += " AND Position.name = ?";
-                    params.push(req.query.positionName);
-                }
-                if (req.query.positionCategory && req.query.positionCategory != "") {
-                    whereSql += " AND Position.category = ?";
-                    params.push(req.query.positionCategory);
-                }
                 sql = `
                     SELECT
                         Position.name,
@@ -104,9 +94,9 @@ export class Model implements eta.Model {
                             LEFT JOIN Position ON
                                 EmployeePosition.position = Position.id
                     WHERE
-                        ${whereSql}
+                        Employee.current = 1
                     ORDER BY Person.lastName, Person.firstName`;
-                eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
+                eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
                         callback({errcode: eta.http.InternalError});

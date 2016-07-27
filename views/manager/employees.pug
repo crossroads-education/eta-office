@@ -25,11 +25,12 @@ mixin position-count-table(start, end, data)
                     td #{data[i].count}
 
 mixin employee-block(employee)
-    div.employee-block(data-toggle="modal", data-target="#modal")
+    div.employee-block(data-toggle="modal", data-target="#modal", data-id=employee.id)
         div.text-center.employee-header
             img.employee-photo(width="100", height="100", data-username=employee.username)
             - var lastNameTokens = employee.lastName.split(" ");
             span.employee-name #{employee.firstName.split(" ")[0]} #{lastNameTokens[lastNameTokens.length - 1]}
+            span.hidden.employee-data(data-positions=JSON.stringify(employee.positions))
     br
 
 block body
@@ -70,7 +71,13 @@ block body
                         span.employee-name.modal-title#modal-title
                 div.modal-body
                     table.table.table-condensed.table-striped
-                        
+                        thead
+                            tr
+                                th Position Name
+                                th Position Category
+                                th Position Start Date
+                                th Position End Date
+                        tbody#modal-positions
                 div.modal-footer
                     button.btn.btn-primary Save Changes
     div
