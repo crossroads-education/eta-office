@@ -1,0 +1,11 @@
+extends ./include/layout.pug
+
+block body
+    div.row
+        div.col-xs-12.text-center
+            p.time #{new Date().toLocaleTimeString()}
+            p.user-name #{firstName} #{lastName}
+            p.user-id #{id}
+            button.btn.btn-success#btn-clock Clock #{needsClockIn ? "In" : "Out"}
+            br
+            button.btn.btn-primary#btn-note Note
