@@ -3,6 +3,30 @@ import * as moment from "moment";
 import {HelperUrl} from "../lib/helpers/HelperUrl.js";
 
 export module employees {
+
+    interface NetworkEmployeePosition {
+        id : number;
+        start : string;
+        end : string;
+    }
+    interface EmployeePosition extends NetworkEmployeePosition {
+        name : string;
+        category : string;
+    }
+
+    function addPositionRow(position : EmployeePosition) : void {
+        let startDate : moment.Moment = moment(position.start);
+        let endDate : moment.Moment = moment(position.end);
+        let $row = $("<tr>");
+        $row.addClass("position-row");
+        $row.attr("data-id", position.id);
+        $row.append($("<td>").addClass("position-name").text(position.name));
+        $row.append($("<td>").addClass("position-category").text(position.category));
+        $row.append($("<td>").append($("<input type='date'>").addClass("position-start").attr("value", startDate.format("YYYY-MM-DD"))));
+        $row.append($("<td>").append($("<input type='date'>").addClass("position-end").attr("value", endDate.format("YYYY-MM-DD"))));
+        $("#modal-positions").append($row);
+    }
+
     function onEmployeeOpen() : void {
         $("#modal-positions").html("");
         let $this : JQuery = $(this);
@@ -14,28 +38,76 @@ export module employees {
         $("#modal-photo").attr("src", photoUrl);
         $("#modal-positions").attr("data-employee", $this.attr("data-id"));
         for (let i : number = 0; i < positions.length; i++) {
-            let startDate : moment.Moment = moment(positions[i].start);
-            let endDate : moment.Moment = moment(positions[i].end);
-            let $row = $("<tr>");
-            $row.addClass("position-row");
-            $row.append($("<td>").text(positions[i].name));
-            $row.append($("<td>").text(positions[i].category));
-            $row.append($("<td>").append($("<input type='date'>").addClass("position-start").attr("value", startDate.format("YYYY-MM-DD"))));
-            $row.append($("<td>").append($("<input type='date'>").addClass("position-end").attr("value", endDate.format("YYYY-MM-DD"))));
-            $("#modal-positions").append($row);
+            addPositionRow(positions[i]);
         }
     }
-    $(document).ready(function() {
-        $("select.input-filter").on("change", function() {
+
+    function onPositionAdd() {
+        let $select : JQuery = $("#select-position");
+        let $selected : JQuery = $select.find(`option[value="${$select.val()}"]`);
+        addPositionRow({
+            "id": $select.val(),
+            "start": null,
+            "end": null,
+            "name": $selected.data("name"),
+            "category": $selected.data("category")
+        });
+    }
+
+    function onPositionSave() {
+        $("#modal-error").html("");
+        let errorMessage : string = "";
+        let positions : NetworkEmployeePosition[] = [];
+        $("#modal-positions .position-row").each(function(index : number, element : HTMLElement) {
             let $this : JQuery = $(this);
-            HelperUrl.setParameterByName($this.attr("data-filter"), $this.val());
-        });
-        $("img.employee-photo").each(function(index : number, element : HTMLImageElement) {
-            $(element).on("error", function() {
-                $(this).attr("src", "https://mac.iupui.edu/img/MissingPhotos.svg");
+            let id : number = $this.data("id");
+            let startDate : string = $this.find(".position-start").val();
+            let endDate : string = $this.find(".position-end").val();
+            if (startDate == "") {
+                let name : string = $this.find(".position-name").text();
+                let category : string = $this.find(".position-category").text();
+                errorMessage += `Position ${name} (${category}) cannot have an empty start date.<br/>`;
+            }
+            if (endDate == "") {
+                endDate = null;
+            }
+            positions.push({
+                "id": id,
+                "start": startDate,
+                "end": endDate
             });
-            element.src = "https://mac.iupui.edu/img/team-xsmall/" + $(element).data("username") + ".jpg";
         });
+        if (errorMessage != "") {
+            $("#modal-error").html(errorMessage);
+            return;
+        }
+        $.post("/office/post/update-employee-position", {
+            "id": $("#modal-positions").data("employee"),
+            "positions": JSON.stringify(positions)
+        }, function(data) {
+            $("#modal-success").html("Successfully updated positions.");
+        }).fail(function(data) {
+            $("#modal-error").html("Error code " + data.status + " occurred.");
+        });
+    }
+
+    function onImageSetup(index : number, element : HTMLImageElement) : void {
+        $(element).on("error", function() {
+            $(this).attr("src", "https://mac.iupui.edu/img/MissingPhotos.svg");
+        });
+        element.src = "https://mac.iupui.edu/img/team-xsmall/" + $(element).data("username") + ".jpg";
+    }
+
+    function onFilter() {
+        let $this : JQuery = $(this);
+        HelperUrl.setParameterByName($this.attr("data-filter"), $this.val());
+    }
+
+    $(document).ready(function() {
+        $("select.input-filter").on("change", onFilter);
+        $("img.employee-photo").each(onImageSetup);
         $("div.employee-block").on("click", onEmployeeOpen);
+        $("#btn-position-add").on("click", onPositionAdd);
+        $("#btn-position-save").on("click", onPositionSave);
     });
 }

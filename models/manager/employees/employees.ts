@@ -161,11 +161,20 @@ export class Model implements eta.Model {
                             }
                             return a.lastName.localeCompare(b.lastName);
                         });
-                        callback({
-                            "employees": employees,
-                            "positionCounts": positionCounts,
-                            "shirtSizes": shirtSizes,
-                            "filters": req.query
+                        sql = "SELECT * FROM Position WHERE active = 1 ORDER BY category, name";
+                        eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+                            if (err) {
+                                eta.logger.dbError(err);
+                                callback({errcode: eta.http.InternalError});
+                                return;
+                            }
+                            callback({
+                                "employees": employees,
+                                "positions": rows,
+                                "positionCounts": positionCounts,
+                                "shirtSizes": shirtSizes,
+                                "filters": req.query
+                            });
                         });
                     });
                 });
