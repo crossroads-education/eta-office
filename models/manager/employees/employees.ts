@@ -148,6 +148,11 @@ export class Model implements eta.Model {
                         }
                         let employees : any[] = [];
                         for (let i in rawEmployees) { // converting from object to array
+                            rawEmployees[i].positions.sort((a : any, b : any) : number => {
+                                let aTime : number = a.start.getTime();
+                                let bTime : number = b.start.getTime();
+                                return aTime > bTime ? 1 : (aTime < bTime ? -1 : 0);
+                            });
                             employees.push(rawEmployees[i]);
                         }
                         employees.sort((a : any, b : any) : number => {
