@@ -62,3 +62,14 @@ span.employee-name.modal-title {
 .collapsible-title {
     margin-left: 1em;
 }
+
+.modal-allowance {
+    cursor: pointer;
+}
+
+.modal-allowance + span {
+    padding-left: 0.5em;
+    font-weight: 600;
+    font-size: 1.25em;
+    cursor: pointer;
+}

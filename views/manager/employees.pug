@@ -30,8 +30,26 @@ mixin employee-block(employee)
             img.employee-photo(width="100", height="100", data-username=employee.username)
             - var lastNameTokens = employee.lastName.split(" ");
             span.employee-name #{employee.firstName.split(" ")[0]} #{lastNameTokens[lastNameTokens.length - 1]}
-            span.hidden.employee-data(data-positions=JSON.stringify(employee.positions))
+            -
+                var allowances = {
+                    "alarm": employee.alarm == 1,
+                    "call1": employee.call1 == 1,
+                    "call2": employee.call2 == 1,
+                    "sick":  employee.sick  == 1
+                }
+            span.hidden.employee-data(
+                data-positions=JSON.stringify(employee.positions),
+                data-mentor=employee.mentor,
+                data-allowances=JSON.stringify(allowances))
     br
+
+mixin collapsible-parent(name)
+    div.collapsible-parent
+        div.collapsible-header
+            span.glyphicon.glyphicon-plus
+            span.collapsible-title #{name}
+        div.collapsible-body.in
+            block
 
 block body
     - var sizes = ["S", "M", "L", "XL", "XXL"];
@@ -41,6 +59,10 @@ block body
         div.header-block.col-xs-2
             +shirt-size-table("Hoodie")
         div.header-block.col-xs-4.text-center
+            if filters.error && !filters.positionName && !filters.positionCategory
+                div.text-danger
+                    if filters.error == 404
+                        | Your filter did not match any employees!
             div
                 button.btn.btn-primary.btn-header Front Desk Log
             div
@@ -72,26 +94,39 @@ block body
                 div.modal-body
                     span.text-success#modal-success
                     span.text-danger#modal-error
-                    div.collapsible-parent
-                        div.collapsible-header
-                            span.glyphicon.glyphicon-plus
-                            span.collapsible-title Positions
-                        div.collapsible-body.in
-                            table.table.table-condensed.table-striped
-                                thead
-                                    tr
-                                        th Position Name
-                                        th Position Category
-                                        th Position Start Date
-                                        th Position End Date
-                                tbody#modal-positions
-                            div
-                                select#select-position
-                                    each position in positions
-                                        option(value=position.id, data-name=position.name, data-category=position.category) #{position.category}: #{position.name}
-                                button.btn.btn-success#btn-position-add Add Position
+                    +collapsible-parent("Positions")
+                        table.table.table-condensed.table-striped
+                            thead
+                                tr
+                                    th Position Name
+                                    th Position Category
+                                    th Position Start Date
+                                    th Position End Date
+                            tbody#modal-positions
+                        div
+                            select#select-position
+                                each position in positions
+                                    option(value=position.id, data-name=position.name, data-category=position.category) #{position.category}: #{position.name}
+                            button.btn.btn-success#btn-position-add Add Position
+                    +collapsible-parent("Allowances / Mentor Progression")
+                        div
+                            p
+                                input.modal-allowance(type="checkbox", data-name="alarm")
+                                span Alarm Clock Day
+                            p
+                                input.modal-allowance(type="checkbox", data-name="call1")
+                                span Call-In #1
+                            p
+                                input.modal-allowance(type="checkbox", data-name="call2")
+                                span Call-In #2
+                            p
+                                input.modal-allowance(type="checkbox", data-name="sick")
+                                span Sick Day
+                        div.hidden#mentor-container
+                            span Mentor Progression
+                            input(type="number")#input-mentor
                 div.modal-footer
-                    button.btn.btn-primary#btn-position-save Save Changes
+                    button.btn.btn-primary#btn-save Save Changes
     div
         div.col-xs-4
             -

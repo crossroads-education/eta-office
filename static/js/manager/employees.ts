@@ -1,4 +1,5 @@
 /// <reference path="../typings/index.d.ts"/>
+/// <amd-dependency path="bootstrap"/>
 import * as moment from "moment";
 import {HelperUrl} from "../lib/helpers/HelperUrl.js";
 
@@ -35,9 +36,20 @@ export module employees {
         let name : string = $this.find(".employee-name").text();
         let photoUrl : string = $this.find(".employee-photo").attr("src");
         let positions : any[] = $data.data("positions");
+        let allowances : {[key : string] : boolean} = $data.data("allowances");
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
         $("#modal-positions").attr("data-employee", $this.attr("data-id"));
+        console.log(allowances);
+        for (let name in allowances) {
+            $(`input.modal-allowance[data-name="${name}"]`).prop("checked", allowances[name]);
+        }
+        if ($data.data("mentor") >= 0) {
+            $("#mentor-container").removeClass("hidden");
+            $("#input-mentor").val($data.data("mentor"));
+        } else {
+            $("#mentor-container").addClass("hidden");
+        }
         for (let i : number = 0; i < positions.length; i++) {
             addPositionRow(positions[i]);
         }
@@ -55,7 +67,7 @@ export module employees {
         });
     }
 
-    function onPositionSave() {
+    function onSave() {
         $("#modal-error").html("");
         let errorMessage : string = "";
         let positions : NetworkEmployeePosition[] = [];
@@ -78,13 +90,24 @@ export module employees {
                 "end": endDate
             });
         });
+        let allowances : {[key : string] : boolean} = {};
+        $("input.modal-allowance").each(function(index : number, element : HTMLElement) {
+            let $this : JQuery = $(this);
+            allowances[$this.data("name")] = $this.prop("checked");
+        });
+        let mentor : number = -1;
+        if (!$("#mentor-container").hasClass("hidden")) {
+            mentor = $("#input-mentor").val();
+        }
         if (errorMessage != "") {
             $("#modal-error").html(errorMessage);
             return;
         }
-        $.post("/office/post/update-employee-position", {
+        $.post("/office/post/update-employee", {
             "id": $("#modal-positions").data("employee"),
-            "positions": JSON.stringify(positions)
+            "positions": JSON.stringify(positions),
+            "allowances": JSON.stringify(allowances),
+            "mentor": mentor
         }, function(data) {
             $("#modal-success").html("Successfully updated positions.");
         }).fail(function(data) {
@@ -122,12 +145,22 @@ export module employees {
         });
     }
 
+    function setupModalInputs() {
+        $("input.modal-allowance + span").on("click", function() {
+            let $this : JQuery = $(this);
+            let $checkbox : JQuery = $this.prev();
+            $checkbox.prop("checked", !$checkbox.prop("checked"));
+        });
+    }
+
     $(document).ready(function() {
         $("select.input-filter").on("change", onFilter);
         $("img.employee-photo").each(onImageSetup);
-        $("div.employee-block").on("click", onEmployeeOpen);
         $("#btn-position-add").on("click", onPositionAdd);
-        $("#btn-position-save").on("click", onPositionSave);
+        $("#btn-save").on("click", onSave);
         setupModalCollapsible();
+        setupModalInputs();
+        // don't set up click listener until everything's ready
+        $("div.employee-block").on("click", onEmployeeOpen);
     });
 }

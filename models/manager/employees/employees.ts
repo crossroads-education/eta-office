@@ -1,6 +1,7 @@
 import * as eta from "eta-lib";
 
 import * as express from "express";
+import * as querystring from "querystring";
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
@@ -68,7 +69,7 @@ export class Model implements eta.Model {
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
-                let params : string[] = [];
+                let params : string[] = [req.query.allowanceTerm ? req.query.allowanceTerm : eta.term.getCurrent().id];
                 let whereSql : string = "Employee.current = 1";
                 if (req.query.positionName && req.query.positionName != "") {
                     whereSql += " AND Position.name = ?";
@@ -81,6 +82,10 @@ export class Model implements eta.Model {
                 sql = `
                     SELECT
                         Employee.*,
+                        EmployeeAllowance.alarm,
+                        EmployeeAllowance.call1,
+                        EmployeeAllowance.call2,
+                        EmployeeAllowance.sick,
                         Person.firstName,
                         Person.lastName,
                         Person.username
@@ -88,6 +93,9 @@ export class Model implements eta.Model {
                         EmployeePosition
                             LEFT JOIN Employee ON
                                 EmployeePosition.id = Employee.id
+                            LEFT JOIN EmployeeAllowance ON
+                                EmployeePosition.id = EmployeeAllowance.id AND
+                                EmployeeAllowance.term = ?
                             LEFT JOIN Person ON
                                 EmployeePosition.id = Person.id
                             LEFT JOIN Position ON
@@ -100,6 +108,10 @@ export class Model implements eta.Model {
                     if (err) {
                         eta.logger.dbError(err);
                         callback({errcode: eta.http.InternalError});
+                        return;
+                    }
+                    if (employeeRows.length === 0) {
+                        res.redirect("/office/manager/employees?error=404");
                         return;
                     }
                     let employeeIDs : string[] = [];
