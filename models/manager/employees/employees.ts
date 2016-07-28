@@ -28,15 +28,15 @@ export class Model implements eta.Model {
                     ) AS hoodie ON
                         shirt.size = hoodie.size
         `;
-        eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+        eta.db.query(sql, [], (err : eta.DBError, shirtRows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});
                 return;
             }
             let shirtSizes : {[key : string] : any} = {};
-            for (let i : number = 0; i < rows.length; i++) {
-                shirtSizes[rows[i].size] = rows[i];
+            for (let i : number = 0; i < shirtRows.length; i++) {
+                shirtSizes[shirtRows[i].size] = shirtRows[i];
             }
             sql = `
                 SELECT
@@ -68,23 +68,22 @@ export class Model implements eta.Model {
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
+                let params : string[] = [];
+                let whereSql : string = "Employee.current = 1";
+                if (req.query.positionName && req.query.positionName != "") {
+                    whereSql += " AND Position.name = ?";
+                    params.push(req.query.positionName);
+                }
+                if (req.query.positionCategory && req.query.positionCategory != "") {
+                    whereSql += " AND Position.category = ?";
+                    params.push(req.query.positionCategory);
+                }
                 sql = `
                     SELECT
-                        Position.name,
-                        Position.category,
-                        EmployeePosition.start,
-                        EmployeePosition.end,
                         Employee.*,
                         Person.firstName,
                         Person.lastName,
-                        Person.username,
-                        (
-                            EmployeePosition.start <= CURDATE() AND
-                            (
-                                ISNULL(EmployeePosition.end) OR
-                                EmployeePosition.end >= CURDATE()
-                            )
-                        ) AS positionCurrent
+                        Person.username
                     FROM
                         EmployeePosition
                             LEFT JOIN Employee ON
@@ -94,59 +93,75 @@ export class Model implements eta.Model {
                             LEFT JOIN Position ON
                                 EmployeePosition.position = Position.id
                     WHERE
-                        Employee.current = 1
+                        ${whereSql}
+                    GROUP BY Employee.id
                     ORDER BY Person.lastName, Person.firstName`;
-                eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+                eta.db.query(sql, params, (err : eta.DBError, employeeRows : any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
                         callback({errcode: eta.http.InternalError});
                         return;
                     }
-                    let rawEmployees : {[key : string] : any} = {};
-                    for (let i : number = 0; i < rows.length; i++) {
-                        let id : string = rows[i].id;
-                        if (!rawEmployees[id]) {
-                            rawEmployees[id] = eta.object.copy(rows[i]);
-                            rawEmployees[id].matchesFilter = !!rawEmployees[id].positionCurrent;
-                            rawEmployees[id].positions = [];
-                            rawEmployees[id].positionNames = [];
-                            rawEmployees[id].positionCategories = [];
-                            delete
-                                rawEmployees[id].name,
-                                rawEmployees[id].category,
-                                rawEmployees[id].start,
-                                rawEmployees[id].end,
-                                rawEmployees[id].positionCurrent;
-                        }
-                        rawEmployees[id].positions.push({
-                            "name": rows[i].name,
-                            "category": rows[i].category,
-                            "start": rows[i].start,
-                            "end": rows[i].end
-                        });
-                        rawEmployees[id].positionNames.push(rows[i].name);
-                        rawEmployees[id].positionCategories.push(rows[i].category);
-                        if (rows[i].positionCurrent) {
-                            rawEmployees[id].matchesFilter = true;
-                        }
+                    let employeeIDs : string[] = [];
+                    for (let i : number = 0; i < employeeRows.length; i++) {
+                        employeeIDs.push(employeeRows[i].id);
                     }
-                    let employees : any[] = [];
-                    for (let i in rawEmployees) { // converting from object to array
-                        if (rawEmployees[i].matchesFilter) {
+                    eta.logger.json(employeeIDs);
+                    sql = `
+                        SELECT
+                            Position.id,
+                            EmployeePosition.id AS employee,
+                            Position.name,
+                            Position.category,
+                            EmployeePosition.start,
+                            EmployeePosition.end
+                        FROM
+                            EmployeePosition
+                                LEFT JOIN Position ON
+                                    EmployeePosition.position = Position.id
+                        WHERE
+                            EmployeePosition.id IN (?)`;
+                    eta.db.query(sql, [employeeIDs], (err : eta.DBError, positionRows : any[]) => {
+                        if (err) {
+                            eta.logger.dbError(err);
+                            callback({errcode: eta.http.InternalError});
+                            return;
+                        }
+                        let rawEmployees : {[key : string] : any} = {};
+                        for (let i : number = 0; i < positionRows.length; i++) {
+                            let id : string = positionRows[i].employee;
+                            if (!rawEmployees[id]) {
+                                let employeeIndex : number = -1;
+                                for (let k : number = 0; k < employeeRows.length; k++) {
+                                    if (employeeRows[k].id == id) {
+                                        employeeIndex = k;
+                                    }
+                                }
+                                rawEmployees[id] = eta.object.copy(employeeRows[employeeIndex]);
+                                rawEmployees[id].positions = [];
+                                rawEmployees[id].positionNames = [];
+                                rawEmployees[id].positionCategories = [];
+                            }
+                            rawEmployees[id].positions.push(positionRows[i]);
+                            rawEmployees[id].positionNames.push(positionRows[i].name);
+                            rawEmployees[id].positionCategories.push(positionRows[i].category);
+                        }
+                        let employees : any[] = [];
+                        for (let i in rawEmployees) { // converting from object to array
                             employees.push(rawEmployees[i]);
                         }
-                    }
-                    employees.sort((a : any, b : any) : number => {
-                        if (a.lastName == b.lastName) {
-                            return a.firstName.localeCompare(b.firstName);
-                        }
-                        return a.lastName.localeCompare(b.lastName);
-                    });
-                    callback({
-                        "employees": employees,
-                        "positionCounts": positionCounts,
-                        "shirtSizes": shirtSizes,
-                        "filters": req.query
+                        employees.sort((a : any, b : any) : number => {
+                            if (a.lastName == b.lastName) {
+                                return a.firstName.localeCompare(b.firstName);
+                            }
+                            return a.lastName.localeCompare(b.lastName);
+                        });
+                        callback({
+                            "employees": employees,
+                            "positionCounts": positionCounts,
+                            "shirtSizes": shirtSizes,
+                            "filters": req.query
+                        });
                     });
                 });
             });
