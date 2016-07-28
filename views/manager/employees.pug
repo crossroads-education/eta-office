@@ -72,19 +72,24 @@ block body
                 div.modal-body
                     span.text-success#modal-success
                     span.text-danger#modal-error
-                    table.table.table-condensed.table-striped
-                        thead
-                            tr
-                                th Position Name
-                                th Position Category
-                                th Position Start Date
-                                th Position End Date
-                        tbody#modal-positions
-                    div
-                        select#select-position
-                            each position in positions
-                                option(value=position.id, data-name=position.name, data-category=position.category) #{position.category}: #{position.name}
-                        button.btn.btn-success#btn-position-add Add Position
+                    div.collapsible-parent
+                        div.collapsible-header
+                            span.glyphicon.glyphicon-plus
+                            span.collapsible-title Positions
+                        div.collapsible-body.in
+                            table.table.table-condensed.table-striped
+                                thead
+                                    tr
+                                        th Position Name
+                                        th Position Category
+                                        th Position Start Date
+                                        th Position End Date
+                                tbody#modal-positions
+                            div
+                                select#select-position
+                                    each position in positions
+                                        option(value=position.id, data-name=position.name, data-category=position.category) #{position.category}: #{position.name}
+                                button.btn.btn-success#btn-position-add Add Position
                 div.modal-footer
                     button.btn.btn-primary#btn-position-save Save Changes
     div

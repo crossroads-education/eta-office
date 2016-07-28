@@ -106,7 +106,6 @@ export class Model implements eta.Model {
                     for (let i : number = 0; i < employeeRows.length; i++) {
                         employeeIDs.push(employeeRows[i].id);
                     }
-                    eta.logger.json(employeeIDs);
                     sql = `
                         SELECT
                             Position.id,

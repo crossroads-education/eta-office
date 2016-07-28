@@ -9,6 +9,7 @@ export module employees {
         start : string;
         end : string;
     }
+
     interface EmployeePosition extends NetworkEmployeePosition {
         name : string;
         category : string;
@@ -103,11 +104,30 @@ export module employees {
         HelperUrl.setParameterByName($this.attr("data-filter"), $this.val());
     }
 
+    function setupModalCollapsible() {
+        $(".collapsible-parent").each(function(index : number, element : HTMLElement) {
+            let $this : JQuery = $(this);
+            let $body : JQuery = $(this).find(".collapsible-body");
+            (<any>$body).collapse();
+            $body.on("hide.bs.collapse", function() {
+                $this.find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+            });
+            $body.on("show.bs.collapse", function() {
+                $this.find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+            });
+            $this.find(".collapsible-header").on("click", function() {
+                (<any>$body).collapse("toggle");
+            });
+            (<any>$body).collapse("hide");
+        });
+    }
+
     $(document).ready(function() {
         $("select.input-filter").on("change", onFilter);
         $("img.employee-photo").each(onImageSetup);
         $("div.employee-block").on("click", onEmployeeOpen);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-position-save").on("click", onPositionSave);
+        setupModalCollapsible();
     });
 }
