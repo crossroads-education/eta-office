@@ -1,0 +1,4 @@
+{
+  "models": ["/templates/select/position"],
+  "permissions": ["access/manager/employees"]
+}

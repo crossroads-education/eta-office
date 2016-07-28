@@ -1,0 +1,154 @@
+extends ../include/layout.pug
+
+mixin shirt-size-table(type)
+    table.table.table-condensed.table-striped
+        thead
+            tr
+                th #{type} Size
+                th Count
+        tbody
+            each size in sizes
+                tr
+                    td #{size}
+                    td #{shirtSizes[size][type.toLowerCase() + "Count"]}
+
+mixin position-count-table(start, end, data)
+    table.table.table-condensed.table-striped
+        thead
+            tr
+                th Position
+                th Count
+        tbody
+            - for (var i = start; i < end; i++)
+                tr
+                    td #{data[i].name}
+                    td #{data[i].count}
+
+mixin employee-block(employee)
+    div.employee-block(data-toggle="modal", data-target="#modal", data-id=employee.id)
+        div.text-center.employee-header
+            img.employee-photo(width="100", height="100", data-username=employee.username)
+            - var lastNameTokens = employee.lastName.split(" ");
+            span.employee-name #{employee.firstName.split(" ")[0]} #{lastNameTokens[lastNameTokens.length - 1]}
+            -
+                var allowances = {
+                    "alarm": employee.alarm == 1,
+                    "call1": employee.call1 == 1,
+                    "call2": employee.call2 == 1,
+                    "sick":  employee.sick  == 1
+                }
+            span.hidden.employee-data(
+                data-positions=JSON.stringify(employee.positions),
+                data-mentor=employee.mentor,
+                data-allowances=JSON.stringify(allowances))
+    br
+
+mixin collapsible-parent(name)
+    div.collapsible-parent
+        div.collapsible-header
+            span.glyphicon.glyphicon-plus
+            span.collapsible-title #{name}
+        div.collapsible-body.in
+            block
+
+block body
+    - var sizes = ["S", "M", "L", "XL", "XXL"];
+    div.header-bar.row
+        div.header-block.col-xs-2
+            +shirt-size-table("Shirt")
+        div.header-block.col-xs-2
+            +shirt-size-table("Hoodie")
+        div.header-block.col-xs-4.text-center
+            if filters.error && !filters.positionName && !filters.positionCategory
+                div.text-danger
+                    if filters.error == 404
+                        | Your filter did not match any employees!
+            div
+                button.btn.btn-primary.btn-header Front Desk Log
+            div
+                input.form-control#input-filter(type="text")
+            div
+                select.input-filter.border-rounded(data-filter="positionName")
+                    option(value="") All
+                    each name in selectPositionNames
+                        - var isSelected = filters.positionName == name ? {"selected": "selected"} : {};
+                        option(value=name)&attributes(isSelected) #{name}
+                select.input-filter.border-rounded(data-filter="positionCategory")
+                    option(value="") All
+                    each category in selectPositionCategories
+                        - var isSelected = filters.positionCategory == category ? {"selected": "selected"} : {};
+                        option(value=category)&attributes(isSelected) #{category}
+        - var midway = Math.floor(positionCounts.length / 2);
+        div.header-block.col-xs-2
+            +position-count-table(0, midway, positionCounts)
+        div.header-block.col-xs-2
+            +position-count-table(midway, positionCounts.length, positionCounts)
+    div.modal.fade#modal(tabindex="-1")
+        div.modal-dialog
+            div.modal-content
+                div.modal-header
+                    button.close(type="button", data-dismiss="modal") &times;
+                    div
+                        img.employee-photo#modal-photo(width="100", height="100")
+                        span.employee-name.modal-title#modal-title
+                div.modal-body
+                    span.text-success#modal-success
+                    span.text-danger#modal-error
+                    +collapsible-parent("Positions")
+                        table.table.table-condensed.table-striped
+                            thead
+                                tr
+                                    th Position Name
+                                    th Position Category
+                                    th Position Start Date
+                                    th Position End Date
+                            tbody#modal-positions
+                        div
+                            select#select-position
+                                each position in positions
+                                    option(value=position.id, data-name=position.name, data-category=position.category) #{position.category}: #{position.name}
+                            button.btn.btn-success#btn-position-add Add Position
+                    +collapsible-parent("Allowances / Mentor Progression")
+                        div
+                            p
+                                input.modal-allowance(type="checkbox", data-name="alarm")
+                                span Alarm Clock Day
+                            p
+                                input.modal-allowance(type="checkbox", data-name="call1")
+                                span Call-In #1
+                            p
+                                input.modal-allowance(type="checkbox", data-name="call2")
+                                span Call-In #2
+                            p
+                                input.modal-allowance(type="checkbox", data-name="sick")
+                                span Sick Day
+                        div.hidden#mentor-container
+                            span Mentor Progression
+                            input(type="number")#input-mentor
+                div.modal-footer
+                    button.btn.btn-primary#btn-save Save Changes
+    div
+        div.col-xs-4
+            -
+                var length = employees.length;
+                if (length % 3 == 0) {
+                    length -= 1;
+                }
+            - for (var i = 0; i < length; i += 3)
+                +employee-block(employees[i])
+        div.col-xs-4
+            -
+                var length = employees.length;
+                if (length % 3 == 1) {
+                    length -= 1;
+                }
+            - for (var i = 1; i < length; i += 3)
+                +employee-block(employees[i])
+        div.col-xs-4
+            -
+                var length = employees.length;
+                if (length % 3 == 2) {
+                    length -= 1;
+                }
+            - for (var i = 2; i < length; i += 3)
+                +employee-block(employees[i])
