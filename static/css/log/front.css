@@ -1,0 +1,12 @@
+.log-label {
+    font-weight: 600;
+    font-size: 1.25em;
+}
+
+select#input-about + span.select2 {
+    margin-bottom: 10px;
+}
+
+textarea#input-message {
+    margin-bottom: 10px;
+}
