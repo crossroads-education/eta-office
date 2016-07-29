@@ -1,5 +1,5 @@
 /// <reference path="../typings/index.d.ts"/>
-/// <amd-dependency path="bootstrap"/>
+import "bootstrap";
 import * as moment from "moment";
 import {HelperUrl} from "../lib/helpers/HelperUrl.js";
 
@@ -131,7 +131,7 @@ export module employees {
         $(".collapsible-parent").each(function(index : number, element : HTMLElement) {
             let $this : JQuery = $(this);
             let $body : JQuery = $(this).find(".collapsible-body");
-            (<any>$body).collapse();
+            $body.collapse();
             $body.on("hide.bs.collapse", function() {
                 $this.find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
             });
@@ -139,9 +139,9 @@ export module employees {
                 $this.find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
             });
             $this.find(".collapsible-header").on("click", function() {
-                (<any>$body).collapse("toggle");
+                $body.collapse("toggle");
             });
-            (<any>$body).collapse("hide");
+            $body.collapse("hide");
         });
     }
 
