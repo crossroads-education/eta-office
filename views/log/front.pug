@@ -1,0 +1,34 @@
+extends ../include/layout.pug
+
+block body
+    div.row
+        div.col-xs-3
+        div.col-xs-6
+            div.text-center
+                span.text-success#modal-success
+                span.text-danger#modal-error
+                p.log-label About:
+                select.border-rounded#input-about
+                    each employee in employees
+                        option(value=employee.id) #{employee.lastName}, #{employee.firstName}
+                br
+                p.log-label Describe the event:
+                textarea.border-rounded#input-message(rows="5", cols="30")
+                br
+                button.btn.btn-success#btn-submit Submit
+            div
+                table.table.table-striped.table-hover
+                    thead
+                        tr
+                            th Date / Time
+                            th Author
+                            th About
+                            th Message
+                    tbody
+                        each log in logs
+                            tr
+                                td #{log.timestamp.toLocaleString()}
+                                td #{log.author}
+                                td #{log.about}
+                                td #{log.message}
+        div.col-xs-3
