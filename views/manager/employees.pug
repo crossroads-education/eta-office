@@ -128,7 +128,7 @@ block body
                 div.modal-footer
                     button.btn.btn-primary#btn-save Save Changes
     div
-        div.col-xs-4
+        div.col-xs-4.employee-column
             -
                 var length = employees.length;
                 if (length % 3 == 0) {
@@ -136,7 +136,7 @@ block body
                 }
             - for (var i = 0; i < length; i += 3)
                 +employee-block(employees[i])
-        div.col-xs-4
+        div.col-xs-4.employee-column
             -
                 var length = employees.length;
                 if (length % 3 == 1) {
@@ -144,7 +144,7 @@ block body
                 }
             - for (var i = 1; i < length; i += 3)
                 +employee-block(employees[i])
-        div.col-xs-4
+        div.col-xs-4.employee-column
             -
                 var length = employees.length;
                 if (length % 3 == 2) {

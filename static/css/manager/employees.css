@@ -19,6 +19,10 @@ select.border-rounded {
     cursor: pointer;
 }
 
+div.employee-column {
+    margin-bottom: 50px;
+}
+
 div.employee-block {
     margin-bottom: 15px;
     float: left;
