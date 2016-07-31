@@ -12,13 +12,13 @@
   "private": false,
   "contributors": [
     {
-      "name": "Luke Brown",
-      "email": "lukbrown@iupui.edu"
-    },
-    {
       "name": "Alex Hicks",
       "email": "aldahick@iupui.edu",
       "url": "http://alexhicks.net"
+    },
+    {
+      "name": "Brian Huntley",
+      "email": "bhuntley@iupui.edu"
     }
   ],
   "dependencies": {
