@@ -35,6 +35,5 @@ export module front {
         table = $("#logs").closest("table").dataTable(<any>{
             "order": [[0, "desc"]]
         });
-        (<any>window).table = table;
     });
 }
