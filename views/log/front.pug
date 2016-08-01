@@ -9,6 +9,7 @@ block body
                 span.text-danger#modal-error
                 p.log-label About:
                 select.border-rounded#input-about
+                    option
                     each employee in employees
                         option(value=employee.id) #{employee.lastName}, #{employee.firstName}
                 br
@@ -24,7 +25,7 @@ block body
                             th Author
                             th About
                             th Message
-                    tbody
+                    tbody#logs
                         each log in logs
                             tr
                                 td #{log.timestamp.toLocaleString()}

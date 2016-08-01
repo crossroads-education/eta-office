@@ -8,25 +8,52 @@ export class Model implements eta.Model {
             callback({errcode: eta.http.InvalidParameters});
             return;
         }
-        eta.permission.getUser(req.session["userid"], (user : eta.PermissionUser) => {
-            if (user === null) {
+        let user : eta.PermissionUser = req.session["permissions"];
+        if ((req.body.type == "FRONT" && !user.has("add/log/front")) ||
+            (req.body.type == "MANGR" && !user.has("add/log/manager")) ||
+            (req.body.type == "CLOCK" && !user.has("add/log/clock"))) {
+                callback({errcode: eta.http.Forbidden});
+                return;
+        }
+        let nowDate : Date = new Date();
+        let now : string = eta.time.getStandardDatetime(nowDate);
+        let sql : string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`, `timestamp`) VALUES(?, ?, ?, ?, ?)";
+        let params : string[] = [req.session["userid"], req.body.about, req.body.message, req.body.type, now];
+        eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
+            if (err) {
+                eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});
                 return;
             }
-            if ((req.body.type == "FRONT" && !user.has("add/log/front")) ||
-                (req.body.type == "MANGR" && !user.has("add/log/manager")) ||
-                (req.body.type == "CLOCK" && !user.has("add/log/clock"))) {
-                    callback({errcode: eta.http.Forbidden});
-                    return;
-            }
-            let sql : string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`) VALUES(?, ?, ?, ?)";
-            eta.db.query(sql, [req.session["userid"], req.body.about, req.body.message, req.body.type], (err : eta.DBError, rows : any[]) => {
+            sql = `
+                SELECT
+                    CONCAT(AboutPerson.firstName, ' ', AboutPerson.lastName) AS about,
+                    CONCAT(AuthorPerson.firstName, ' ', AuthorPerson.lastName) AS author
+                FROM
+                    Log
+                        LEFT JOIN Person AboutPerson ON
+                            Log.about = AboutPerson.id
+                        LEFT JOIN Person AuthorPerson ON
+                            Log.author = AuthorPerson.id
+                WHERE
+                    Log.author = ? AND
+                    Log.timestamp = ?`;
+            params = [req.session["userid"], now];
+            eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
-                callback({raw: "true"});
+                let data : {[key : string] : string} = {
+                    "about": rows[0].about,
+                    "author": rows[0].author,
+                    "message": req.body.message,
+                    "timestamp": nowDate.toLocaleString()
+                };
+                callback({
+                    raw: JSON.stringify(data)
+                });
             });
         });
     }
