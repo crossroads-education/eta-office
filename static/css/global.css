@@ -5,16 +5,16 @@ div#body, div#body * {
 
 .navbar {
     min-height: 0px;
-    height: 30px;
+    height: 40px;
 }
 
 .nav > li > a {
-    font-size: 15px !important;
-    padding: 5px 15px !important;
+    font-size: 20px !important;
+    padding: 10px 20px !important;
 }
 
 .dropdown-menu > li > a {
-    font-size: 12px !important;
+    font-size: 15px !important;
 }
 
 .border-rounded {
