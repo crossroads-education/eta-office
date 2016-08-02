@@ -1,0 +1,36 @@
+extends ../include/layout.pug
+
+block body
+    div.text-center
+        span.text-success#success
+        span.text-danger#error
+        div.row
+            div.col-xs-12
+                span.form-label Term
+                select.border-rounded.input-filter#input-term(data-param="term")
+                    for term in selectTerms
+                        - var isSelected = (term.id == currentTerm) ? {"selected": "selected"} : {}
+                        option(value=term.id)&attributes(isSelected) #{term.name}
+                select.border-rounded.input-filter#input-center(data-param="center")
+                    for center in selectCenters
+                        - var isSelected = (center.id == currentCenter) ? {"selected": "selected"} : {}
+                        option(value=center.id)&attributes(isSelected) #{center.name}
+        div.row
+            div.col-xs-4
+            div.col-xs-4
+                table.table.table-striped.table-hover#table-hours
+                    thead
+                        tr
+                            th Day
+                            th Open
+                            th Close
+                    tbody
+                        for day, index in hours
+                            tr(data-day=index)
+                                td.form-label #{day.name}
+                                td
+                                    input.input-hours(type="time", value=day.open, data-type="open")
+                                td
+                                    input.input-hours(type="time", value=day.close, data-type="close")
+            div.col-xs-4
+        button.btn.btn-success#btn-submit Submit

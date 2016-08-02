@@ -1,0 +1,13 @@
+.form-label {
+    font-weight: 600;
+    font-size: 1.25em;
+    margin-right: 5px;
+}
+
+td.form-label {
+    margin-right: 0px;
+}
+
+.text-center th {
+    text-align: center !important;
+}
