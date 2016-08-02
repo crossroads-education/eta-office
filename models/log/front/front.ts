@@ -15,8 +15,7 @@ export class Model implements eta.Model {
                         Employee.id = Person.id
             WHERE
                 Employee.current = 1
-            ORDER BY Person.lastName, Person.firstName
-        `;
+            ORDER BY Person.lastName, Person.firstName`;
         eta.db.query(sql, [], (err : eta.DBError, employeeRows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
