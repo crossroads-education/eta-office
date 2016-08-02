@@ -1,7 +1,8 @@
 /// <reference path="../typings/index.d.ts"/>
+
 import "bootstrap";
 import * as moment from "moment";
-import {HelperUrl} from "../lib/helpers/HelperUrl.js";
+import {HelperUrl} from "lib/helpers/HelperUrl";
 
 export module employees {
 
