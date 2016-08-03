@@ -1,6 +1,6 @@
 /// <reference path="../typings/index.d.ts"/>
 import "datatables.net";
-import "datatables-bootstrap";
+import "datatables.net-bs";
 import "select2";
 
 export module front {
