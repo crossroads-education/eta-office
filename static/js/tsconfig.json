@@ -6,7 +6,8 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
-    "preserveConstEnums": true
+    "preserveConstEnums": true,
+    "sourceMap": true
   },
   "compileOnSave": true,
   "buildOnSave": false,
