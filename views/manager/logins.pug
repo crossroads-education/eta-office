@@ -1,0 +1,56 @@
+extends ../include/layout.pug
+
+mixin login-row(login)
+    td.cell-name #{login.name}
+    td
+        input.form-control.input-username(type="text", value=login.username)
+    td
+        input.form-control.input-password(type="text", value="********", data-hidden="yes", data-value=login.password, disabled)
+    td
+        button.btn.btn-warning.btn-toggle Hide / Show
+        button.btn.btn-success.btn-update Update
+        button.btn.btn-danger.btn-delete Delete
+
+block body
+    div.text-center.row
+        div.col-xs-3
+        div.col-xs-6
+            div
+                span#success-add
+                span#error-add
+                div.row
+                    div.col-xs-3
+                    div.col-xs-6
+                        div.row
+                            span.col-xs-3.form-label Name
+                            div.col-xs-8
+                                input.form-control.input-add(type="text", data-name="name", autocomplete="new-password")
+                        div.row
+                            span.col-xs-3.form-label Username
+                            div.col-xs-8
+                                input.form-control.input-add(type="text", data-name="username", autocomplete="new-password")
+                        div.row
+                            span.col-xs-3.form-label Password
+                            div.col-xs-8
+                                input.form-control.input-add(type="text", data-name="password", autocomplete="new-password")
+                        br
+                        div.text-center.row
+                            div.col-xs-3.form-label
+                            div.col-xs-8
+                                button.form-control.btn.btn-success#btn-submit-add Submit
+                    div.col-xs-3
+            br
+            table.table.table-striped.table-hover
+                thead
+                    tr
+                        th Name
+                        th Username
+                        th Password
+                        th
+                tbody#table-logins
+                    tr.hidden#row-template
+                        +login-row({})
+                    each login in logins
+                        tr
+                            +login-row(login)
+        div.col-xs-3
