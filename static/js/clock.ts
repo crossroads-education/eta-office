@@ -8,8 +8,12 @@ export module clock {
     $(document).ready(function() {
         $("#btn-clock").on("click", function() {
             $.post("/office/post/clock", {}, function(data) {
-                alert(data == "in" ? "Successfully clocked in." : "Successfully clocked out.");
-                window.location.reload();
+                $("#success").text(data == "in" ? "Successfully clocked in." : "Successfully clocked out.");
+                setTimeout(function () {
+                    window.location.reload();
+                }, 3000);
+            }).fail(function(data) {
+                $("#error").text("Error code " + data.status + " has occured.");
             })
         });
         setInterval(updateTime, 1000);

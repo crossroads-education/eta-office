@@ -1,0 +1,15 @@
+.table-hover tr:hover td {
+    background-color: #b3b3ff;
+}
+
+div.dt-buttons {
+    float: right;
+    padding-right: 10px;
+}
+#employees_filter {
+    padding-right: 10px;
+}
+
+#employees_filter label {
+    margin-top: 10px;
+}

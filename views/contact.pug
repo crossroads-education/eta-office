@@ -1,0 +1,23 @@
+extends ./include/layout.pug
+
+block body
+    table.table.table-condensed.table-striped.table-hover#employees
+        thead
+            tr
+                th First Name
+                th Last Name
+                th Positions
+                th Categories
+                th IU Email
+                th Alternate Email
+                th Phone Number
+        tbody
+            each employee in employees
+                tr
+                    td #{employee.firstName}
+                    td #{employee.lastName}
+                    td !{employee.positions}
+                    td !{employee.categories}
+                    td #{employee.email}
+                    td #{employee.altEmail}
+                    td #{employee.phone}

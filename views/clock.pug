@@ -3,6 +3,8 @@ extends ./include/layout.pug
 block body
     div.row
         div.col-xs-12.text-center
+            span.text-success.status-message#success
+            span.text-danger.status-message#error
             p.time #{new Date().toLocaleTimeString()}
             p.user-name #{firstName} #{lastName}
             p.user-id #{id}
