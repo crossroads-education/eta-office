@@ -20,9 +20,12 @@ div#body, div#body * {
 .border-rounded {
     border-radius: 4px;
     border: 1px solid #AAAAAA;
+    padding: 5px;
+}
+
+.border-rounded:not(.keep-caret) {
     -webkit-appearance: none;
     -moz-appearance: none;
-    padding: 5px;
 }
 
 button.border-rounded {
