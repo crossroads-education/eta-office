@@ -1,4 +1,7 @@
 {
+  "css": [
+    "/office/css/templates/modal.css"
+  ],
   "models": ["/templates/select/position"],
   "permissions": ["access/manager/employees"]
 }

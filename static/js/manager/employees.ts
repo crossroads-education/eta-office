@@ -1,7 +1,9 @@
 /// <reference path="../typings/index.d.ts"/>
 
 import "bootstrap";
+import "templates/modal";
 import * as moment from "moment";
+
 import {HelperUrl} from "lib/helpers/HelperUrl";
 
 export module employees {
@@ -128,24 +130,6 @@ export module employees {
         HelperUrl.setParameterByName($this.attr("data-filter"), $this.val());
     }
 
-    function setupModalCollapsible() {
-        $(".collapsible-parent").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
-            let $body : JQuery = $(this).find(".collapsible-body");
-            $body.collapse();
-            $body.on("hide.bs.collapse", function() {
-                $this.find(".glyphicon").removeClass("glyphicon-minus").addClass("glyphicon-plus");
-            });
-            $body.on("show.bs.collapse", function() {
-                $this.find(".glyphicon").removeClass("glyphicon-plus").addClass("glyphicon-minus");
-            });
-            $this.find(".collapsible-header").on("click", function() {
-                $body.collapse("toggle");
-            });
-            $body.collapse("hide");
-        });
-    }
-
     function setupModalInputs() {
         $("input.modal-allowance + span").on("click", function() {
             let $this : JQuery = $(this);
@@ -159,7 +143,6 @@ export module employees {
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-save").on("click", onSave);
-        setupModalCollapsible();
         setupModalInputs();
         // don't set up click listener until everything's ready
         $("div.employee-block").on("click", onEmployeeOpen);

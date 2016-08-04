@@ -53,20 +53,6 @@ span.employee-name.modal-title {
     font-size: 3em;
 }
 
-.collapsible-header {
-    font-size: 2em;
-    cursor: pointer;
-}
-
-.collapsible-header * {
-    vertical-align: middle;
-    user-select: none;
-}
-
-.collapsible-title {
-    margin-left: 1em;
-}
-
 .modal-allowance {
     cursor: pointer;
 }

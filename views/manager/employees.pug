@@ -1,5 +1,7 @@
 extends ../include/layout.pug
 
+include ../templates/modal.pug
+
 mixin shirt-size-table(type)
     table.table.table-condensed.table-striped
         thead
@@ -42,14 +44,6 @@ mixin employee-block(employee)
                 data-mentor=employee.mentor,
                 data-allowances=JSON.stringify(allowances))
     br
-
-mixin collapsible-parent(name)
-    div.collapsible-parent
-        div.collapsible-header
-            span.glyphicon.glyphicon-plus
-            span.collapsible-title #{name}
-        div.collapsible-body.in
-            block
 
 block body
     - var sizes = ["S", "M", "L", "XL", "XXL"];

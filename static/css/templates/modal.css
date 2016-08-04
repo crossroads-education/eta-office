@@ -1,0 +1,23 @@
+.collapsible-header {
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.collapsible-header * {
+    vertical-align: middle;
+    user-select: none;
+}
+
+.collapsible-title {
+    margin-left: 1em;
+}
+
+.collapsible-rotate-plus {
+    transform: rotate(-90deg);
+    transition: 0.5s;
+}
+
+.collapsible-rotate-minus {
+    transform: rotate(0deg);
+    transition: 0.5s;
+}
