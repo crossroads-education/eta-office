@@ -1,0 +1,32 @@
+#body {
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+tr.applicant-row {
+    cursor: pointer;
+}
+
+div.dt-buttons {
+    float: right;
+}
+
+select.input-filter {
+    margin-bottom: 5px;
+}
+
+#table-applicants_length label {
+    float: right;
+    margin-right: 1em;
+}
+
+#table-applicants_filter label {
+    margin-right: 1em;
+}
+
+#modal-title {
+    font-weight: 600;
+    font-size: 3em;
+    margin-left: 10px;
+    vertical-align: middle;
+}

@@ -1,6 +1,7 @@
 /// <amd-dependency path="jquery-ui"/>
 /// <reference path="../typings/index.d.ts"/>
 
+import "select2";
 import {HelperUrl} from "lib/helpers/HelperUrl";
 
 export module TemplateSchedule {
@@ -83,19 +84,36 @@ export module TemplateSchedule {
     }
 
     function filter() : void {
-        $(".schedule-row-filterable").show();
-        let selector : string = ".schedule-row-filterable";
+        // $(".schedule-row-filterable").show();
         let shouldFilter : boolean = false;
-        $(".input-filter").each((index : number, element : HTMLElement) => {
-            let filter : string = element.getAttribute("data-filter");
-            let value : string = (<HTMLInputElement> element).value;
-            if (value != "") {
+        let selectors : {[key : string] : string[]} = {};
+        $(".input-filter").each(function(index : number, element : HTMLElement) {
+            let filterName : string = $(element).data("filter");
+            let values : string[] = $(element).val();
+            if (values && values.length > 0) {
                 shouldFilter = true;
-                selector += `:not([data-${filter}*='${value}'])`;
+                for (let i : number = 0; i < values.length; i++) {
+                    if (!selectors[filterName]) {
+                        selectors[filterName] = [];
+                    }
+                    selectors[filterName].push(`[data-${filterName}*='${values[i]}']`);
+                }
             }
         });
         if (shouldFilter) {
-            $(selector).hide();
+            let $hide : JQuery = $(".schedule-row-filterable");
+            let $show : JQuery = $(".schedule-row-filterable");
+            let final : string = "";
+            for (let i in selectors) {
+                let selector : string = selectors[i].join(",");
+                final += selector + " ";
+                console.log(selector);
+                $hide = $hide.filter(`:not(${selector})`);
+                $show = $show.filter(selector);
+            }
+            console.log(final);
+            $hide.hide();
+            $show.show();
         }
     }
 
@@ -155,9 +173,21 @@ export module TemplateSchedule {
         $(".schedule-cell-quarter").each(onPageSetup);
         $(".schedule-cell-quarter.inactive").each(onInactiveSetup);
 
-        $(".input-filter").on("change", () => {
-            filter();
+        $(".input-filter").each(function(index : number, element : HTMLElement) {
+            let $this : JQuery = $(this);
+            let placeholder : string = "";
+            let filter : string = $this.data("filter");
+            if (filter == "position-names") {
+                placeholder = "Position";
+            } else if (filter == "position-categories") {
+                placeholder = "Category";
+            }
+            $this.select2(<any>{
+                "maximumSelectionLength": 4,
+                "placeholder": placeholder
+            });
         });
+        $(".input-filter").on("change", filter);
 
         $("span.schedule-filter-link").on("click", onFilterLink);
         $("select.schedule-filter-link").on("change", onFilterLink);

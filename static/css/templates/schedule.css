@@ -1,3 +1,7 @@
+.select2-selection__rendered {
+    white-space: nowrap;
+}
+
 #schedule-error {
     color: red;
 }
@@ -18,7 +22,7 @@
 
 .schedule-filter-row {
     display: block;
-    height: 25px;
+    /*height: 25px;*/
     margin-bottom: 5px;
 }
 

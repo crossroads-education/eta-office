@@ -20,7 +20,7 @@ div
     div.hidden#schedule-message
     input#row-type(type="hidden", value=scheduleRowType)
     if scheduleRowType == "person"
-        div.schedule-filter-row
+        div.schedule-filter-row.row
             div.col-xs-4.center-vertical
                 - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                 each day, index in days
@@ -35,21 +35,15 @@ div
                         option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
             div.col-xs-3.center-vertical
                 input.border-rounded.normal-input(type="text",placeholder="SEARCH")
-    div.schedule-filter-row
+    div.schedule-filter-row.row
         div.col-xs-4.center-vertical
             if scheduleRowType == "person"
-                select.border-rounded.input-filter(data-filter="position-names")
-                    option(value="") ALL
-                    //- TODO: Add filters here
-                    for position in schedulePositionNames
-                        - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
-                        option(value=position)&attributes(isSelected) #{position.toUpperCase()}
-                select.border-rounded.input-filter(data-filter="position-categories")
-                    option(value="") ALL
-                    //- TODO: Add filters here
-                    for category in schedulePositionCategories
-                        - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
-                        option(value=category)&attributes(isSelected) #{category.toUpperCase()}
+                div.row
+                    select.col-xs-12.border-rounded.input-filter(data-filter="position-names", multiple)
+                        option
+                        for position in schedulePositionNames
+                            - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
+                            option(value=position)&attributes(isSelected) #{position}
         div.col-xs-3.center-vertical
             if scheduleRowType == "day" || (permissions.has("edit/schedule/master") && scheduleMode == "manager")
                 | PALETTE
@@ -67,6 +61,14 @@ div
                     button.border-rounded MANAGER ACCESS
             if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
                 button.btn.btn-success.btn-schedule-submit Submit
+    div.schedule-filter-row.row
+        div.col-xs-4.center-vertical
+            div.row
+                select.col-xs-12.border-rounded.input-filter(data-filter="position-categories", multiple)
+                    option
+                    for category in schedulePositionCategories
+                        - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
+                        option(value=category)&attributes(isSelected) #{category}
     div.schedule-box
         div.schedule-row
             div.schedule-left-col.col-md-2

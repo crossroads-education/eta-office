@@ -1,0 +1,69 @@
+extends ../include/layout.pug
+
+include ../templates/modal.pug
+
+block body
+    span.text-success#success
+    span.text-danger#error
+    div
+        span.form-label Term
+        select.border-rounded.keep-caret.input-filter(data-param="term")
+            each term in selectTerms
+                if term.session == "1"
+                    - var isSelected = term.id == currentTerm ? {"selected": "selected"} : {};
+                    option(value=term.id)&attributes(isSelected) #{term.name}
+    table.table.table-striped.table-hover#table-applicants
+        thead
+            tr
+                th University ID
+                th First Name
+                th Last Name
+                th Email
+                th Expected Graduation Date
+                th Positions Applied For
+                th Evaluate?
+                th Interview?
+                th Hire?
+                th
+                th Notes
+        tbody
+            for applicant in applicants
+                tr.applicant-row(data-id=applicant.id, data-positions=JSON.stringify(applicant.positions))
+                    td #{applicant.id}
+                    td.cell-first-name #{applicant.firstName}
+                    td.cell-last-name #{applicant.lastName}
+                    td
+                        a(href="mailto:" + applicant.email) #{applicant.email}
+                    td #{applicant.expectedGraduation.toLocaleDateString()}
+                    td !{applicant.positionNames}
+                    td.text-center
+                        - var isChecked = applicant.evaluate == 1 ? {"checked": "checked"} : {}
+                        input.input-applicant(type="checkbox", data-name="evaluate")&attributes(isChecked)
+                    td.text-center
+                        - var isChecked = applicant.interview == 1 ? {"checked": "checked"} : {}
+                        input.input-applicant(type="checkbox", data-name="interview")&attributes(isChecked)
+                    td.text-center
+                        - var isChecked = applicant.hire == 1 ? {"checked": "checked"} : {}
+                        input.input-applicant(type="checkbox", data-name="hire")&attributes(isChecked)
+                    td.text-center
+                        button.btn.btn-success.btn-update Update
+                    td.text-center
+                        button.btn.btn-primary.btn-toggle-notes(data-toggle="modal", data-target="#modal") Open
+    div.modal.fade#modal(tabindex="-1")
+        div.modal-dialog
+            div.modal-content
+                div.modal-header
+                    button.close(type="button", data-dismiss="modal") &times;
+                    div
+                        span.applicant-name.modal-title#modal-title
+                div.modal-body
+                    +collapsible-parent("Positions Applied For")
+                        table.table.table-condensed.table-striped.table-hover
+                            thead
+                                tr
+                                    th Position
+                                    th Last Applied
+                                    th Application Count
+                            tbody#modal-positions
+                div.modal-footer
+                    button.btn.btn-primary#btn-save Save Changes
