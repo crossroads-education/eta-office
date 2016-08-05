@@ -79,8 +79,7 @@ export module logins {
     }
 
     $(document).ready(function() {
-        status = new HelperStatus("#success-add", "#success-error");
-
+        status = new HelperStatus("#success-add", "#error-add");
         $(".input-add").on("keyup", function(evt : Event) {
             if ((<any>evt).which === 13) {
                 onAddSubmit.apply(this);
