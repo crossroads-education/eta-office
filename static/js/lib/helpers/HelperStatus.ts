@@ -5,17 +5,28 @@ export class HelperStatus {
     public constructor(successSelector : string, errorSelector : string) {
         this.$success = $(successSelector);
         this.$error = $(errorSelector);
-        this.$success.addClass("text-success");
-        this.$error.addClass("text-danger");
+        this.$success.fadeOut();
+        this.$error.fadeOut();
+        this.$success.addClass("text-success hidden");
+        this.$error.addClass("text-danger hidden");
+    }
+
+    private fadeOut($element : JQuery, callback : () => void) : void {
+        $element.fadeOut(200, function() {
+            $element.addClass("hidden");
+            callback();
+        });
     }
 
     public success(message : string) : void {
-        this.$error.text("");
-        this.$success.text(message);
+        this.fadeOut(this.$error, () => {
+            this.$success.removeClass("hidden").fadeIn().text(message);
+        });
     }
 
     public error(message : string) : void {
-        this.$success.text("");
-        this.$error.text(message);
+        this.fadeOut(this.$success, () => {
+            this.$error.removeClass("hidden").fadeIn().text(message);
+        });
     }
 }
