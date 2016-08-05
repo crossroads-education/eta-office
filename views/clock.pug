@@ -11,3 +11,7 @@ block body
             button.btn.btn-success#btn-clock Clock #{needsClockIn ? "In" : "Out"}
             br
             button.btn.btn-primary#btn-note Note
+            div.hidden#container-note
+                textarea.border-rounded.keep-caret#input-notes(rows = "5", cols = "75", placeholder = "Enter notes here")
+                br
+                button.btn.btn-success#btn-submit Submit

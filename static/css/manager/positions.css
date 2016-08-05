@@ -1,0 +1,19 @@
+.names {
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.row {
+    margin-bottom: 15px;
+}
+
+#btn-submit {
+    font-size: 3em;
+    border-radius: 30px;
+}
+
+#messages span {
+    font-size : 2.75em;
+    font-weight : 500;
+    margin-bottom: 10px;
+}

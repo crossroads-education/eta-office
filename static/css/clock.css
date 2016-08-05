@@ -22,12 +22,31 @@
     margin-bottom: 20px;
 }
 
+
 #btn-note {
     font-size: 2.25em;
+    padding-right: 25px;
+    padding-left: 25px;
 }
 
 .status-message {
     font-size : 2.75em;
     font-weight : 500;
 
+}
+
+#container-note {
+    margin-top: 20px;
+}
+
+#input-notes {
+    margin-bottom: 20px;
+}
+
+#btn-submit {
+    font-size: 1.75em;
+}
+
+#error {
+    margin-top: 10px;
 }

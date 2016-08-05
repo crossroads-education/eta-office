@@ -15,6 +15,9 @@ export class Model implements eta.Model {
                 callback({errcode: eta.http.Forbidden});
                 return;
         }
+        if (req.body.about == "userid") {
+            req.body.about = req.session["userid"];
+        }
         let nowDate : Date = new Date();
         let now : string = eta.time.getStandardDatetime(nowDate);
         let sql : string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`, `timestamp`) VALUES(?, ?, ?, ?, ?)";

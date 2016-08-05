@@ -1,0 +1,18 @@
+extends ../include/layout.pug
+
+block body
+    div.row
+        each position in positions
+            div.col-xs-6
+                div.row
+                    div.col-xs-6
+                        label.names #{position.name}
+                    div.col-xs-6
+                        - var isChecked = position.open == 1 ? {"checked": "checked"} : {};
+                        input.input-toggle(type="checkbox", data-position=position.name)&attributes(isChecked)
+
+    div.text-center#messages
+        button.btn.btn-success.btn-submit#btn-submit Submit
+        br
+        span.text-danger#error
+        span.text-success#success
