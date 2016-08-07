@@ -107,13 +107,14 @@ export module TemplateSchedule {
             for (let i in selectors) {
                 let selector : string = selectors[i].join(",");
                 final += selector + " ";
-                console.log(selector);
                 $hide = $hide.filter(`:not(${selector})`);
                 $show = $show.filter(selector);
             }
             console.log(final);
             $hide.hide();
             $show.show();
+        } else {
+            $(".schedule-row-filterable").show(); // no filters are selected, so show everything
         }
     }
 
