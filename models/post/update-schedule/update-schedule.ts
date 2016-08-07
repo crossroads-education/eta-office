@@ -34,8 +34,6 @@ export class Model implements eta.Model {
             `;
             params.push(req.body.day);
             params.push(req.body.term);
-            eta.logger.trace(sql);
-            eta.logger.json(params);
             eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
