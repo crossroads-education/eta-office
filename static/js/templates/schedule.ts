@@ -106,12 +106,14 @@ export module TemplateSchedule {
             let final : string = "";
             for (let i in selectors) {
                 let selector : string = selectors[i].join(",");
-                final += selector + " ";
-                $hide = $hide.filter(`:not(${selector})`);
                 $show = $show.filter(selector);
             }
-            console.log(final);
-            $hide.hide();
+            let notSelector : string = ".schedule-cell-row:not(.schedule-header-row)";
+            $show.each(function(index : number, element : HTMLElement) : void {
+                let userid : string = $(this).find(".schedule-cell-row").attr("data-userid");
+                notSelector += `:not([data-userid='${userid}'])`;
+            });
+            $(notSelector).parent().hide();
             $show.show();
         } else {
             $(".schedule-row-filterable").show(); // no filters are selected, so show everything
