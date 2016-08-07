@@ -29,7 +29,7 @@ div
             div.col-xs-3.center-vertical
                 | SORT BY
                 select.schedule-filter-link.border-rounded(data-param="sort")
-                    - var sortables = ["name", "hours", "total hours"];
+                    - var sortables = ["name", "daily hours", "weekly hours"];
                     each sortable in sortables
                         - var isSelected = scheduleFilters.sort == sortable ? {"selected": "selected"} : {}
                         option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}

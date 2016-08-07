@@ -215,15 +215,22 @@ export class Model implements eta.Model {
                             }
                         }
 
-                        if (filters["sort"]) {
-                            if (filters["sort"] == "name") {
-                                rows.sort((a : schedule.Row, b : schedule.Row) : number => {
-                                    let tokensA : string[] = a.label.split(" ");
-                                    let tokensB : string[] = b.label.split(" ");
-                                    return tokensA[tokensA.length - 1].localeCompare(tokensB[tokensB.length - 1]);
-                                })
-                            }
+                        if (filters["sort"] == "name") {
+                            rows.sort((a : schedule.Row, b : schedule.Row) : number => {
+                                let tokensA : string[] = a.label.split(" ");
+                                let tokensB : string[] = b.label.split(" ");
+                                return tokensA[tokensA.length - 1].localeCompare(tokensB[tokensB.length - 1]);
+                            });
+                        } else if (filters["sort"] == "daily hours") {
+                            rows.sort((a : schedule.Row, b : schedule.Row) : number => {
+                                return a.dayTotal == b.dayTotal ? 0 : (a.dayTotal < b.dayTotal ? 1 : -1);
+                            });
+                        } else if (filters["sort"] == "weekly hours") {
+                            rows.sort((a : schedule.Row, b : schedule.Row) : number => {
+                                return a.weekTotal == b.weekTotal ? 0 : (a.weekTotal < b.weekTotal ? 1 : -1);
+                            });
                         }
+
                         callback({
                             "scheduleRowType": "person", // each row represents a person in the master schedule
                             "scheduleFilters": filters,
