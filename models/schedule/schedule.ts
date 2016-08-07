@@ -29,7 +29,8 @@ export class Model implements eta.Model {
                 Center.code AS centerCode,
                 HOUR(EmployeeSchedule.time) AS hour,
                 MINUTE(EmployeeSchedule.time) AS minute,
-                TotalHours.totalHours,
+                DayTotal.totalHours AS dayHours,
+                WeekTotal.totalHours AS weekHours,
                 Person.firstName,
                 Person.lastName
             FROM
@@ -41,14 +42,28 @@ export class Model implements eta.Model {
                     LEFT JOIN (
                         SELECT
                             id, term, day,
-                            COUNT(*) / 4 as totalHours
+                            COUNT(*) / 4 AS totalHours
                         FROM
                             EmployeeSchedule
+                        WHERE
+                            center != -1
                         GROUP BY id, term, day
-                    ) AS TotalHours ON
-                        EmployeeSchedule.id = TotalHours.id AND
-                        EmployeeSchedule.term = TotalHours.term AND
-                        EmployeeSchedule.day = TotalHours.day
+                    ) AS DayTotal ON
+                        EmployeeSchedule.id = DayTotal.id AND
+                        EmployeeSchedule.term = DayTotal.term AND
+                        EmployeeSchedule.day = DayTotal.day
+                    LEFT JOIN (
+                        SELECT
+                            id, term,
+                            COUNT(*) / 4 AS totalHours
+                        FROM
+                            EmployeeSchedule
+                        WHERE
+                            center != -1
+                        GROUP BY id, term
+                    ) AS WeekTotal ON
+                        EmployeeSchedule.id = WeekTotal.id AND
+                        EmployeeSchedule.term = WeekTotal.term
             WHERE
                 EmployeeSchedule.term = ? AND
                 EmployeeSchedule.day = ?
@@ -140,7 +155,8 @@ export class Model implements eta.Model {
                                     "data-position-names": positionRows[positionIndex].names.split(","),
                                     "data-position-categories": positionRows[positionIndex].categories.split(",")
                                 },
-                                "total": raw[i].totalHours,
+                                "weekTotal": raw[i].weekHours ? raw[i].weekHours : 0,
+                                "dayTotal": raw[i].dayHours ? raw[i].dayHours : 0,
                                 "slots": [],
                                 "isAvailable": false,
                                 "isScheduled": false

@@ -66,12 +66,10 @@
 /* Used for row label, far left of label section */
 .schedule-left-col .schedule-label {
     float: right;
-    /*width: 70%;*/
 }
 
 /* Optional column to the right of .schedule-label, used for a number (probably hour count) */
 .schedule-left-col .schedule-hours {
-    width: 25%;
     float: right;
     font-weight: bold;
 }

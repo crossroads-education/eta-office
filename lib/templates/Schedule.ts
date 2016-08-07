@@ -50,9 +50,14 @@ export interface Row {
     filterables : {[key : string] : any};
 
     /**
-    Sum of scheduled time for this row in hours (decimal possible)
+    Sum of scheduled time for this day in hours (decimal possible)
     */
-    total : number;
+    dayTotal : number;
+
+    /**
+    Sum of scheduled time for this person (week) in hours (decimal possible)
+    */
+    weekTotal : number;
 
     /**
     Indexes: hour (from 0), minutes / 15 (0, 15, 30, 45)
