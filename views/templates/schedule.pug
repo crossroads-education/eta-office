@@ -82,7 +82,9 @@ div
                     div.schedule-cell.schedule-header-cell.col-md-2 #{hour}
         for row, rowID in scheduleRows
             - var column = 0
-            div.schedule-row.schedule-row-filterable&attributes(row.filterables)
+            //-
+                .hvr-sweep-to-right
+            div.schedule-row.schedule-row-filterable.hvr-border-fade&attributes(row.filterables)
                 div.schedule-left-col.col-md-3.row
                     div.col-xs-8
                         div.schedule-label #{row.label}
