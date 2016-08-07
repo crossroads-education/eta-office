@@ -21,7 +21,6 @@ export class Model implements eta.Model {
             VALUES ${moreSql.substring(0, moreSql.length - 1)}
             ON DUPLICATE KEY UPDATE isAvailable = VALUES(isAvailable)
         `;
-        eta.logger.trace(sql);
         eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);

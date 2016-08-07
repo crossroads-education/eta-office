@@ -62,13 +62,14 @@ div
             if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
                 button.btn.btn-success.btn-schedule-submit Submit
     div.schedule-filter-row.row
-        div.col-xs-4.center-vertical
-            div.row
-                select.col-xs-12.border-rounded.input-filter(data-filter="position-categories", multiple)
-                    option
-                    for category in schedulePositionCategories
-                        - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
-                        option(value=category)&attributes(isSelected) #{category}
+        if scheduleRowType == "person"
+            div.col-xs-4.center-vertical
+                div.row
+                    select.col-xs-12.border-rounded.input-filter(data-filter="position-categories", multiple)
+                        option
+                        for category in schedulePositionCategories
+                            - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
+                            option(value=category)&attributes(isSelected) #{category}
     div.schedule-box
         div.schedule-row
             div.schedule-left-col.col-md-3.row
@@ -82,16 +83,14 @@ div
                     div.schedule-cell.schedule-header-cell.col-md-2 #{hour}
         for row, rowID in scheduleRows
             - var column = 0
-            //-
-                .hvr-sweep-to-right
             div.schedule-row.schedule-row-filterable.hvr-border-fade&attributes(row.filterables)
                 div.schedule-left-col.col-md-3.row
                     div.col-xs-8
                         div.schedule-label #{row.label}
                     div.schedule-hours.col-xs-4.row
-                        span.col-xs-1 #{row.dayTotal}
+                        span.col-xs-1 #{row.dayTotal ? row.dayTotal : "0"}
                         span.col-xs-1  /
-                        span.col-xs-1  #{row.weekTotal}
+                        span.col-xs-1  #{row.weekTotal ? row.weekTotal : "0"}
                 div.schedule-cell-row.col-md-9(data-userid=row.userid, data-day=row.day)
                     +schedule-empty-hour(rowID, column)
                     - column += 4

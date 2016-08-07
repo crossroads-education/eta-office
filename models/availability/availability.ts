@@ -16,7 +16,8 @@ export class Model implements eta.Model {
                 DAYNAME(CONCAT("1970-09-2", EmployeeSchedule.day)) AS dayName,
                 HOUR(EmployeeSchedule.time) AS hour,
                 MINUTE(EmployeeSchedule.time) AS minute,
-                TotalHours.totalHours
+                DayTotal.totalHours AS dayTotal,
+                WeekTotal.totalHours AS weekTotal
             FROM
                 EmployeeSchedule
                     LEFT JOIN Center ON
@@ -26,14 +27,28 @@ export class Model implements eta.Model {
                     LEFT JOIN (
                         SELECT
                             id, term, day,
-                            COUNT(*) / 4 as totalHours
+                            COUNT(*) / 4 AS totalHours
                         FROM
                             EmployeeSchedule
+                        WHERE
+                            center != -1
                         GROUP BY id, term, day
-                    ) AS TotalHours ON
-                        EmployeeSchedule.id = TotalHours.id AND
-                        EmployeeSchedule.term = TotalHours.term AND
-                        EmployeeSchedule.day = TotalHours.day
+                    ) AS DayTotal ON
+                        EmployeeSchedule.id = DayTotal.id AND
+                        EmployeeSchedule.term = DayTotal.term AND
+                        EmployeeSchedule.day = DayTotal.day
+                    LEFT JOIN (
+                        SELECT
+                            id, term,
+                            COUNT(*) / 4 AS totalHours
+                        FROM
+                            EmployeeSchedule
+                        WHERE
+                            center != -1
+                        GROUP BY id, term
+                    ) AS WeekTotal ON
+                        EmployeeSchedule.id = WeekTotal.id AND
+                        EmployeeSchedule.term = WeekTotal.term
             WHERE
                 EmployeeSchedule.term = ? AND
                 EmployeeSchedule.id = ?
@@ -98,7 +113,8 @@ export class Model implements eta.Model {
                             "day": raw[i].day,
                             "label": raw[i].dayName,
                             "filterables": {},
-                            "total": raw[i].totalHours,
+                            "dayTotal": raw[i].dayTotal,
+                            "weekTotal": raw[i].weekTotal,
                             "slots": [],
                             "isAvailable": false,
                             "isScheduled": false
@@ -137,7 +153,8 @@ export class Model implements eta.Model {
                             "day": i,
                             "label": dayNames[i],
                             "filterables": {},
-                            "total": 0,
+                            "dayTotal": 0,
+                            "weekTotal": raw[0] ? raw[0].weekTotal : 0,
                             "slots": [],
                             "isAvailable": false,
                             "isScheduled": false
