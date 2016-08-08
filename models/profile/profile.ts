@@ -72,7 +72,7 @@ export class Model implements eta.Model {
                     LEFT JOIN Center ON
                         Position.center = Center.id
             WHERE
-                Employee.id = '0003474860' AND
+                Employee.id = ? AND
                 Employee.current = 1
         `;
         eta.db.query(sql, [req.session["userid"]], (err : eta.DBError, rows : any[]) => {
