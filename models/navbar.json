@@ -1,25 +1,29 @@
 {
   "Profile": {
+    "permission": "access/profile",
     "url": "profile"
   },
   "Scheduling": {
     "Master Schedule": {
+      "permission": "access/schedule/master",
       "url": "schedule"
     },
     "Personal Availability": {
+      "permission": "access/schedule/availability",
       "url": "availability"
     }
   },
   "Reference": {
     "Policies": {
-      "url": "policy/index"
+      "url": "https://mac.iupui.edu/office/policy/"
     },
     "Contact List": {
+      "permission": "access/contact",
       "url": "contact"
     },
     "Front Desk Log": {
-      "url": "log/front",
-      "permission": "access/log/front"
+      "permission": "access/log/front",
+      "url": "log/front"
     }
   },
   "Management": {
@@ -27,21 +31,26 @@
     "Human Resources": {
       "permission": "access/manager/hr",
       "Hiring Portal": {
+        "permission": "access/manager/hire",
         "url": "manager/hire"
       },
       "Current Employees": {
+        "permission": "access/manager/employees",
         "url": "manager/employees"
       }
     },
     "Systems": {
       "permission": "access/manager/system",
       "Center Management": {
+        "permission": "access/manager/centers",
         "url": "manager/centers"
       },
       "Edit Positions": {
+        "permission": "access/manager/positions",
         "url": "manager/positions"
       },
       "Login Credentials": {
+        "permission": "access/manager/logins",
         "url": "manager/logins"
       }
     }
