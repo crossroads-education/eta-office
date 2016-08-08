@@ -1,5 +1,6 @@
 /// <reference path="./typings/index.d.ts"/>
 /// <amd-dependency path="bootstrap-slider"/>
+import "bootstrap-switch";
 
 export module profile {
 
@@ -42,6 +43,7 @@ export module profile {
                 onInfoSubmit.apply(this);
             }
         });
+        $("input.info-field[type='checkbox']").bootstrapSwitch("state");
         $("button.iu-button[type='submit']").on("click", onInfoSubmit);
     });
 }

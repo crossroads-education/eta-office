@@ -27,3 +27,11 @@ select, input[type="checkbox"], .slider-handle {
 select.info-field {
     margin-bottom: 15px;
 }
+
+#container-switch .row {
+    margin-bottom: 10px;
+}
+
+#container-switch .row > span {
+    padding-left: 0px;
+}
