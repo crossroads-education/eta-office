@@ -48,11 +48,12 @@ export class Model implements eta.Model {
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
-                let data : {[key : string] : string} = {
+                let data : {[key : string] : any} = {
                     "about": rows[0].about,
                     "author": rows[0].author,
                     "message": req.body.message,
-                    "timestamp": nowDate.toLocaleString()
+                    "timestamp": nowDate,
+                    "type": req.body.type
                 };
                 callback({
                     raw: JSON.stringify(data)

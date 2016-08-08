@@ -1,9 +1,13 @@
 /// <reference path="../typings/index.d.ts"/>
 
 import "bootstrap";
+import "bootstrap-switch";
+import "datatables.net";
+import "datatables.net-bs";
 import "templates/modal";
 import * as moment from "moment";
 
+import {HelperStatus} from "lib/helpers/HelperStatus";
 import {HelperUrl} from "lib/helpers/HelperUrl";
 
 export module employees {
@@ -19,6 +23,16 @@ export module employees {
         category : string;
     }
 
+    interface Log {
+        about : string;
+        author : string;
+        message : string;
+        timestamp : string;
+        type : string;
+    }
+
+    let modalStatus : HelperStatus;
+
     function addPositionRow(position : EmployeePosition) : void {
         let startDate : moment.Moment = moment(position.start);
         let endDate : moment.Moment = moment(position.end);
@@ -32,20 +46,40 @@ export module employees {
         $("#modal-positions").append($row);
     }
 
+    function addLogRow(log : Log) : void {
+        let $row : JQuery = $("<tr>");
+        console.log(log);
+        let timestamp : Date = new Date(log.timestamp);
+        let category : string = log.type;
+        if (category == "FRONT") {
+            category = "Front Desk";
+        } else if (category == "CLOCK") {
+            category = "Timesheet";
+        } else if (category == "MANGR") {
+            category = "Manager";
+        }
+        $row.append($("<td>").text(timestamp.toLocaleString()));
+        $row.append($("<td>").text(log.author));
+        $row.append($("<td>").text(log.message));
+        $row.append($("<td>").text(category));
+        $("#table-log").prepend($row);
+    }
+
     function onEmployeeOpen() : void {
         $("#modal-positions").html("");
+        $("#table-log").html("");
         let $this : JQuery = $(this);
         let $data : JQuery = $this.find(".employee-data");
         let name : string = $this.find(".employee-name").text();
         let photoUrl : string = $this.find(".employee-photo").attr("src");
         let positions : any[] = $data.data("positions");
         let allowances : {[key : string] : boolean} = $data.data("allowances");
+        let userid : string = $this.attr("data-id");
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
-        $("#modal-positions").attr("data-employee", $this.attr("data-id"));
-        console.log(allowances);
+        $("#modal-positions").attr("data-employee", userid);
         for (let name in allowances) {
-            $(`input.modal-allowance[data-name="${name}"]`).prop("checked", allowances[name]);
+            $(`input.modal-allowance[data-name="${name}"]`).bootstrapSwitch("state", allowances[name]);
         }
         if ($data.data("mentor") >= 0) {
             $("#mentor-container").removeClass("hidden");
@@ -56,6 +90,15 @@ export module employees {
         for (let i : number = 0; i < positions.length; i++) {
             addPositionRow(positions[i]);
         }
+        $.post("/office/post/get-log", {
+            "userid": userid
+        }, function(log) {
+            for (let i : number = 0; i < log.length; i++) {
+                addLogRow(log[i]);
+            }
+        }, "json").fail(function(data) {
+            modalStatus.error("Couldn't fetch log info: " + data.status);
+        });
     }
 
     function onPositionAdd() {
@@ -96,7 +139,7 @@ export module employees {
         let allowances : {[key : string] : boolean} = {};
         $("input.modal-allowance").each(function(index : number, element : HTMLElement) {
             let $this : JQuery = $(this);
-            allowances[$this.data("name")] = $this.prop("checked");
+            allowances[$this.data("name")] = <any>$this.bootstrapSwitch("state");
         });
         let mentor : number = -1;
         if (!$("#mentor-container").hasClass("hidden")) {
@@ -112,9 +155,23 @@ export module employees {
             "allowances": JSON.stringify(allowances),
             "mentor": mentor
         }, function(data) {
-            $("#modal-success").html("Successfully updated positions.");
+            modalStatus.success("Successfully updated employee data.");
         }).fail(function(data) {
-            $("#modal-error").html("Error code " + data.status + " occurred.");
+            modalStatus.error("Error code " + data.status + " occurred.");
+        });
+    }
+
+    function onLogSubmit() : void {
+        let message : string = $("#input-log-message").val();
+        $.post("/office/post/add-log", {
+            "about": $("#modal-positions").data("employee"),
+            "message": message,
+            "type": "MANGR"
+        }, function(log : Log) {
+            addLogRow(log);
+            modalStatus.success("Successfully submitted new log entry.");
+        }, "json").fail(function(data) {
+            modalStatus.error("Error code " + data.status + " occurred.");
         });
     }
 
@@ -131,18 +188,25 @@ export module employees {
     }
 
     function setupModalInputs() {
+        $("input.modal-allowance").bootstrapSwitch();
         $("input.modal-allowance + span").on("click", function() {
-            let $this : JQuery = $(this);
-            let $checkbox : JQuery = $this.prev();
-            $checkbox.prop("checked", !$checkbox.prop("checked"));
+            let $checkbox : JQuery = $(this).prev();
+            $checkbox.bootstrapSwitch("toggleState");
         });
     }
 
     $(document).ready(function() {
+        modalStatus = new HelperStatus("#modal-success", "#modal-error");
         $("select.input-filter").on("change", onFilter);
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-save").on("click", onSave);
+        $("#input-log-message").on("keyup", function(evt : any) {
+            if (evt.which == 13) {
+                onLogSubmit();
+            }
+        });
+        $("#btn-submit-log").on("click", onLogSubmit);
         setupModalInputs();
         // don't set up click listener until everything's ready
         $("div.employee-block").on("click", onEmployeeOpen);

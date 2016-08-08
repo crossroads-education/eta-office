@@ -17,7 +17,7 @@ export module front {
             $("#modal-error").html("");
             $("#modal-success").html("Successfully logged message.");
             let $row : JQuery = $("<tr>");
-            $row.append($("<td>").text(log.timestamp));
+            $row.append($("<td>").text(new Date(log.timestamp).toLocaleString()));
             $row.append($("<td>").text(log.author));
             $row.append($("<td>").text(log.about));
             $row.append($("<td>").text(log.message));

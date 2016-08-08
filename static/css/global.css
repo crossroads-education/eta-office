@@ -45,3 +45,13 @@ td.form-label {
 .text-center th {
     text-align: center !important;
 }
+
+/*From http://stackoverflow.com/a/12540590*/
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}

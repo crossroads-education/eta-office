@@ -58,9 +58,9 @@ block body
                     if filters.error == 404
                         | Your filter did not match any employees!
             div
-                button.btn.btn-primary.btn-header Front Desk Log
-            div
-                input.form-control#input-filter(type="text")
+                a.btn.btn-primary.btn-header(href=baseurl + "log/front") Front Desk Log
+            //- div
+            //-     input.form-control#input-filter(type="text")
             div
                 select.input-filter.border-rounded(data-filter="positionName")
                     option(value="") All
@@ -78,7 +78,7 @@ block body
         div.header-block.col-xs-2
             +position-count-table(midway, positionCounts.length, positionCounts)
     div.modal.fade#modal(tabindex="-1")
-        div.modal-dialog
+        div.modal-dialog.modal-lg
             div.modal-content
                 div.modal-header
                     button.close(type="button", data-dismiss="modal") &times;
@@ -86,10 +86,11 @@ block body
                         img.employee-photo#modal-photo(width="100", height="100")
                         span.employee-name.modal-title#modal-title
                 div.modal-body
-                    span.text-success#modal-success
-                    span.text-danger#modal-error
+                    div#status-container.col-xs-12
+                        span.text-success#modal-success
+                        span.text-danger#modal-error
                     +collapsible-parent("Positions")
-                        table.table.table-condensed.table-striped
+                        table.table.table-striped.table-hover
                             thead
                                 tr
                                     th Position Name
@@ -106,19 +107,32 @@ block body
                         div
                             p
                                 input.modal-allowance(type="checkbox", data-name="alarm")
-                                span Alarm Clock Day
+                                span.modal-allowance-label Alarm Clock Day
                             p
                                 input.modal-allowance(type="checkbox", data-name="call1")
-                                span Call-In #1
+                                span.modal-allowance-label Call-In #1
                             p
                                 input.modal-allowance(type="checkbox", data-name="call2")
-                                span Call-In #2
+                                span.modal-allowance-label Call-In #2
                             p
                                 input.modal-allowance(type="checkbox", data-name="sick")
-                                span Sick Day
+                                span.modal-allowance-label Sick Day
                         div.hidden#mentor-container
                             span Mentor Progression
                             input(type="number")#input-mentor
+                    +collapsible-parent("Log References")
+                        div.row
+                            div.col-xs-10
+                                input.form-control#input-log-message(placeholder="Message", type="text")
+                            button.col-xs-2.btn.btn-success#btn-submit-log Submit
+                        table.table.table-striped.table-hover.col-xs-12#table-log-container
+                            thead
+                                tr
+                                    th Date / Time
+                                    th Author
+                                    th Message
+                                    th Category
+                            tbody#table-log
                 div.modal-footer
                     button.btn.btn-primary#btn-save Save Changes
     div
