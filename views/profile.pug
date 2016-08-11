@@ -17,12 +17,15 @@ block body
             input.info-field(type="tel", name="emergencyPhone", value=employee.emergencyPhone)
         label Emergency Contact Relationship
             input.info-field(type="text", name="emergencyRelationship", value=employee.emergencyRelationship)
-        label Work-Study Eligible?
-            - var isChecked = employee.workStudy === 1 ? {"checked": "checked"} : {};
-            input.info-field(type="checkbox", name="workStudy")&attributes(isChecked)
-        label International Student?
-            - var isChecked = employee.international === 1 ? {"checked": "checked"} : {};
-            input.info-field(type="checkbox", name="international")&attributes(isChecked)
+        div#container-switch
+            div.row
+                span.form-label.col-xs-3 Work-Study Eligible?
+                - var isChecked = employee.workStudy === 1 ? {"checked": "checked"} : {};
+                input.info-field.col-xs-3(type="checkbox", name="workStudy")&attributes(isChecked)
+            div.row
+                span.form-label.col-xs-3 International Student?
+                - var isChecked = employee.international === 1 ? {"checked": "checked"} : {};
+                input.info-field.col-xs-3(type="checkbox", name="international")&attributes(isChecked)
         label Shirt Size
             br
             select.info-field(name="shirt")
