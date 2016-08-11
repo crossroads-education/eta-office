@@ -12,7 +12,7 @@ interface HoursOfOperation {
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
         if (!req.query.term) {
-            req.query.term = eta.term.getCurrent().id;
+            req.query.term = eta.term.getCurrent(true).id;
         }
         if (!req.query.center) {
             req.query.center = eta.setting.get("/center", "main").value;
@@ -50,9 +50,11 @@ export class Model implements eta.Model {
                     centers[i].name = eta.time.daysOfWeek[rows[i].day];
                 }
             }
+            let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
             callback({
                 "currentCenter": req.query.center,
                 "currentTerm": req.query.term,
+                "selectTerms": terms,
                 "hours": centers
             });
         });

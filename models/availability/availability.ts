@@ -195,6 +195,10 @@ export class Model implements eta.Model {
                     }
                 }
 
+                rows.sort(function(a : schedule.Row, b : schedule.Row) : number {
+                    return a.day == b.day ? 0 : (a.day > b.day ? 1 : -1);
+                });
+
                 callback({
                     "scheduleRowType": "day",
                     "scheduleFilters": {

@@ -4,8 +4,5 @@
     "https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap.min.css",
     "/office/css/templates/modal.css"
   ],
-  "models": [
-    "/templates/select/term"
-  ],
   "permissions": ["access/manager/hire"]
 }

@@ -66,9 +66,11 @@ export class Model implements eta.Model {
                     }
                     applicantRows[index].positions.push(positionRows[i]);
                 }
+                let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
                 callback({
                     "applicants": applicantRows,
-                    "currentTerm": req.query.term
+                    "currentTerm": req.query.term,
+                    "selectTerms": terms
                 });
             });
         });

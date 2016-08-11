@@ -1,7 +1,6 @@
 {
   "models": [
-    "/templates/select/center",
-    "/templates/select/term"
+    "/templates/select/center"
   ],
   "permissions": ["access/manager/centers"]
 }

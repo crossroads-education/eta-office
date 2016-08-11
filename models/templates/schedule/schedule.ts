@@ -4,6 +4,9 @@ import * as express from "express";
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+        if (!req.query.term) {
+            req.query.term = eta.term.getCurrent().id;
+        }
         let positions : string[] = [];
         let categories : string[] = [];
         var sql : string = `
@@ -21,15 +24,10 @@ export class Model implements eta.Model {
                 callback({errcode: eta.http.InternalError});
                 return;
             }
-            let terms : eta.Term[] = eta.object.copy(eta.term.terms);
+            let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term));
             for (let i : number = 0; i < terms.length; i++) {
-                if (terms[i].term.endsWith("5")) {
-                    if (terms[i].session == "1") {
-                        terms.splice(i, 1);
-                        i--;
-                    } else {
-                        terms[i].name += ` (${terms[i].session})`;
-                    }
+                if (terms[i].session != "1") {
+                    terms[i].name += ` (${terms[i].session})`;
                 }
             }
             callback({
