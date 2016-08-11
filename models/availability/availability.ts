@@ -83,11 +83,13 @@ export class Model implements eta.Model {
                 }
                 let hours : {open : number, close : number} = eta.object.copy(hourRows[0]);
                 for (let i : number = 0; i < hourRows.length; i++) {
-                    if (hourRows[i].open < hours.open) {
-                        hours.open = hourRows[i].open;
-                    }
-                    if (hourRows[i].close > hours.close) {
-                        hours.close = hourRows[i].close;
+                    if(hourRows[i].open != 0 || hourRows[i].close != 0) {
+                        if (hourRows[i].open < hours.open) {
+                            hours.open = hourRows[i].open;
+                        }
+                        if (hourRows[i].close > hours.close) {
+                            hours.close = hourRows[i].close;
+                        }
                     }
                 }
                 let openHourDate : Date = new Date();
@@ -159,7 +161,6 @@ export class Model implements eta.Model {
                             "isAvailable": false,
                             "isScheduled": false
                         });
-                        closedDays.push(i);
                     }
                 }
 
