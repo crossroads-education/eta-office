@@ -197,3 +197,10 @@
 .schedule-cell-quarter.first.last {
     border-radius: 10px;
 }
+
+#container-status {
+    margin-bottom: 25px;
+    font-weight: 350;
+    font-size: 1.75em;
+
+}

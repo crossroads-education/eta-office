@@ -1,6 +1,8 @@
 /// <amd-dependency path="./templates/schedule.js"/>
+import {HelperStatus} from "lib/helpers/HelperStatus";
 
 export module availability {
+    let status : HelperStatus;
     function onSubmit() : void {
         let params : {[key : string] : any} = {
             "term": $("#schedule-term").val(),
@@ -21,15 +23,18 @@ export module availability {
         params["cells"] = JSON.stringify(params["cells"]);
         console.log(params);
         $.post("/office/post/update-availability", params, function(data) {
-            $("#schedule-error").addClass("hidden");
-            $("#schedule-message").text("Successfully updated availability.").removeClass("hidden");
+            status.success("Successfully updated availability.");
+            // $("#schedule-error").addClass("hidden");
+            // $("#schedule-message").text("Successfully updated availability.").removeClass("hidden");
         }).fail(function(data) {
-            $("#schedule-message").addClass("hidden");
-            $("#schedule-error").text("Error status " + data.status + " occurred.").removeClass("hidden");
+            status.error("Error status " + data.status + " occured.");
+            // $("#schedule-message").addClass("hidden");
+            // $("#schedule-error").text("Error status " + data.status + " occurred.").removeClass("hidden");
         });
     }
 
     $(document).ready(function() {
+        status = new HelperStatus("#success", "#error");
         $(".btn-schedule-submit").on("click", onSubmit);
     });
 }
