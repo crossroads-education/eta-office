@@ -165,7 +165,7 @@ export class Model implements eta.Model {
                 }
 
                 rows.sort(function(a : schedule.Row, b : schedule.Row) : number {
-                    return a.day == b.day ? (a.day > b.day ? a.day : b.day) : 0;
+                    return a.day == b.day ? 0 : (a.day > b.day ? 1 : -1);
                 });
 
                 let locationPalette : {[key : string] : string} = {
@@ -194,10 +194,6 @@ export class Model implements eta.Model {
                         }
                     }
                 }
-
-                rows.sort(function(a : schedule.Row, b : schedule.Row) : number {
-                    return a.day == b.day ? 0 : (a.day > b.day ? 1 : -1);
-                });
 
                 callback({
                     "scheduleRowType": "day",
