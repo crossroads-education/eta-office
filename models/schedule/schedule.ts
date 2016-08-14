@@ -189,7 +189,7 @@ export class Model implements eta.Model {
                             "Clear": "CL"
                         };
                         for (let i : number = 0; i < centers.length; i++) {
-                            if (centers[i].address != "") {
+                            if (centers[i].capacity > 0) {
                                 locationPalette[centers[i].shorthand] = centers[i].code;
                             }
                         }
