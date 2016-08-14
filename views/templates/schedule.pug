@@ -15,9 +15,10 @@ mixin schedule-empty-hour(rowID, column)
             - count++
 
 link(rel="stylesheet",href=baseurl + "css/templates/schedule.css")
+div.text-center#container-status
+    span.text-success.status-message#success
+    span.text-danger.status-message#error
 div
-    div.hidden#schedule-error
-    div.hidden#schedule-message
     input#row-type(type="hidden", value=scheduleRowType)
     if scheduleRowType == "person"
         div.schedule-filter-row.row
