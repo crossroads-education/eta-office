@@ -52,6 +52,10 @@
       "Login Credentials": {
         "permission": "access/manager/logins",
         "url": "manager/logins"
+      },
+      "Reporting Tools": {
+        "permission": "access/manager/reports",
+        "url": "manager/reports"
       }
     }
   },
