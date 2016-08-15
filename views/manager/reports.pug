@@ -1,0 +1,30 @@
+extends ../include/layout.pug
+
+mixin select-term()
+    select.border-rounded.keep-caret(data-name="term")
+        each term in terms
+            -
+                var isSelected = term.id == currentTerm ? {"selected": "selected"} : {}
+                var name = term.name + (term.session == "1" ? "" : (" (" + term.session + ")"))
+            option(value=term.id)&attributes(isSelected) #{name}
+
+mixin report-section(name)
+    div.report-section(data-report=name, style="display: none;")
+        block
+
+block body
+    div
+        span.text-success#success
+        span.text-error#error
+        h2 Select Report
+        select.border-rounded.keep-caret#input-report
+            option(value="payroll") Payroll Data
+    +report-section("payroll")
+        h3 Get Scheduled Hours Per Employee
+        div.section-input
+            +select-term()
+            button.btn.btn-success.btn-report-submit Submit
+    div
+        table.table.table-striped.table-hover#table-results
+            thead
+            tbody

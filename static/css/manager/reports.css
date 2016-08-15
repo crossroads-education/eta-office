@@ -1,0 +1,8 @@
+#success,#error {
+    font-size: 1.5em;
+}
+
+#table-results {
+    width: unset;
+    min-width: 25%;
+}
