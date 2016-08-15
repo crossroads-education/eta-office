@@ -75,3 +75,13 @@ span.employee-name.modal-title {
     font-size: 1.25em;
     cursor: pointer;
 }
+
+#output-notes {
+    width: 75%;
+    font-size: 1.25em;
+}
+
+#form-nametag {
+    float: left;
+    display: inline-block;
+}

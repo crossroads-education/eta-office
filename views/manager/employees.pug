@@ -42,7 +42,8 @@ mixin employee-block(employee)
             span.hidden.employee-data(
                 data-positions=JSON.stringify(employee.positions),
                 data-mentor=employee.mentor,
-                data-allowances=JSON.stringify(allowances))
+                data-allowances=JSON.stringify(allowances),
+                data-notes=employee.notes)
     br
 
 block body
@@ -133,7 +134,13 @@ block body
                                     th Message
                                     th Category
                             tbody#table-log
+                    +collapsible-parent("Scheduling Notes / Preferences")
+                        textarea(disabled)#output-notes
                 div.modal-footer
+                    //- Part of a nametag generation system that's not finished
+                    //- form#form-nametag(method="POST", action="/office/post/generate-nametag")
+                    //-     input(type="hidden", name="userid")#input-nametag-id
+                    //-     button.btn.btn-warning Generate Nametag
                     button.btn.btn-primary#btn-save Save Changes
     div
         div.col-xs-4.employee-column

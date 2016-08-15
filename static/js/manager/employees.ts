@@ -78,6 +78,8 @@ export module employees {
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
         $("#modal-positions").attr("data-employee", userid);
+        $("#input-nametag-id").val(userid);
+        $("#output-notes").text($data.attr("data-notes"));
         for (let name in allowances) {
             $(`input.modal-allowance[data-name="${name}"]`).bootstrapSwitch("state", allowances[name]);
         }
