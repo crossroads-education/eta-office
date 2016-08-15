@@ -54,5 +54,23 @@
         "url": "manager/logins"
       }
     }
+  },
+  "Compass": {
+    "permission": "access/compass",
+    "Analytics": {
+      "permission": "access/analytics/director",
+      "url": "/itrac/analytics/index"
+    },
+    "Ticker": {
+      "url": "/itrac/ticker/setup"
+    },
+    "Sign-In (MAC)": {
+      "permission": "access/compass/signin",
+      "url": "/itrac/signin?location=2"
+    },
+    "Sign-In (Stat)": {
+      "permission": "access/compass/signin",
+      "url": "/itrac/signin?location=8"
+    }
   }
 }
