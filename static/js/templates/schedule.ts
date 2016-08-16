@@ -88,6 +88,7 @@ export module TemplateSchedule {
         // $(".schedule-row-filterable").show();
         let shouldFilter : boolean = false;
         let selectors : {[key : string] : string[]} = {};
+        let filters : {[key : string] : string[]} = {};
         $(".input-filter").each(function(index : number, element : HTMLElement) {
             let filterName : string = $(element).data("filter");
             let values : string[] = $(element).val();
@@ -99,9 +100,11 @@ export module TemplateSchedule {
                     }
                     selectors[filterName].push(`[data-${filterName}*='${values[i]}']`);
                 }
+                filters[filterName] = values;
             }
         });
         if (shouldFilter) {
+            location.hash = "#" + JSON.stringify(filters);
             let $hide : JQuery = $(".schedule-row-filterable");
             let $show : JQuery = $(".schedule-row-filterable");
             let final : string = "";
@@ -206,6 +209,13 @@ export module TemplateSchedule {
 
         $(window).on("resize", onWindowResize);
         onWindowResize();
+
+        if (location.hash !== "") {
+            let filters : {[key : string] : string[]} = JSON.parse(location.hash.substring(1));
+            for (let name in filters) {
+                $(`.input-filter[data-filter="${name}"]`).val(filters[name]).trigger("change");
+            }
+        }
 
         if ($("#schedule-palette")[0]) { // if they're allowed to select things
             // use jqueryui's selectable
