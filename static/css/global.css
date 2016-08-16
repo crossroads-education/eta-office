@@ -3,18 +3,20 @@ div#body, div#body * {
     /*font-weight: 400;*/
 }
 
-.navbar {
-    min-height: 0px;
-    height: 40px;
-}
+@media (min-width: 992px) {
+    .navbar {
+        min-height: 0px;
+        height: 40px;
+    }
 
-.nav > li > a {
-    font-size: 20px !important;
-    padding: 10px 20px !important;
-}
+    .nav > li > a {
+        font-size: 20px !important;
+        padding: 10px 20px !important;
+    }
 
-.dropdown-menu > li > a {
-    font-size: 15px !important;
+    .dropdown-menu > li > a {
+        font-size: 15px !important;
+    }
 }
 
 .border-rounded {

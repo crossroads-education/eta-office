@@ -1,6 +1,7 @@
-/// <amd-dependency path="jquery-ui"/>
 /// <reference path="../typings/index.d.ts"/>
 
+import "jquery-ui";
+import "jquery-ui-touch-punch";
 import "select2";
 import {HelperUrl} from "lib/helpers/HelperUrl";
 
@@ -168,6 +169,14 @@ export module TemplateSchedule {
         HelperUrl.setParameterByName(this.getAttribute("data-param"), value);
     }
 
+    function onWindowResize() {
+        let shouldHide : boolean = $(window).width() < 1180;
+        $(".schedule-hours,.schedule-header-hours")[shouldHide ? "hide" : "show"]();
+        $(".schedule-left-col .col-xs-8,.col-xs-12")
+            .addClass("col-xs-" + (shouldHide ? "12" : "8"))
+            .removeClass("col-xs-" + (shouldHide ? "8" : "12"));
+    }
+
     $(document).ready(function() {
         cellCount = $(".schedule-cell-quarter[data-row='0']").length;
 
@@ -194,6 +203,9 @@ export module TemplateSchedule {
 
         $("span.schedule-filter-link").on("click", onFilterLink);
         $("select.schedule-filter-link").on("change", onFilterLink);
+
+        $(window).on("resize", onWindowResize);
+        onWindowResize();
 
         if ($("#schedule-palette")[0]) { // if they're allowed to select things
             // use jqueryui's selectable
