@@ -34,8 +34,13 @@ div
                     each sortable in sortables
                         - var isSelected = scheduleFilters.sort == sortable ? {"selected": "selected"} : {}
                         option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
+                if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
+                    span.schedule-filter-link(data-param="edit", data-value="yes")
+                        button.border-rounded MANAGER ACCESS
+                if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
+                    button.btn.btn-success.btn-schedule-submit Submit
             div.col-xs-3.center-vertical
-                input.border-rounded.normal-input(type="text",placeholder="SEARCH")
+                //- Legend here
     div.schedule-filter-row.row
         div.col-xs-4.center-vertical
             if scheduleRowType == "person"
@@ -58,11 +63,7 @@ div
                     - var isSelected = scheduleFilters.term == term.id ? {"selected": true} : {}
                     option(value=term.id)&attributes(isSelected) #{term.name.toUpperCase()}
         div.col-xs-3.center-vertical
-            if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
-                span.schedule-filter-link(data-param="edit", data-value="yes")
-                    button.border-rounded MANAGER ACCESS
-            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
-                button.btn.btn-success.btn-schedule-submit Submit
+            //- Legend here
     div.schedule-filter-row.row
         if scheduleRowType == "person"
             div.col-xs-4.center-vertical
