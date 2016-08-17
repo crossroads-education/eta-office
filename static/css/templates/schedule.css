@@ -106,6 +106,7 @@
 /* Styling for the "cells", each representing an hour */
 .schedule-cell {
     float: left;
+    width: 7%;
     text-align: center;
     background-color: #efefef;
     height: 20px;
@@ -115,10 +116,6 @@
     border-top: none;
     border-bottom: none;
     margin: 1px 0;
-}
-
-.schedule-cell:not(.no-width) {
-    width: 7%;
 }
 
 .schedule-cell:hover {
@@ -152,8 +149,15 @@
     z-index: 10;
 }
 
-.schedule-cell-quarter.no-width{
+.schedule-legend-label {
+    font-weight: bold;
+}
+
+.schedule-legend-cell {
     width: 16.66%;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
 }
 
 .schedule-cell-quarter.inactive:hover {
