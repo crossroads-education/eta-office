@@ -21,6 +21,10 @@
       "permission": "access/contact",
       "url": "contact"
     },
+    "Changelog": {
+      "permission": "access/log/dev",
+      "url": "log/dev"
+    },
     "Front Desk Log": {
       "permission": "access/log/front",
       "url": "log/front"

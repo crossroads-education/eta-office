@@ -1,0 +1,16 @@
+extends ../include/layout.pug
+
+block body
+    table.table.table-striped.table-hover#table-commits
+        thead
+            tr
+                th Date
+                th Message
+                th Author
+        tbody
+            each commit in commits
+                - var date = new Date(commit.date);
+                tr
+                    td.cell-date #{date.toLocaleString()}
+                    td.cell-message #{commit.message}
+                    td.cell-author #{commit.author_name}
