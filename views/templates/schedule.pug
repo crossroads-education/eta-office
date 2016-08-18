@@ -58,8 +58,8 @@ div
                 if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
                     span.schedule-filter-link(data-param="edit", data-value="yes")
                         button.border-rounded MANAGER ACCESS
-                if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
-                    button.btn.btn-success.btn-schedule-submit Submit
+            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
+                button.btn.btn-success.btn-schedule-submit Submit
         div.col-xs-5.center-vertical.row
             each legend in legendData
                 div.col-xs-2.text-center.schedule-legend-label #{legend.name}
@@ -87,7 +87,6 @@ div
         div.col-xs-5.center-vertical.row
             each legend in legendData
                 div.col-xs-1.schedule-cell-quarter.schedule-legend-cell(class=legend.class, data-available)
-
     div.schedule-filter-row.row
         if scheduleRowType == "person"
             div.col-xs-4.center-vertical
