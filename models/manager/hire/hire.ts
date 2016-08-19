@@ -39,12 +39,17 @@ export class Model implements eta.Model {
             }
             let sql : string = `
                 SELECT
-                    ApplicantPosition.*
+                    ApplicantPosition.*,
+                    ApplicantEvaluation.date AS evalDate,
+                    ApplicantEvaluation.score AS evalScore
                 FROM
                     ApplicantPosition
                         LEFT JOIN Term ON
                             ApplicantPosition.lastApplied >= Term.start AND
                             ApplicantPosition.lastApplied <= Term.end
+                        LEFT JOIN ApplicantEvaluation ON
+                            ApplicantPosition.id = ApplicantEvaluation.id AND
+                            ApplicantPosition.position = ApplicantEvaluation.level
                 WHERE
                     Term.id = ?`;
             eta.db.query(sql, [req.query.term], (err : eta.DBError, positionRows : any[]) => {
@@ -66,11 +71,20 @@ export class Model implements eta.Model {
                     }
                     applicantRows[index].positions.push(positionRows[i]);
                 }
-                let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
-                callback({
-                    "applicants": applicantRows,
-                    "currentTerm": req.query.term,
-                    "selectTerms": terms
+                sql = "SELECT DISTINCT name FROM Position WHERE active = 1 AND name LIKE '%-Level'";
+                eta.db.query(sql, [], (err : eta.DBError, levelRows : any[]) => {
+                    if (err) {
+                        eta.logger.dbError(err);
+                        callback({errcode: eta.http.InternalError});
+                        return;
+                    }
+                    let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
+                    callback({
+                        "applicants": applicantRows,
+                        "currentTerm": req.query.term,
+                        "evaluationLevels": levelRows,
+                        "selectTerms": terms
+                    });
                 });
             });
         });

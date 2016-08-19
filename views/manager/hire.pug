@@ -65,5 +65,27 @@ block body
                                     th Last Applied
                                     th Application Count
                             tbody#modal-positions
+                    +collapsible-parent("Notes")
+                        textarea.form-control#input-notes
+                    +collapsible-parent("Evaluations")
+                        table.table.table-condensed.table-striped.table-hover
+                            thead
+                                tr
+                                    th Level
+                                    th Date Taken
+                                    th Score
+                            tbody#modal-evaluations
+                            tfoot
+                                tr
+                                    td
+                                        select.form-control#input-evaluation-level
+                                            each level in evaluationLevels
+                                                option(value=level.name) #{level.name}
+                                    td
+                                        input.form-control#input-evaluation-date(type="date")
+                                    td
+                                        input.form-control#input-evaluation-score(type="number", min="0", max="100")
+                                    td
+                                        button.btn.btn-success#btn-evaluation-submit Submit
                 div.modal-footer
                     button.btn.btn-primary#btn-save Save Changes

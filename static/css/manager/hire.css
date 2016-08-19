@@ -30,3 +30,18 @@ select.input-filter {
     margin-left: 10px;
     vertical-align: middle;
 }
+
+.score-good {
+    background-color: green;
+    color: white;
+}
+
+.score-neutral {
+    background-color: yellow;
+    color: black;
+}
+
+.score-bad {
+    background-color: red;
+    color: white;
+}
