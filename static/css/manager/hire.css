@@ -3,6 +3,20 @@
     padding-left: 10px;
 }
 
+#container-hire {
+    margin-top: 5px;
+    margin-bottom: 20px;
+}
+
+#container-hire .col-xs-2 {
+    padding-left: 0px;
+}
+
+#btn-submit-hire {
+    padding: 5px 20px;
+    margin-left: 10px;
+}
+
 tr.applicant-row {
     cursor: pointer;
 }

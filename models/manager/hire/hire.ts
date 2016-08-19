@@ -78,6 +78,8 @@ export class Model implements eta.Model {
                         callback({errcode: eta.http.InternalError});
                         return;
                     }
+                    sql = `
+                    SELECT `
                     let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
                     callback({
                         "applicants": applicantRows,

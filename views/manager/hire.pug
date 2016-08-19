@@ -5,6 +5,12 @@ include ../templates/modal.pug
 block body
     span.text-success#success
     span.text-danger#error
+    br
+    span.form-label Manually hire employee
+    div.row#container-hire
+        div.col-xs-2
+            input.form-control(type="text", placeholder="Username / User ID")#input-user
+        button.btn.btn-success#btn-submit-hire Hire
     div
         span.form-label Term
         select.border-rounded.keep-caret.input-filter(data-param="term")
@@ -46,7 +52,7 @@ block body
                         - var isChecked = applicant.hire == 1 ? {"checked": "checked"} : {}
                         input.input-applicant(type="checkbox", data-name="hire")&attributes(isChecked)
                     td.text-center
-                        button.btn.btn-success.btn-update Update
+                        button.btn.btn-success.btn-update(disabled) Update
                     td.text-center
                         button.btn.btn-primary.btn-toggle-notes(data-toggle="modal", data-target="#modal") Open
     div.modal.fade#modal(tabindex="-1")
