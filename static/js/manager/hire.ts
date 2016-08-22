@@ -34,23 +34,60 @@ export module hire {
         HelperUrl.setParameterByName($this.data("param"), $this.val());
     }
 
-    function onEvaluationAdd() {
+    function onApplicantFlagChange() {
+        $(this).closest(".applicant-row").find(".btn-update").prop("disabled", false);
+    }
+
+    function onApplicantFlagSubmit(){
+        let flags : {[key : string] : boolean} = {};
+        $(this).closest(".applicant-row").find(".input-applicant").each(function() {
+            flags[this.getAttribute("data-name")] = this.checked;
+        })
+        $.post("/office/post/update-applicant", {
+            "userid": $(this).closest(".applicant-row").data("id"),
+            "flags": JSON.stringify(flags)
+        }, function(data) {
+            status.success("Successfully updated employee flags")
+        }).fail(function(data) {
+            status.error("Error code " + data.status + " has occured");
+        });
+    }
+
+    function onEvaluationSubmit() {
         addEvaluationRow(
             $("#input-evaluation-level").val(),
             $("#input-evaluation-date").val(),
             Number($("#input-evaluation-score").val())
         );
+
+        $.post("/office/post/add-evaluation", {
+            "userid": $("#modal").data("id"),
+            "level": $("#input-evaluation-level").val(),
+            "date": $("#input-evaluation-date").val(),
+            "score": $("#input-evaluation-score").val()
+
+        }, function(data) {
+            status.success("Succesfully submitted evulation")
+        }).fail(function(data) {
+            status.error("Error code " + data.status + " has occured");
+        });
     }
 
+    function onManualHireSubmit() {
+        $.post("/office/post/add-employee", {
+            "userid": $("#input-user").val()
+        }, function(data) {
+            status.success("Successfully entered employee. Please edit position in Current Employees")
+        }).fail(function(data) {
+            status.error("Error code " + data.status + " has occured");
+        })
+    }
     function onApplicantOpen() {
         let $row : JQuery = $(this).closest(".applicant-row");
         $("#modal-positions").html("");
+        $("#modal").attr("data-id", $row.data("id"));
         $("#modal-title").text($row.find(".cell-first-name").text() + " " + $row.find(".cell-last-name").text());
-        let positions : {
-            position : string,
-            lastApplied : string,
-            count : number
-        }[] = $row.data("positions");
+        let positions : any[] = $row.data("positions");
         for (let i : number = 0; i < positions.length; i++) {
             let $positionRow : JQuery = $("<tr>");
             $positionRow.append($("<td>").text(positions[i].position));
@@ -58,9 +95,17 @@ export module hire {
             $positionRow.append($("<td>").text(lastApplied));
             $positionRow.append($("<td>").text(positions[i].count.toString()));
             $("#modal-positions").append($positionRow);
+            if (positions[i].evalScore) {
+                addEvaluationRow(
+                    positions[i].position,
+                    new Date (positions[i].evalDate).toLocaleDateString(),
+                    positions[i].evalScore
+                )
+            }
         }
 
         // evaluations
+
         (<any>$("#input-evaluation-date")[0]).valueAsDate = new Date(); // reset to today
 
     }
@@ -74,6 +119,9 @@ export module hire {
         });
         $(".input-filter").on("change", onFilter);
         $(".btn-toggle-notes").on("click", onApplicantOpen);
-        $("#btn-evaluation-submit").on("click", onEvaluationAdd);
+        $("#btn-evaluation-submit").on("click", onEvaluationSubmit);
+        $(".btn-update").on("click", onApplicantFlagSubmit);
+        $(".input-applicant").on("change", onApplicantFlagChange);
+        $("#btn-submit-hire").on("click", onManualHireSubmit);
     });
 }
