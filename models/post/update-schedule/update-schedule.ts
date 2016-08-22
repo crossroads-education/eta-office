@@ -11,6 +11,10 @@ export class Model implements eta.Model {
         let moreSql : string = "WHEN id = ? AND time = ? THEN ?\n";
         let params : string[] = [];
         let cells : any[] = JSON.parse(req.body.cells);
+        if (cells.length === 0) {
+            callback({raw: "true"});
+            return;
+        }
         eta.center.getAll(function(centers : eta.Center[]) {
             for (let i : number = 0; i < cells.length; i++) {
                 let center : number = -1;

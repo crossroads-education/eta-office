@@ -9,6 +9,10 @@ export class Model implements eta.Model {
             return;
         }
         let cells : any[] = JSON.parse(req.body.cells);
+        if (cells.length === 0) {
+            callback({"raw": "true"});
+            return;
+        }
         let moreSql : string = "(?, ?, ?, ?, ?, ?),";
         let params : string[] = [];
         for (let i : number = 0; i < cells.length; i++) {
