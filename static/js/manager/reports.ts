@@ -1,7 +1,15 @@
+import "datatables.net";
+import "datatables.net-bs";
+import "datatables.net-buttons";
+import "datatables.net-buttons-bs";
+import "datatables.net-buttons-html5";
+import "datatables.net-buttons-print";
+
 import {HelperStatus} from "lib/helpers/HelperStatus";
 
 export module reports {
 
+    let table : any;
     let status : HelperStatus;
     function onReportChange() : void {
         let fadeDuration : number = 200;
@@ -26,14 +34,16 @@ export module reports {
             status.error("No data matched your parameters.");
             return;
         }
-        let $table : JQuery = $("#table-results");
-        let $header : JQuery = $("<tr>");
-        for (let columnName in rows[0]) {
-            $header.append($("<th>").text(columnName));
+        if (table) {
+            table.clear();
+            table.destroy();
         }
-        $table.find("thead").html("").append($header);
-        let $body : JQuery = $table.find("tbody");
-        $body.html("");
+        let $headerRow : JQuery = $("<tr>");
+        for (let columnName in rows[0]) {
+            $headerRow.append($("<th>").text(columnName));
+        }
+        $("#table-results").find("thead").html("").append($headerRow);
+        let $body : JQuery = $("#table-results").find("tbody").html("");
         for (let i : number = 0; i < rows.length; i++) {
             let $row : JQuery = $("<tr>");
             for (let columnName in rows[i]) {
@@ -41,6 +51,11 @@ export module reports {
             }
             $body.append($row);
         }
+        table = (<any>$("#table-results")).DataTable({
+            "buttons": ["csv", "print"],
+            "dom": "Blftipr"
+        });
+        (<any>window).table = table;
     }
 
     function onReportSubmit() : void {

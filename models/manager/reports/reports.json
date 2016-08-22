@@ -1,3 +1,7 @@
 {
+  "css": [
+    "https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css",
+    "https://cdn.datatables.net/buttons/1.2.2/css/buttons.bootstrap.min.css"
+  ],
   "permissions": ["access/manager/reports"]
 }

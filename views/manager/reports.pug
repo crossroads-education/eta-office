@@ -12,6 +12,9 @@ mixin report-section(name)
     div.report-section(data-report=name, style="display: none;")
         block
 
+mixin report-submit()
+    button.btn.btn-success.btn-report-submit Submit
+
 block body
     div
         span.text-success#success
@@ -19,11 +22,17 @@ block body
         h2 Select Report
         select.border-rounded.keep-caret#input-report
             option(value="payroll") Payroll Data
+            option(value="sections") Section Data
     +report-section("payroll")
         h3 Get Scheduled Hours Per Employee
         div.section-input
             +select-term()
-            button.btn.btn-success.btn-report-submit Submit
+            +report-submit()
+    +report-section("sections")
+        h3 Get Section Data
+        div.section-input
+            +select-term()
+            +report-submit()
     div
         table.table.table-striped.table-hover#table-results
             thead

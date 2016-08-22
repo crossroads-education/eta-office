@@ -1,7 +1,7 @@
 -- term
 SELECT
-    `Person`.`id` AS "Student ID",
     CONCAT(`Person`.`lastName`, ', ', `Person`.`firstName`) AS "Name",
+    `Person`.`id` AS "Student ID",
     COUNT(*) / 4 AS "Hours"
 FROM
     `Employee`

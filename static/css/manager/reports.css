@@ -2,7 +2,16 @@
     font-size: 1.5em;
 }
 
-#table-results {
-    width: unset;
-    min-width: 25%;
+.dataTables_filter label {
+    /*float: right;*/
+    margin-right: 1em;
+}
+
+.dataTables_length label {
+    float: right;
+    margin-right: 1em;
+}
+
+.dt-buttons {
+    float: right;
 }
