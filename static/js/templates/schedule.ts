@@ -120,6 +120,7 @@ export module TemplateSchedule {
             $(notSelector).parent().hide();
             $show.show();
         } else {
+            location.hash = ""; // reset filters to empty
             $(".schedule-row-filterable").show(); // no filters are selected, so show everything
         }
     }
