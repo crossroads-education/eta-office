@@ -23,7 +23,6 @@ export module profile {
             }
             params[name] = value;
         });
-        console.log(params);
         $.post("/office/post/update-profile", params, function(data) {
             $("#errors").addClass("hidden");
             $("#success").removeClass("hidden");
@@ -43,7 +42,12 @@ export module profile {
                 onInfoSubmit.apply(this);
             }
         });
-        $("input.info-field[type='checkbox']").bootstrapSwitch("state");
+        $("input.info-field[type='checkbox']").each(function(index : number, element : HTMLElement) {
+            let $element : JQuery = $(element);
+            $element.bootstrapSwitch({
+                "state": $element.prop("checked")
+            });
+        });
         $("button.iu-button[type='submit']").on("click", onInfoSubmit);
     });
 }

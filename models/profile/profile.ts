@@ -53,7 +53,6 @@ export class Model implements eta.Model {
                 Person.firstName,
                 Person.lastName,
                 Employee.*,
-                Applicant.workStudy,
                 GROUP_CONCAT(Position.name ORDER BY Position.id) AS positionNames,
                 GROUP_CONCAT(Position.category ORDER BY Position.id) AS positionCategories,
                 GROUP_CONCAT(DISTINCT CONCAT(Center.name, ' [', Center.shorthand, ']', '\n\n', Center.address) ORDER BY Center.name) AS positionCenters
@@ -61,8 +60,6 @@ export class Model implements eta.Model {
                 Employee
                     LEFT JOIN Person ON
                         Employee.id = Person.id
-                    LEFT JOIN Applicant ON
-                        Employee.id = Applicant.id
                     LEFT JOIN EmployeePosition ON
                         Employee.id = EmployeePosition.id AND
                         EmployeePosition.start <= CURDATE() AND

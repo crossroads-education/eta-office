@@ -10,11 +10,11 @@ export class Model implements eta.Model {
             "phone", "shirt", "hoodie", "workStudy"];
         let sql : string = "UPDATE Employee SET ";
         let params : string[] = [];
-        for (let i : number = 0; i < fields[i].length; i++) {
+        for (let i : number = 0; i < fields.length; i++) {
             sql += fields[i] + " = ?,";
             params.push(req.body[fields[i]]);
         }
-        sql = sql.slice(0, -1) + " WHERE id = ? AND current = 1";
+        sql = sql.slice(0, -1) + " WHERE id = ?";
         params.push(req.session["userid"]);
         eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
             if (err) {
