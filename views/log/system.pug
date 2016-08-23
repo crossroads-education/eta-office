@@ -1,0 +1,17 @@
+extends ../include/layout.pug
+
+block body
+    table.table.table-striped.table-hover#table-log
+        thead
+            tr
+                th Time
+                th Source
+                th Severity
+                th Message
+        tbody
+            each log in logs
+                tr
+                    td #{log.time}
+                    td #{log.source}
+                    td #{log.severity}
+                    td #{log.message}

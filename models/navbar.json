@@ -28,6 +28,10 @@
     "Front Desk Log": {
       "permission": "access/log/front",
       "url": "log/front"
+    },
+    "System Log": {
+      "permission": "access/log/system",
+      "url": "log/system"
     }
   },
   "Management": {
