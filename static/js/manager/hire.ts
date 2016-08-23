@@ -4,6 +4,8 @@ import "datatables.net-buttons";
 import "datatables.net-buttons-bs";
 import "datatables.net-buttons-html5";
 import "datatables.net-buttons-print";
+import "select2";
+
 
 import "templates/modal";
 
@@ -38,7 +40,7 @@ export module hire {
         $(this).closest(".applicant-row").find(".btn-update").prop("disabled", false);
     }
 
-    function onApplicantFlagSubmit(){
+    function onApplicantFlagSubmit() {
         let flags : {[key : string] : boolean} = {};
         $(this).closest(".applicant-row").find(".input-applicant").each(function() {
             flags[this.getAttribute("data-name")] = this.checked;
@@ -47,9 +49,9 @@ export module hire {
             "userid": $(this).closest(".applicant-row").data("id"),
             "flags": JSON.stringify(flags)
         }, function(data) {
-            status.success("Successfully updated employee flags")
+            status.success("Successfully updated employee flags.");
         }).fail(function(data) {
-            status.error("Error code " + data.status + " has occured");
+            status.error("Error code " + data.status + " has occurred.");
         });
     }
 
@@ -65,23 +67,24 @@ export module hire {
             "level": $("#input-evaluation-level").val(),
             "date": $("#input-evaluation-date").val(),
             "score": $("#input-evaluation-score").val()
-
         }, function(data) {
-            status.success("Succesfully submitted evulation")
+            status.success("Succesfully submitted evulation");
         }).fail(function(data) {
-            status.error("Error code " + data.status + " has occured");
+            status.error("Error code " + data.status + " has occurred.");
         });
     }
 
     function onManualHireSubmit() {
         $.post("/office/post/add-employee", {
-            "userid": $("#input-user").val()
+            "userid": $("#input-hire-user").val(),
+            "positions": JSON.stringify($("#input-hire-positions").val())
         }, function(data) {
-            status.success("Successfully entered employee. Please edit position in Current Employees")
+            status.success("Successfully entered employee. Please edit their positions in \"Current Employees\".");
         }).fail(function(data) {
-            status.error("Error code " + data.status + " has occured");
+            status.error("Error code " + data.status + " has occurred.");
         })
     }
+
     function onApplicantOpen() {
         let $row : JQuery = $(this).closest(".applicant-row");
         $("#modal-positions").html("");
@@ -105,13 +108,14 @@ export module hire {
         }
 
         // evaluations
-
         (<any>$("#input-evaluation-date")[0]).valueAsDate = new Date(); // reset to today
-
     }
 
     $(document).ready(function() {
         status = new HelperStatus("#success", "#error");
+        $("#input-hire-positions").select2({
+            "placeholder": "Positions"
+        });
         $("#table-applicants").dataTable(<any>{
             "buttons": ["csv", "print"],
             "dom": "Blftipr",

@@ -8,8 +8,14 @@ block body
     br
     span.form-label Manually hire employee
     div.row#container-hire
+        div.col-xs-1
+            input.form-control#input-hire-user(type="text", placeholder="Username / User ID")
         div.col-xs-2
-            input.form-control(type="text", placeholder="Username / User ID")#input-user
+            //- Select2 only likes in-line styling, unfortunately.
+            select#input-hire-positions(style="width: 100%;", multiple)
+                td
+                each position in hirePositions
+                    option(value=position.id) #{position.name} - #{position.category}
         button.btn.btn-success#btn-submit-hire Hire
     div
         span.form-label Term

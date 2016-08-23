@@ -78,14 +78,21 @@ export class Model implements eta.Model {
                         callback({errcode: eta.http.InternalError});
                         return;
                     }
-                    sql = `
-                    SELECT `
-                    let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
-                    callback({
-                        "applicants": applicantRows,
-                        "currentTerm": req.query.term,
-                        "evaluationLevels": levelRows,
-                        "selectTerms": terms
+                    sql = "SELECT id, name, category FROM Position WHERE active = 1 ORDER BY Position.name, Position.category";
+                    eta.db.query(sql, [], (err : eta.DBError, hirePositionRows : any[]) => {
+                        if (err) {
+                            eta.logger.dbError(err);
+                            callback({errcode: eta.http.InternalError});
+                            return;
+                        }
+                        let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
+                        callback({
+                            "applicants": applicantRows,
+                            "currentTerm": req.query.term,
+                            "evaluationLevels": levelRows,
+                            "hirePositions": hirePositionRows,
+                            "selectTerms": terms
+                        });
                     });
                 });
             });
