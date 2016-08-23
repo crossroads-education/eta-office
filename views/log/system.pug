@@ -11,7 +11,7 @@ block body
         tbody
             each log in logs
                 tr
-                    td #{log.time}
-                    td #{log.source}
-                    td #{log.severity}
-                    td #{log.message}
+                    td.cell-time #{log.time}
+                    td.cell-source #{log.source}
+                    td.cell-severity #{log.severity}
+                    td.cell-message #{log.message}
