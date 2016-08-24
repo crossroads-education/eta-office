@@ -5,11 +5,10 @@ import * as express from "express";
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
-        // Day name from http://stackoverflow.com/a/32908851/5850070
-        eta.logger.trace(req.query.userid);
-            if (!req.query.userid) {
+        if (!req.query.userid) {
             req.query.userid = req.session["userid"];
         }
+        // Day name from http://stackoverflow.com/a/32908851/5850070
         let sql : string = `
             SELECT
                 EmployeeSchedule.center,
