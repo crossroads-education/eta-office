@@ -113,7 +113,11 @@ div
             div.schedule-row.schedule-row-filterable.hvr-border-fade&attributes(row.filterables)
                 div.schedule-left-col.col-xs-4.row
                     div.col-xs-8
-                        div.schedule-label #{row.label}
+                        if scheduleRowType == "person"
+                            a(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
+                                div.schedule-label #{row.label}
+                        else
+                            div.schedule-label #{row.label}
                     div.schedule-hours.col-xs-4.row
                         span.col-xs-1 #{row.dayTotal ? row.dayTotal : "0"}
                         span.col-xs-1  /
