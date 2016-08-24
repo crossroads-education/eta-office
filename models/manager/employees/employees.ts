@@ -132,15 +132,15 @@ export class Model implements eta.Model {
                                     EmployeePosition.position = Position.id
                         WHERE
                             EmployeePosition.id IN (?)`;
-                    eta.db.query(sql, [employeeIDs], (err : eta.DBError, positionRows : any[]) => {
+                    eta.db.query(sql, [employeeIDs], (err : eta.DBError, employeePositionRows : any[]) => {
                         if (err) {
                             eta.logger.dbError(err);
                             callback({errcode: eta.http.InternalError});
                             return;
                         }
                         let rawEmployees : {[key : string] : any} = {};
-                        for (let i : number = 0; i < positionRows.length; i++) {
-                            let id : string = positionRows[i].employee;
+                        for (let i : number = 0; i < employeePositionRows.length; i++) {
+                            let id : string = employeePositionRows[i].employee;
                             if (!rawEmployees[id]) {
                                 let employeeIndex : number = -1;
                                 for (let k : number = 0; k < employeeRows.length; k++) {
@@ -152,10 +152,11 @@ export class Model implements eta.Model {
                                 rawEmployees[id].positions = [];
                                 rawEmployees[id].positionNames = [];
                                 rawEmployees[id].positionCategories = [];
+                                rawEmployees[id].timesheet = [];
                             }
-                            rawEmployees[id].positions.push(positionRows[i]);
-                            rawEmployees[id].positionNames.push(positionRows[i].name);
-                            rawEmployees[id].positionCategories.push(positionRows[i].category);
+                            rawEmployees[id].positions.push(employeePositionRows[i]);
+                            rawEmployees[id].positionNames.push(employeePositionRows[i].name);
+                            rawEmployees[id].positionCategories.push(employeePositionRows[i].category);
                         }
                         let employees : any[] = [];
                         for (let i in rawEmployees) { // converting from object to array
@@ -173,18 +174,39 @@ export class Model implements eta.Model {
                             return a.lastName.localeCompare(b.lastName);
                         });
                         sql = "SELECT * FROM Position WHERE active = 1 ORDER BY category, name";
-                        eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+                        eta.db.query(sql, [], (err : eta.DBError, positionRows : any[]) => {
                             if (err) {
                                 eta.logger.dbError(err);
                                 callback({errcode: eta.http.InternalError});
                                 return;
                             }
-                            callback({
-                                "employees": employees,
-                                "positions": rows,
-                                "positionCounts": positionCounts,
-                                "shirtSizes": shirtSizes,
-                                "filters": req.query
+                            sql = "SELECT * FROM EmployeeTimesheet";
+                            eta.db.query(sql, [], (err : eta.DBError, timesheetRows : any[]) => {
+                                if (err) {
+                                    eta.logger.dbError(err);
+                                    callback({errcode: eta.http.InternalError});
+                                    return;
+                                }
+                                for (let i : number = 0; i < timesheetRows.length; i++) {
+                                    let employeeIndex : number = -1;
+                                    for (let k : number = 0; k < employees.length; k++) {
+                                        if (timesheetRows[i].id == employees[k].id) {
+                                            employeeIndex = k;
+                                            break;
+                                        }
+                                    }
+                                    if (employeeIndex == -1) {
+                                        continue; // they aren't in the dataset, who cares
+                                    }
+                                    employees[employeeIndex].timesheet.push(timesheetRows[i]);
+                                }
+                                callback({
+                                    "employees": employees,
+                                    "positions": positionRows,
+                                    "positionCounts": positionCounts,
+                                    "shirtSizes": shirtSizes,
+                                    "filters": req.query
+                                });
                             });
                         });
                     });

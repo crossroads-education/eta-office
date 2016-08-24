@@ -5,7 +5,8 @@ import * as express from "express";
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
         let sql : string = "UPDATE EmployeeTimesheet SET timeOut = NOW(), ipOut = ? WHERE DATE(timeIn) = CURDATE() AND id = ? AND timeOut IS NULL";
-        let params : string[] = [req.ip, req.session["userid"]];
+        let ipTokens : string[] = req.ip.split(":"); // remove IPv6 prepend stuff
+        let params : string[] = [ipTokens[ipTokens.length - 1], req.session["userid"]];
         if (req.session["needsClockIn"]) {
             sql = "INSERT INTO EmployeeTimesheet (ipIn, id, ipOut, timeIn, timeOut) VALUES (?, ?, NULL, NOW(), NULL)";
         }

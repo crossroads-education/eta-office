@@ -6,6 +6,7 @@ import "datatables.net";
 import "datatables.net-bs";
 import "templates/modal";
 import * as moment from "moment";
+import {timesheet} from "templates/timesheet";
 
 import {HelperStatus} from "lib/helpers/HelperStatus";
 import {HelperUrl} from "lib/helpers/HelperUrl";
@@ -48,7 +49,6 @@ export module employees {
 
     function addLogRow(log : Log) : void {
         let $row : JQuery = $("<tr>");
-        console.log(log);
         let timestamp : Date = new Date(log.timestamp);
         let category : string = log.type;
         if (category == "FRONT") {
@@ -80,6 +80,12 @@ export module employees {
         $("#modal-positions").attr("data-employee", userid);
         $("#input-nametag-id").val(userid);
         $("#output-notes").text($data.attr("data-notes"));
+        let timesheetRows : timesheet.TimesheetRow[] = $data.data("timesheet");
+        timesheet.table.fnClearTable();
+        for (let i : number = 0; i < timesheetRows.length; i++) {
+            timesheet.addRow(timesheetRows[i]);
+        }
+        timesheet.table.fnDraw();
         for (let name in allowances) {
             $(`input.modal-allowance[data-name="${name}"]`).bootstrapSwitch("state", allowances[name]);
         }

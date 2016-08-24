@@ -1,6 +1,7 @@
 {
   "css": [
     "https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css",
+    "https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.12/css/dataTables.bootstrap.min.css",
     "/office/css/templates/modal.css"
   ],
   "models": ["/templates/select/position"],

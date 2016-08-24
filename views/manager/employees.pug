@@ -1,6 +1,7 @@
 extends ../include/layout.pug
 
 include ../templates/modal.pug
+include ../templates/timesheet.pug
 
 mixin shirt-size-table(type)
     table.table.table-condensed.table-striped
@@ -43,7 +44,8 @@ mixin employee-block(employee)
                 data-positions=JSON.stringify(employee.positions),
                 data-mentor=employee.mentor,
                 data-allowances=JSON.stringify(allowances),
-                data-notes=employee.notes)
+                data-notes=employee.notes,
+                data-timesheet=JSON.stringify(employee.timesheet))
     br
 
 block body
@@ -136,6 +138,8 @@ block body
                             tbody#table-log
                     +collapsible-parent("Scheduling Notes / Preferences")
                         textarea(disabled)#output-notes
+                    +collapsible-parent("Timesheet")
+                        +table-timesheet([], true)
                 div.modal-footer
                     //- Part of a nametag generation system that's not finished
                     //- form#form-nametag(method="POST", action="/office/post/generate-nametag")

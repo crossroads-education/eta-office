@@ -1,3 +1,4 @@
+import "templates/timesheet";
 import {HelperStatus} from "lib/helpers/HelperStatus";
 
 export module clock {

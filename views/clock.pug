@@ -1,5 +1,7 @@
 extends ./include/layout.pug
 
+include ./templates/timesheet.pug
+
 block body
     div.row
         div.col-xs-12.text-center
@@ -11,7 +13,18 @@ block body
             button.btn.btn-success#btn-clock Clock #{needsClockIn ? "In" : "Out"}
             br
             button.btn.btn-primary#btn-note Note
+            br
+            button.btn.btn-default#btn-timesheet(data-toggle="modal", data-target="#modal") View Timesheet
             div.hidden#container-note
                 textarea.border-rounded.keep-caret#input-notes(rows = "5", cols = "75", placeholder = "Enter notes here")
                 br
                 button.btn.btn-success#btn-submit Submit
+    div.modal.fade#modal(tabindex="-1")
+        div.modal-dialog
+            div.modal-content
+                div.modal-header
+                    button.close(type="button", data-dismiss="modal") &times;
+                    div
+                        span.modal-title Timesheet
+                div.modal-body
+                    +table-timesheet(timesheet)

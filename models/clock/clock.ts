@@ -22,15 +22,31 @@ export class Model implements eta.Model {
                     DATE(timeIn) = CURDATE() AND
                     ISNULL(timeOut)`;
             let env : {[key : string] : any} = rows[0];
-            eta.db.query(sql, [req.session["userid"]], (err : eta.DBError,  timesheetRows : any[]) => {
+            eta.db.query(sql, [req.session["userid"]], (err : eta.DBError,  timeCountRows : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
                     callback({errcode: eta.http.InternalError});
                     return;
                 }
-                env["needsClockIn"] = timesheetRows[0].count == 0;
+                env["needsClockIn"] = timeCountRows[0].count == 0;
                 req.session["needsClockIn"] = env["needsClockIn"];
-                callback(env);
+                sql = `
+                    SELECT
+                        timeIn, timeOut
+                    FROM
+                        EmployeeTimesheet
+                    WHERE
+                        id = ?
+                    ORDER BY timeIn DESC`;
+                eta.db.query(sql, [req.session["userid"]], (err : eta.DBError,  timesheetRows : any[]) => {
+                    if (err) {
+                        eta.logger.dbError(err);
+                        callback({errcode: eta.http.InternalError});
+                        return;
+                    }
+                    env["timesheet"] = timesheetRows
+                    callback(env);
+                });
             })
         })
     }

@@ -18,15 +18,15 @@
 }
 
 #btn-clock {
-    font-size : 2.75em;
-    margin-bottom: 20px;
+    font-size: 2.75em;
 }
 
 
-#btn-note {
+#btn-note, #btn-timesheet {
     font-size: 2.25em;
     padding-right: 25px;
     padding-left: 25px;
+    margin-top: 20px;
 }
 
 .status-message {

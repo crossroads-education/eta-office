@@ -1,0 +1,22 @@
+mixin table-timesheet(timesheet, useIP)
+    table.table.table-striped.table-hover#table-timesheet(data-use-ip=!!useIP)
+        thead
+            tr
+                th Date
+                th Total Hours
+                th Time In
+                th Time Out
+                if useIP
+                    th IP In
+                    th IP Out
+        tbody
+            each row in timesheet
+                - var totalHours = row.timeOut ? (row.timeOut - row.timeIn) / (1000 * 60 * 60) : 0;
+                tr
+                    td #{row.timeIn.toLocaleDateString()}
+                    td #{totalHours.toFixed(2)}
+                    td #{row.timeIn.toLocaleTimeString()}
+                    td #{row.timeOut ? row.timeOut.toLocaleTimeString() : "NONE"}
+                    if useIP
+                        td #{row.ipIn}
+                        td #{row.ipOut}
