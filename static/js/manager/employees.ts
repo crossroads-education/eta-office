@@ -158,7 +158,7 @@ export module employees {
             return;
         }
         $.post("/office/post/update-employee", {
-            "id": $("#modal-positions").data("employee"),
+            "id": $("#modal-positions").attr("data-employee"),
             "positions": JSON.stringify(positions),
             "allowances": JSON.stringify(allowances),
             "mentor": mentor
@@ -172,7 +172,7 @@ export module employees {
     function onLogSubmit() : void {
         let message : string = $("#input-log-message").val();
         $.post("/office/post/add-log", {
-            "about": $("#modal-positions").data("employee"),
+            "about": $("#modal-positions").attr("data-employee"),
             "message": message,
             "type": "MANGR"
         }, function(log : Log) {
