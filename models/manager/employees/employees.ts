@@ -61,7 +61,7 @@ export class Model implements eta.Model {
                     Position.name != 'Project Manager' AND
                     Position.category != 'META'
                 GROUP BY Position.name
-                ORDER BY category
+                ORDER BY Position.name, category
             `;
             eta.db.query(sql, [], (err : eta.DBError, positionCounts : any[]) => {
                 if (err) {
