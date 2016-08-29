@@ -197,8 +197,10 @@ export class Model implements eta.Model {
                         }
                     }
                 }
-
-                callback({
+                let permissions : eta.PermissionUser = req.session["permissions"];
+                let env : {[key : string] : any} = {
+                    "isOther": req.query.userid != req.session["userid"],
+                    "isManager": permissions.has("edit/schedule/master"),
                     "scheduleRowType": "day",
                     "scheduleFilters": {
                         "term": term
@@ -207,7 +209,32 @@ export class Model implements eta.Model {
                     "scheduleMode": "availability",
                     "scheduleHours": allHoursOpen,
                     "scheduleLocationPalette": locationPalette
-                });
+                };
+                if (env["isOther"] && env["isManager"]) {
+                    sql = `
+                        SELECT
+                            Employee.id,
+                            Person.firstName,
+                            Person.lastName,
+                            Employee.notes
+                        FROM
+                            Employee
+                                LEFT JOIN Person ON
+                                    Employee.id = Person.id
+                        WHERE
+                            Employee.id = ?`;
+                    eta.db.query(sql, [req.query.userid], (err : eta.DBError, rows : any[]) => {
+                        if (err) {
+                            eta.logger.dbError(err);
+                            callback({errcode: eta.http.InternalError});
+                            return;
+                        }
+                        env["about"] = rows[0];
+                        callback(env);
+                    })
+                } else {
+                    callback(env);
+                }
             });
         });
     }

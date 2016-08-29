@@ -1,4 +1,14 @@
 extends ./include/layout.pug
 
 block body
+    if isOther
+        div.text-center
+            span.form-label #{about.firstName} #{about.lastName}
+                if isManager
+                    |  (#{about.id})
     include ./templates/schedule.pug
+    if isOther && isManager
+        div.row#container-notes
+            div.col-xs-offset-4.col-xs-4
+                span.form-label Scheduling Notes / Preferences
+                textarea.form-control(rows="5", cols="40", disabled) #{about.notes}
