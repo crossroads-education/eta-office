@@ -32,14 +32,17 @@ export class Model implements eta.Model {
                 return;
             }
             sql = `
-                INSERT INTO EmployeeAllowance (id, term, alarm, call1, call2, sick)
-                VALUES(?, ?, ?, ?, ?, ?)
+                INSERT INTO EmployeeAllowance (id, term, alarm, call1, call2, sick, hw1, hw2, hw3)
+                VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ON DUPLICATE KEY UPDATE
                     alarm = VALUES(alarm),
                     call1 = VALUES(call1),
                     call2 = VALUES(call2),
-                    sick  = VALUES(sick)`;
-            params = [req.body.id, req.body.term, allowances["alarm"], allowances["call1"], allowances["call2"], allowances["sick"]];
+                    sick  = VALUES(sick),
+                    hw1   = VALUES(hw1),
+                    hw2   = VALUES(hw2),
+                    hw3   = VALUES(hw3)`;
+            params = [req.body.id, req.body.term, allowances["alarm"], allowances["call1"], allowances["call2"], allowances["sick"], allowances["hw1"], allowances["hw2"], allowances["hw3"]];
             eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);

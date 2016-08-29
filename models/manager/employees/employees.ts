@@ -86,6 +86,9 @@ export class Model implements eta.Model {
                         EmployeeAllowance.call1,
                         EmployeeAllowance.call2,
                         EmployeeAllowance.sick,
+                        EmployeeAllowance.hw1,
+                        EmployeeAllowance.hw2,
+                        EmployeeAllowance.hw3,
                         Person.firstName,
                         Person.lastName,
                         Person.username

@@ -3,6 +3,11 @@ extends ../include/layout.pug
 include ../templates/modal.pug
 include ../templates/timesheet.pug
 
+mixin input-allowance(name, title)
+    p
+        input.modal-allowance(type="checkbox", data-name=name)
+        span.modal-allowance-label #{title}
+
 mixin shirt-size-table(type)
     table.table.table-condensed.table-striped
         thead
@@ -38,7 +43,10 @@ mixin employee-block(employee)
                     "alarm": employee.alarm == 1,
                     "call1": employee.call1 == 1,
                     "call2": employee.call2 == 1,
-                    "sick":  employee.sick  == 1
+                    "sick":  employee.sick == 1,
+                    "hw1":   employee.hw1 == 1,
+                    "hw2":   employee.hw2 == 1,
+                    "hw3":   employee.hw3 == 1
                 }
             span.hidden.employee-data(
                 data-positions=JSON.stringify(employee.positions),
@@ -108,18 +116,13 @@ block body
                             button.btn.btn-success#btn-position-add Add Position
                     +collapsible-parent("Allowances / Mentor Progression")
                         div
-                            p
-                                input.modal-allowance(type="checkbox", data-name="alarm")
-                                span.modal-allowance-label Alarm Clock Day
-                            p
-                                input.modal-allowance(type="checkbox", data-name="call1")
-                                span.modal-allowance-label Call-In #1
-                            p
-                                input.modal-allowance(type="checkbox", data-name="call2")
-                                span.modal-allowance-label Call-In #2
-                            p
-                                input.modal-allowance(type="checkbox", data-name="sick")
-                                span.modal-allowance-label Sick Day
+                            +input-allowance("alarm", "Alarm Clock Day")
+                            +input-allowance("call1", "Call-In #1")
+                            +input-allowance("call2", "Call-In #2")
+                            +input-allowance("sick", "Sick Day")
+                            +input-allowance("hw1", "Homework Verbal Warning")
+                            +input-allowance("hw2", "Homework Manager Meeting")
+                            +input-allowance("hw3", "Homework Director Meeting")
                         div.hidden#mentor-container
                             span Mentor Progression
                             input(type="number")#input-mentor
