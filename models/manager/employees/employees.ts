@@ -27,8 +27,7 @@ export class Model implements eta.Model {
                             Employee
                         GROUP BY hoodie
                     ) AS hoodie ON
-                        shirt.size = hoodie.size
-        `;
+                        shirt.size = hoodie.size`;
         eta.db.query(sql, [], (err : eta.DBError, shirtRows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
@@ -61,8 +60,7 @@ export class Model implements eta.Model {
                     Position.name != 'Project Manager' AND
                     Position.category != 'META'
                 GROUP BY Position.name
-                ORDER BY Position.name, category
-            `;
+                ORDER BY Position.name, category`;
             eta.db.query(sql, [], (err : eta.DBError, positionCounts : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
@@ -104,7 +102,12 @@ export class Model implements eta.Model {
                             LEFT JOIN Position ON
                                 EmployeePosition.position = Position.id
                     WHERE
-                        ${whereSql}
+                        ${whereSql} AND
+                        EmployeePosition.start <= CURDATE() AND
+                        (
+                            ISNULL(EmployeePosition.end) OR
+                            EmployeePosition.end >= CURDATE()
+                        )
                     GROUP BY Employee.id
                     ORDER BY Person.lastName, Person.firstName`;
                 eta.db.query(sql, params, (err : eta.DBError, employeeRows : any[]) => {
