@@ -26,10 +26,10 @@ function parseLogLine(line : string) : Log {
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
-        if (!req.body.date) {
-            req.body.date = eta.time.getStandardDate(new Date());
+        if (!req.query.date) {
+            req.query.date = eta.time.getStandardDate(new Date());
         }
-        let logFile : string = `logs/${req.body.date}.log`;
+        let logFile : string = `logs/${req.query.date}.log`;
         eta.fs.exists(logFile, (exists : boolean) => {
             if (!exists) {
                 callback({errcode: eta.http.NotFound});
@@ -52,6 +52,7 @@ export class Model implements eta.Model {
                     }
                 }
                 callback({
+                    "currentDate": req.query.date,
                     "logs": logs
                 });
             });

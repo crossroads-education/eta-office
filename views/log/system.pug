@@ -1,6 +1,15 @@
 extends ../include/layout.pug
 
 block body
+    form.row#form-date(action="", method="GET")
+        div.col-xs-6
+            div.row
+                div.col-xs-1
+                    span.form-label Date
+                div.col-xs-3
+                    input.form-control(type="date", name="date", value=currentDate)
+                div.col-xs-1
+                    button.btn.btn-success Submit
     table.table.table-striped.table-hover#table-log
         thead
             tr
