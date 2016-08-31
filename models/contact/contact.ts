@@ -21,17 +21,19 @@ export class Model implements eta.Model {
                         Employee.id = EmployeePosition.id
                     LEFT JOIN Position ON
                         EmployeePosition.position = Position.id
-
+                    LEFT JOIN Center ON
+                        Position.center = Center.id
             WHERE
                 Employee.current = 1 AND
                 (
                     EmployeePosition.end > CURDATE() OR
                     EmployeePosition.end IS NULL
                 ) AND
-                EmployeePosition.start <= CURDATE()
+                EmployeePosition.start <= CURDATE() AND
+                Center.department = ?
             GROUP BY Employee.id
             ORDER BY Person.firstName, Person.lastName`;
-        eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, rows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode : eta.http.InternalError});

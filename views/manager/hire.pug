@@ -46,7 +46,7 @@ block body
                     td.cell-last-name #{applicant.lastName}
                     td
                         a(href="mailto:" + applicant.email) #{applicant.email}
-                    td #{applicant.expectedGraduation.toLocaleDateString()}
+                    td #{applicant.expectedGraduation ? applicant.expectedGraduation.toLocaleDateString() : "None"}
                     td !{applicant.positionNames}
                     td.text-center
                         - var isChecked = applicant.evaluate == 1 ? {"checked": "checked"} : {}

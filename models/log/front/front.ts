@@ -5,7 +5,7 @@ import * as express from "express";
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
         let sql : string = `
-            SELECT
+            SELECT DISTINCT
                 Person.firstName,
                 Person.lastName,
                 Person.id
@@ -13,10 +13,17 @@ export class Model implements eta.Model {
                 Employee
                     LEFT JOIN Person ON
                         Employee.id = Person.id
+                    LEFT JOIN EmployeePosition ON
+                        Employee.id = EmployeePosition.id
+                    LEFT JOIN Position ON
+                        EmployeePosition.position = Position.id
+                    LEFT JOIN Center ON
+                        Position.center = Center.id
             WHERE
-                Employee.current = 1
+                Employee.current = 1 AND
+                Center.department = ?
             ORDER BY Person.lastName, Person.firstName`;
-        eta.db.query(sql, [], (err : eta.DBError, employeeRows : any[]) => {
+        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, employeeRows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});

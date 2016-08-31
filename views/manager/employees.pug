@@ -18,7 +18,7 @@ mixin shirt-size-table(type)
             each size in sizes
                 tr
                     td #{size}
-                    td #{shirtSizes[size][type.toLowerCase() + "Count"]}
+                    td #{shirtSizes[size] ? shirtSizes[size][type.toLowerCase() + "Count"] : 0}
 
 mixin position-count-table(start, end, data)
     table.table.table-condensed.table-striped

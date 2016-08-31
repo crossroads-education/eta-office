@@ -71,15 +71,39 @@ export class Model implements eta.Model {
                     }
                     applicantRows[index].positions.push(positionRows[i]);
                 }
-                sql = "SELECT DISTINCT name FROM Position WHERE active = 1 AND name LIKE '%-Level'";
-                eta.db.query(sql, [], (err : eta.DBError, levelRows : any[]) => {
+                sql = `
+                    SELECT DISTINCT
+                        Position.name
+                    FROM
+                        Position
+                            LEFT JOIN Center ON
+                                Position.center = Center.id
+                    WHERE
+                        Position.active = 1 AND
+                        Position.name LIKE '%-Level' AND
+                        Center.department = ?`;
+                eta.db.query(sql, [req.session["department"]], (err : eta.DBError, levelRows : any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
                         callback({errcode: eta.http.InternalError});
                         return;
                     }
-                    sql = "SELECT id, name, category FROM Position WHERE active = 1 ORDER BY Position.name, Position.category";
-                    eta.db.query(sql, [], (err : eta.DBError, hirePositionRows : any[]) => {
+                    sql = `
+                        SELECT
+                            Position.id,
+                            Position.name,
+                            Position.category
+                        FROM
+                            Position
+                                LEFT JOIN Center ON
+                                    Position.center = Center.id
+                        WHERE
+                            Position.active = 1 AND
+                            Center.department = ?
+                        ORDER BY
+                            Position.name,
+                            Position.category`;
+                    eta.db.query(sql, [req.session["department"]], (err : eta.DBError, hirePositionRows : any[]) => {
                         if (err) {
                             eta.logger.dbError(err);
                             callback({errcode: eta.http.InternalError});

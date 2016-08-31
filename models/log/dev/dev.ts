@@ -12,7 +12,8 @@ export class Model implements eta.Model {
                 return;
             }
             callback({
-                "commits": log.all
+                "commits": log.all,
+                "session": req.session
             });
         });
     }

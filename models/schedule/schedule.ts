@@ -66,12 +66,13 @@ export class Model implements eta.Model {
                         EmployeeSchedule.term = WeekTotal.term
             WHERE
                 EmployeeSchedule.term = ? AND
-                EmployeeSchedule.day = ?
+                EmployeeSchedule.day = ? AND
+                Center.department = ?
             ORDER BY
                 EmployeeSchedule.id,
                 EmployeeSchedule.day,
                 EmployeeSchedule.time`;
-        eta.db.query(sql, [filters["term"], filters["day"]], (err : eta.DBError, raw : any[]) => {
+        eta.db.query(sql, [filters["term"], filters["day"], req.session["department"]], (err : eta.DBError, raw : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});
@@ -86,6 +87,8 @@ export class Model implements eta.Model {
                     EmployeePosition
                         LEFT JOIN Position ON
                             EmployeePosition.position = Position.id
+                        LEFT JOIN Center ON
+                            Position.center = Center.id
                         LEFT JOIN Term ON
                             Term.id = ?
                 WHERE
@@ -93,10 +96,11 @@ export class Model implements eta.Model {
                     (
                         EmployeePosition.end >= Term.start OR
                         ISNULL(EmployeePosition.end)
-                    )
+                    ) AND
+                    Center.department = ?
                 GROUP BY EmployeePosition.id
             `;
-            eta.db.query(sql, [filters["term"]], (err : eta.DBError, positionRows : any[]) => {
+            eta.db.query(sql, [filters["term"], req.session["department"]], (err : eta.DBError, positionRows : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
                     callback({errcode: eta.http.InternalError});
@@ -104,20 +108,27 @@ export class Model implements eta.Model {
                 }
                 sql = `
                     SELECT
-                        HOUR(open) AS open,
-                        HOUR(close) AS close
+                        HOUR(HoursOfOperation.open) AS open,
+                        HOUR(HoursOfOperation.close) AS close
                     FROM
                         HoursOfOperation
+                            LEFT JOIN Center ON
+                                HoursOfOperation.center = Center.id
                     WHERE
-                        term = ? AND
-                        center = ? AND
-                        day = ?
+                        HoursOfOperation.term = ? AND
+                        HoursOfOperation.center = ? AND
+                        HoursOfOperation.day = ? AND
+                        Center.department = ?
                     LIMIT 1 -- just in case
                 `;
-                eta.db.query(sql, [filters["term"], filters["center"], filters["day"]], (err : eta.DBError, hourRows : any[]) => {
+                eta.db.query(sql, [filters["term"], filters["center"], filters["day"], req.session["department"]], (err : eta.DBError, hourRows : any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
                         callback({errcode: eta.http.InternalError});
+                        return;
+                    }
+                    if (hourRows.length === 0) {
+                        callback({errcode: eta.http.NotFound});
                         return;
                     }
                     let hours : {open : number, close : number} = hourRows[0];

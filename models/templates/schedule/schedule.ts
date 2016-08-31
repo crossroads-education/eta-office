@@ -15,10 +15,12 @@ export class Model implements eta.Model {
                 GROUP_CONCAT(DISTINCT Position.category ORDER BY Position.category) AS categories
             FROM
                 Position
+                    LEFT JOIN Center ON
+                        Position.center = Center.id
             WHERE
-                Position.active = 1
-        `;
-        eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+                Position.active = 1 AND
+                Center.department = ?`;
+        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, rows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});

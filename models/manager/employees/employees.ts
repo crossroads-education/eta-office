@@ -13,22 +13,38 @@ export class Model implements eta.Model {
             FROM
                 (
                     SELECT
-                        shirt AS size,
+                        Employee.shirt AS size,
                         COUNT(*) AS count
                     FROM
                         Employee
-                    GROUP BY shirt
+                            LEFT JOIN EmployeePosition ON
+                                Employee.id = EmployeePosition.id
+                            LEFT JOIN Position ON
+                                EmployeePosition.position = Position.id
+                            LEFT JOIN Center ON
+                                Position.center = Center.id
+                    WHERE
+                        Center.department = ?
+                    GROUP BY Employee.shirt
                 ) AS shirt
                     LEFT JOIN (
                         SELECT
-                            hoodie AS size,
+                            Employee.hoodie AS size,
                             COUNT(*) AS count
                         FROM
                             Employee
-                        GROUP BY hoodie
+                                LEFT JOIN EmployeePosition ON
+                                    Employee.id = EmployeePosition.id
+                                LEFT JOIN Position ON
+                                    EmployeePosition.position = Position.id
+                                LEFT JOIN Center ON
+                                    Position.center = Center.id
+                        WHERE
+                            Center.department = ?
+                        GROUP BY Employee.hoodie
                     ) AS hoodie ON
                         shirt.size = hoodie.size`;
-        eta.db.query(sql, [], (err : eta.DBError, shirtRows : any[]) => {
+        eta.db.query(sql, [req.session["department"], req.session["department"]], (err : eta.DBError, shirtRows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});
@@ -47,6 +63,8 @@ export class Model implements eta.Model {
                     EmployeePosition
                         LEFT JOIN Position ON
                             EmployeePosition.position = Position.id
+                        LEFT JOIN Center ON
+                            Position.center = Center.id
                 WHERE
                     EmployeePosition.start <= CURDATE() AND
                     (
@@ -58,10 +76,11 @@ export class Model implements eta.Model {
                         Position.category = 'Management'
                     ) AND
                     Position.name != 'Project Manager' AND
-                    Position.category != 'META'
+                    Position.category != 'META' AND
+                    Center.department = ?
                 GROUP BY Position.name
                 ORDER BY Position.name, category`;
-            eta.db.query(sql, [], (err : eta.DBError, positionCounts : any[]) => {
+            eta.db.query(sql, [req.session["department"]], (err : eta.DBError, positionCounts : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
                     callback({errcode: eta.http.InternalError});
@@ -101,15 +120,19 @@ export class Model implements eta.Model {
                                 EmployeePosition.id = Person.id
                             LEFT JOIN Position ON
                                 EmployeePosition.position = Position.id
+                            LEFT JOIN Center ON
+                                Position.center = Center.id
                     WHERE
                         ${whereSql} AND
                         EmployeePosition.start <= CURDATE() AND
                         (
                             ISNULL(EmployeePosition.end) OR
                             EmployeePosition.end >= CURDATE()
-                        )
+                        ) AND
+                        Center.department = ?
                     GROUP BY Employee.id
                     ORDER BY Person.lastName, Person.firstName`;
+                params.push(req.session["department"]);
                 eta.db.query(sql, params, (err : eta.DBError, employeeRows : any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
@@ -136,9 +159,12 @@ export class Model implements eta.Model {
                             EmployeePosition
                                 LEFT JOIN Position ON
                                     EmployeePosition.position = Position.id
+                                LEFT JOIN Center ON
+                                    Position.center = Center.id
                         WHERE
-                            EmployeePosition.id IN (?)`;
-                    eta.db.query(sql, [employeeIDs], (err : eta.DBError, employeePositionRows : any[]) => {
+                            EmployeePosition.id IN (?) AND
+                            Center.department = ?`;
+                    eta.db.query(sql, [employeeIDs, req.session["department"]], (err : eta.DBError, employeePositionRows : any[]) => {
                         if (err) {
                             eta.logger.dbError(err);
                             callback({errcode: eta.http.InternalError});
@@ -179,8 +205,20 @@ export class Model implements eta.Model {
                             }
                             return a.lastName.localeCompare(b.lastName);
                         });
-                        sql = "SELECT * FROM Position WHERE active = 1 ORDER BY category, name";
-                        eta.db.query(sql, [], (err : eta.DBError, positionRows : any[]) => {
+                        sql = `
+                            SELECT
+                                Position.*
+                            FROM
+                                Position
+                                    LEFT JOIN Center ON
+                                        Position.center = Center.id
+                            WHERE
+                                Position.active = 1 AND
+                                Center.department = ?
+                            ORDER BY
+                                Position.category,
+                                Position.name`;
+                        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, positionRows : any[]) => {
                             if (err) {
                                 eta.logger.dbError(err);
                                 callback({errcode: eta.http.InternalError});

@@ -4,6 +4,11 @@ import * as express from "express";
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+        // TODO: actually implement department column in LoginData
+        if (req.session["department"] !== 1) {
+            callback({errcode: eta.http.Forbidden});
+            return;
+        }
         let sql : string = `
             SELECT
                 name, username, password

@@ -19,16 +19,19 @@ export class Model implements eta.Model {
         }
         let sql : string = `
             SELECT
-                day,
-                open,
-                close
+                HoursOfOperation.day,
+                HoursOfOperation.open,
+                HoursOfOperation.close
             FROM
                 HoursOfOperation
+                    LEFT JOIN Center ON
+                        HoursOfOperation.center = Center.id
             WHERE
-                term = ? AND
-                center = ?
+                HoursOfOperation.term = ? AND
+                HoursOfOperation.center = ? AND
+                Center.department = ?
             ORDER BY day ASC`;
-        eta.db.query(sql, [req.query.term, req.query.center], function(err : eta.DBError, rows : any[]) {
+        eta.db.query(sql, [req.query.term, req.query.center, req.session["department"]], function(err : eta.DBError, rows : any[]) {
             if (err) {
                 eta.logger.dbError(err);
                 callback({errcode: eta.http.InternalError});

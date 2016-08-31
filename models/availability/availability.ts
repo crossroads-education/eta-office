@@ -54,12 +54,13 @@ export class Model implements eta.Model {
                         EmployeeSchedule.term = WeekTotal.term
             WHERE
                 EmployeeSchedule.term = ? AND
-                EmployeeSchedule.id = ?
+                EmployeeSchedule.id = ? AND
+                Center.department = ?
             ORDER BY
                 EmployeeSchedule.day,
                 EmployeeSchedule.time`;
         let term : string = req.query.term ? req.query.term : eta.term.getCurrent().id;
-        let params : string[] = [term, req.query.userid];
+        let params : string[] = [term, req.query.userid, req.session["department"]];
         eta.db.query(sql, params, (err : eta.DBError, raw : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
@@ -68,20 +69,27 @@ export class Model implements eta.Model {
             }
             sql = `
                 SELECT
-                    day,
-                    HOUR(open) AS open,
-                    HOUR(close) AS close
+                    HoursOfOperation.day,
+                    HOUR(HoursOfOperation.open) AS open,
+                    HOUR(HoursOfOperation.close) AS close
                 FROM
                     HoursOfOperation
+                        LEFT JOIN Center ON
+                            HoursOfOperation.center = Center.id
                 WHERE
-                    term = ? AND
-                    center = ?
-                ORDER BY day ASC`;
-            params = [term, eta.setting.get("/center", "main").value.toString()];
+                    HoursOfOperation.term = ? AND
+                    HoursOfOperation.center = ? AND
+                    Center.department = ?
+                ORDER BY HoursOfOperation.day ASC`;
+            params = [term, eta.setting.get("/center", "main").value.toString(), req.session["department"]];
             eta.db.query(sql, params, (err : eta.DBError, hourRows : any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
                     callback({errcode: eta.http.InternalError});
+                    return;
+                }
+                if (hourRows.length === 0) {
+                    callback({errcode: eta.http.NotFound});
                     return;
                 }
                 let hours : {open : number, close : number} = eta.object.copy(hourRows[0]);
