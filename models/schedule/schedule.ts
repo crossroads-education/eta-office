@@ -67,7 +67,10 @@ export class Model implements eta.Model {
             WHERE
                 EmployeeSchedule.term = ? AND
                 EmployeeSchedule.day = ? AND
-                Center.department = ?
+                (
+                    Center.department = ? OR
+                    ISNULL(Center.department)
+                )
             ORDER BY
                 EmployeeSchedule.id,
                 EmployeeSchedule.day,
