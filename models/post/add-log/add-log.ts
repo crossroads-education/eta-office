@@ -20,8 +20,8 @@ export class Model implements eta.Model {
         }
         let nowDate : Date = new Date();
         let now : string = eta.time.getStandardDatetime(nowDate);
-        let sql : string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`, `timestamp`, `department`) VALUES(?, ?, ?, ?, ?, ?)";
-        let params : string[] = [req.session["userid"], req.body.about, req.body.message, req.body.type, now, req.session["department"]];
+        let sql : string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`, `timestamp`) VALUES(?, ?, ?, ?, ?)";
+        let params : string[] = [req.session["userid"], req.body.about, req.body.message, req.body.type, now];
         eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
             if (err) {
                 eta.logger.dbError(err);
