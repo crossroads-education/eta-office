@@ -1,4 +1,4 @@
--- term,department,position
+-- term,department,positions
 SELECT
     CONCAT(`firstName`, ' ', `lastName`) AS "Name",
     `hours` AS "Hours Scheduled",
@@ -36,7 +36,7 @@ FROM
             `Center`.`department` = ? AND
             `EmployeeSchedule`.`center` >= 0 AND
             `PositionPayrate`.`payrate` IS NOT NULL AND
-            `Position`.`name` = ? AND
+            `Position`.`name` IN (?) AND
             NOT (
                 `Position`.`category` = 'Management' AND
                 `Position`.`name` != 'Assistant Manager'

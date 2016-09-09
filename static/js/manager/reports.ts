@@ -4,6 +4,7 @@ import "datatables.net-buttons";
 import "datatables.net-buttons-bs";
 import "datatables.net-buttons-html5";
 import "datatables.net-buttons-print";
+import "select2";
 
 import {HelperStatus} from "lib/helpers/HelperStatus";
 
@@ -11,6 +12,11 @@ export module reports {
 
     let table : any;
     let status : HelperStatus;
+
+    function onSelect2All() : void {
+        $($(this).attr("data-select2")).select2('destroy').find('option').prop('selected', 'selected').end().select2();
+    }
+
     function onReportChange() : void {
         let fadeDuration : number = 200;
         let reportType : string = $("#input-report").val();
@@ -56,17 +62,33 @@ export module reports {
             "dom": "Blftipr"
         });
         (<any>window).table = table;
+        if ($("#input-report").val() == "payroll") {
+            let total : number = 0;
+            for (let i : number = 0; i < rows.length; i++) {
+                total += Number(rows[i]["Weekly Expenditure"].substring(1));
+            }
+            $("#results-total").parent().show();
+            $("#results-total").html(" $" + Math.round(total * 100) / 100);
+        }
     }
 
     function onReportSubmit() : void {
         let $parent : JQuery = $(this).closest(".section-input");
-        let params : {[key : string] : string} = {
-            "reportName": $("#input-report").val()
+        let params : {[key : string] : any} = {
+            "reportName": $("#input-report").val(),
+            "jsonParams": []
         };
         $parent.find("input,select,textarea[data-name]").each(function(index : number, element : HTMLElement) {
             let $input : JQuery = $(element);
-            params[$input.attr("data-name")] = $input.val();
+            let name : string = $input.attr("data-name");
+            let val : any = $input.val();
+            if ($input.hasClass("report-select2")) {
+                val = JSON.stringify(val);
+                params["jsonParams"].push(name);
+            }
+            params[name] = val;
         });
+        params["jsonParams"] = JSON.stringify(params["jsonParams"]);
         $.post("/office/post/generate-report", params, onReportLoad, "json").fail(function(data) {
             status.error("Error code " + data.status + " occurred.");
         });
@@ -76,7 +98,13 @@ export module reports {
         status = new HelperStatus("#success", "#error");
         $("#input-report").on("change", onReportChange);
         $(".btn-report-submit").on("click", onReportSubmit);
-
+        $(".select-2-all").on("click", onSelect2All);
+        $(".report-select2").each(function() {
+            let $this : JQuery = $(this);
+            $this.select2(<any>{
+                "placeholder": $this.attr("data-placeholder")
+            });
+        });
         onReportChange();
     });
 }

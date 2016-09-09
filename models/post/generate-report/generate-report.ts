@@ -5,9 +5,16 @@ import * as fs from "fs";
 
 export class Model implements eta.Model {
     public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
-        if (!eta.params.test(req.body, ["reportName"])) {
+        if (!eta.params.test(req.body, ["reportName", "jsonParams"])) {
             callback({errcode: eta.http.InvalidParameters});
             return;
+        }
+        let jsonParams : string[] = JSON.parse(req.body.jsonParams);
+        for (let i : number = 0; i < jsonParams.length; i++) {
+            let param : any = req.body[jsonParams[i]];
+            if (param) {
+                req.body[jsonParams[i]] = JSON.parse(param);
+            }
         }
         let sqlFilename : string = "modules/office/lib/reports/" + req.body.reportName + ".sql";
         eta.fs.exists(sqlFilename, (exists : boolean) => {

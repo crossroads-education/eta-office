@@ -15,3 +15,7 @@
 .dt-buttons {
     float: right;
 }
+
+.section-input > .section-divider {
+    margin-bottom: 0.5em;
+}

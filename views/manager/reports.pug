@@ -35,17 +35,24 @@ block body
     +report-section("payroll")
         h3 Get Payroll Expenditure
         div.section-input
-            +select-term()
-            select.border-rounded.keep-caret(data-name="department")
-                each department in departments
-                    option(value=department.id) #{department.name}
-            select.border-rounded.keep-caret(data-name="position")
-                each position in positionNames
-                    option(value=position.name) #{position.name}
+            div.section-divider
+                +select-term()
+            div.section-divider
+                select.border-rounded.keep-caret(data-name="department")
+                    each department in departments
+                        option(value=department.id) #{department.name}
+            div.section-divider
+                select.border-rounded.keep-caret.report-select2#select-payroll-positions(data-name="positions", data-placeholder="Position", multiple, style="width: 25%;")
+                    each position in positionNames
+                        option(value=position.name) #{position.name}
+                button.btn.btn-primary.select-2-all(data-select2="#select-payroll-positions") Select All
             +report-submit()
     div
         span.text-success#success
         span.text-error#error
+        span.form-label(style="display: none;")
+            | Total:
+            span#results-total
         table.table.table-striped.table-hover#table-results
             thead
             tbody
