@@ -9,9 +9,32 @@ export class Model implements eta.Model {
             callback({errcode: eta.http.Forbidden});
             return;
         }
-        callback({
-            "currentTerm": eta.term.getCurrent().id,
-            "terms": eta.term.getClosest(eta.term.getCurrent())
+        let sql : string = `
+            SELECT DISTINCT
+                Position.name
+            FROM
+                Position
+            ORDER BY Position.name`;
+        eta.db.query(sql, [], (err : eta.DBError, positionNames : any[]) => {
+            if (err) {
+                eta.logger.dbError(err);
+                callback({errcode: eta.http.InternalError});
+                return;
+            }
+            sql = "SELECT * FROM Department ORDER BY Department.id";
+            eta.db.query(sql, [], (err : eta.DBError, departments : any[]) => {
+                if (err) {
+                    eta.logger.dbError(err);
+                    callback({errcode: eta.http.InternalError});
+                    return;
+                }
+                callback({
+                    "currentTerm": eta.term.getCurrent().id,
+                    "departments": departments,
+                    "positionNames": positionNames,
+                    "terms": eta.term.getClosest(eta.term.getCurrent())
+                });
+            });
         });
     }
 }
