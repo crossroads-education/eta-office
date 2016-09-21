@@ -40,7 +40,7 @@ block body
                 th Notes
         tbody
             for applicant in applicants
-                tr.applicant-row(data-id=applicant.id, data-positions=JSON.stringify(applicant.positions))
+                tr.applicant-row(data-id=applicant.id, data-positions=JSON.stringify(applicant.positions), data-notes=applicant.notes)
                     td #{applicant.id}
                     td.cell-first-name #{applicant.firstName}
                     td.cell-last-name #{applicant.lastName}
@@ -69,6 +69,8 @@ block body
                     div
                         span.applicant-name.modal-title#modal-title
                 div.modal-body
+                    span.text-success#modal-success
+                    span.text-danger#modal-error
                     +collapsible-parent("Positions Applied For")
                         table.table.table-condensed.table-striped.table-hover
                             thead

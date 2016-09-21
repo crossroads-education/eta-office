@@ -1,3 +1,4 @@
+import "bootstrap-switch";
 import "datatables.net";
 import "datatables.net-bs";
 import "datatables.net-buttons";
@@ -5,8 +6,6 @@ import "datatables.net-buttons-bs";
 import "datatables.net-buttons-html5";
 import "datatables.net-buttons-print";
 import "select2";
-
-
 import "templates/modal";
 
 import {HelperStatus} from "lib/helpers/HelperStatus";
@@ -14,6 +13,7 @@ import {HelperUrl} from "lib/helpers/HelperUrl";
 
 export module hire {
     let status : HelperStatus;
+    let modalStatus : HelperStatus;
 
     function addEvaluationRow(level : string, date : string, score : number) : void {
         let $row : JQuery = $("<tr>");
@@ -31,16 +31,16 @@ export module hire {
         $("#modal-evaluations").append($row);
     }
 
-    function onFilter() {
+    function onFilter() : void {
         let $this : JQuery = $(this);
         HelperUrl.setParameterByName($this.data("param"), $this.val());
     }
 
-    function onApplicantFlagChange() {
+    function onApplicantFlagChange() : void {
         $(this).closest(".applicant-row").find(".btn-update").prop("disabled", false);
     }
 
-    function onApplicantFlagSubmit() {
+    function onApplicantFlagSubmit() : void {
         let flags : {[key : string] : boolean} = {};
         $(this).closest(".applicant-row").find(".input-applicant").each(function() {
             flags[this.getAttribute("data-name")] = this.checked;
@@ -50,6 +50,19 @@ export module hire {
             "flags": JSON.stringify(flags)
         }, function(data) {
             status.success("Successfully updated employee flags.");
+        }).fail(function(data) {
+            status.error("Error code " + data.status + " has occurred.");
+        });
+    }
+
+    function onApplicantSave() : void {
+        $.post("/office/post/update-applicant", {
+            "userid": $("#modal").attr("data-id"),
+            "flags": JSON.stringify({
+                "notes": $("#input-notes").val()
+            })
+        }, function(data) {
+            modalStatus.success("Successfully updated notes.");
         }).fail(function(data) {
             status.error("Error code " + data.status + " has occurred.");
         });
@@ -90,6 +103,7 @@ export module hire {
         $("#modal-positions").html("");
         $("#modal").attr("data-id", $row.data("id"));
         $("#modal-title").text($row.find(".cell-first-name").text() + " " + $row.find(".cell-last-name").text());
+        $("#input-notes").html($row.data("notes"));
         let positions : any[] = $row.data("positions");
         for (let i : number = 0; i < positions.length; i++) {
             let $positionRow : JQuery = $("<tr>");
@@ -113,6 +127,7 @@ export module hire {
 
     $(document).ready(function() {
         status = new HelperStatus("#success", "#error");
+        modalStatus = new HelperStatus("#modal-success", "#modal-error");
         $("#input-hire-positions").select2({
             "placeholder": "Positions"
         });
@@ -125,7 +140,12 @@ export module hire {
         $(".btn-toggle-notes").on("click", onApplicantOpen);
         $("#btn-evaluation-submit").on("click", onEvaluationSubmit);
         $(".btn-update").on("click", onApplicantFlagSubmit);
-        $(".input-applicant").on("change", onApplicantFlagChange);
+        $(".input-applicant").bootstrapSwitch({
+            "onText": "Yes",
+            "offText": "No"
+        });
+        $(".input-applicant").on("switchChange.bootstrapSwitch", onApplicantFlagChange);
         $("#btn-submit-hire").on("click", onManualHireSubmit);
+        $("#btn-save").on("click", onApplicantSave);
     });
 }

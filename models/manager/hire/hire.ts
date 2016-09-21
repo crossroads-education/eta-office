@@ -17,7 +17,8 @@ export class Model implements eta.Model {
                 GROUP_CONCAT(DISTINCT ApplicantPosition.position ORDER BY ApplicantPosition.position SEPARATOR '<br/>') AS positionNames,
                 Applicant.evaluate,
                 Applicant.interview,
-                Applicant.hire
+                Applicant.hire,
+                Applicant.notes
             FROM
                 Applicant
                     LEFT JOIN ApplicantPosition ON
