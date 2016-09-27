@@ -83,6 +83,9 @@
     "Sign-In (Stat)": {
       "permission": "access/compass/signin",
       "url": "/itrac/signin?location=8"
+    },
+    "Non-IU Registration": {
+      "url": "/itrac/register"
     }
   }
 }
