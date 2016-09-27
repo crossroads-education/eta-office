@@ -1,17 +1,17 @@
 /// <amd-dependency path="./templates/schedule.js"/>
 
 export module schedule {
-    function onSubmit() : void {
-        let params : {[key : string] : any} = {
+    function onSubmit(): void {
+        let params: { [key: string]: any } = {
             "day": $(".schedule-filter-cell.border-rounded").data("value"),
             "term": $("#schedule-term").val(),
             "cells": []
         };
-        $(".schedule-cell-quarter[data-changed]").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
-            let userid : string = $this.closest(".schedule-cell-row").attr("data-userid");
-            let time : string = $this.attr("data-time");
-            let location : string = $this.attr("data-previous-color");
+        $(".schedule-cell-quarter[data-changed]").each(function(index: number, element: HTMLElement) {
+            let $this: JQuery = $(this);
+            let userid: string = $this.closest(".schedule-cell-row").attr("data-userid");
+            let time: string = $this.attr("data-time");
+            let location: string = $this.attr("data-previous-color");
             params["cells"].push({
                 "userid": userid,
                 "time": time,

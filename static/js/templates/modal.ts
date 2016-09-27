@@ -1,8 +1,8 @@
 export module modal {
     function setupModalCollapsible() {
-        $(".collapsible-parent").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
-            let $body : JQuery = $(this).find(".collapsible-body");
+        $(".collapsible-parent").each(function(index: number, element: HTMLElement) {
+            let $this: JQuery = $(this);
+            let $body: JQuery = $(this).find(".collapsible-body");
             $body.collapse();
             $body.on("hide.bs.collapse", function() {
                 $this.find(".glyphicon").removeClass("glyphicon-minus collapsible-rotate-minus").addClass("glyphicon-plus collapsible-rotate-plus");

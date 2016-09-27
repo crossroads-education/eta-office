@@ -4,14 +4,14 @@ import * as express from "express";
 
 export class Model implements eta.Model {
 
-    private generateSignature(employee : any) : string {
-        let signature : string = `${employee.firstName} ${employee.lastName}\n`;
-        let location : string[] = employee.positionCenters;
-        let nameTokens : string[] = employee.positionNames.split(",");
-        let categoryTokens : string[] = employee.positionCategories.split(",");
-        let managerTokens : string[] = [];
-        for (let i : number = 0; i < nameTokens.length; i++) {
-            let position : string = nameTokens[i] + " Student Tutor";
+    private generateSignature(employee: any): string {
+        let signature: string = `${employee.firstName} ${employee.lastName}\n`;
+        let location: string[] = employee.positionCenters;
+        let nameTokens: string[] = employee.positionNames.split(",");
+        let categoryTokens: string[] = employee.positionCategories.split(",");
+        let managerTokens: string[] = [];
+        for (let i: number = 0; i < nameTokens.length; i++) {
+            let position: string = nameTokens[i] + " Student Tutor";
             if (categoryTokens[i] == "Graduate") {
                 position = nameTokens[i] + " Graduate Student Tutor";
             } else if (categoryTokens[i] == "META") {
@@ -20,7 +20,7 @@ export class Model implements eta.Model {
                 if (["Executive Director", "Senior Project Manager"].indexOf(nameTokens[i]) >= 0) {
                     position = nameTokens[i];
                 } else {
-                    let managerToken : string = nameTokens[i];
+                    let managerToken: string = nameTokens[i];
                     if (managerToken == "Assistant Manager") {
                         position = "";
                         continue;
@@ -47,8 +47,8 @@ export class Model implements eta.Model {
         return signature;
     }
 
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
-        let sql : string = `
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
+        let sql: string = `
             SELECT
                 Person.firstName,
                 Person.lastName,
@@ -72,18 +72,18 @@ export class Model implements eta.Model {
                 Employee.id = ? AND
                 Employee.current = 1
         `;
-        eta.db.query(sql, [req.session["userid"]], (err : eta.DBError, rows : any[]) => {
+        eta.db.query(sql, [req.session["userid"]], (err: eta.DBError, rows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({errcode: eta.http.InternalError});
+                callback({ errcode: eta.http.InternalError });
                 return;
             }
             if (rows.length === 0) {
-                callback({errcode: eta.http.NotFound});
+                callback({ errcode: eta.http.NotFound });
                 return;
             }
-            let signature : string = this.generateSignature(rows[0]);
-            let env : {[key : string] : any} = {
+            let signature: string = this.generateSignature(rows[0]);
+            let env: { [key: string]: any } = {
                 "employee": rows[0],
                 "minHours": 12,
                 "maxHours": 27,

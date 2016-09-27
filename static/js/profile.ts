@@ -5,15 +5,15 @@ import "bootstrap-switch";
 export module profile {
 
     function onInfoSubmit() {
-        var params : {[key : string] : string} = {};
+        var params: { [key: string]: string } = {};
         $("#info-container .info-field").each(function() {
-            let name : string = this.getAttribute("name");
+            let name: string = this.getAttribute("name");
             if (name == null) {
                 return;
             }
-            let value : string = $(this).val();
+            let value: string = $(this).val();
             if ($(this).hasClass("info-slider")) {
-                let valueTokens : string[] = this.getAttribute("data-value").split(",");
+                let valueTokens: string[] = this.getAttribute("data-value").split(",");
                 name = name.substring(0, 1).toUpperCase() + name.substring(1);
                 params["min" + name] = valueTokens[0];
                 params["max" + name] = valueTokens[1];
@@ -42,8 +42,8 @@ export module profile {
                 onInfoSubmit.apply(this);
             }
         });
-        $("input.info-field[type='checkbox']").each(function(index : number, element : HTMLElement) {
-            let $element : JQuery = $(element);
+        $("input.info-field[type='checkbox']").each(function(index: number, element: HTMLElement) {
+            let $element: JQuery = $(element);
             $element.bootstrapSwitch({
                 "state": $element.prop("checked")
             });

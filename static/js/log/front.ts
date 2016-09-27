@@ -4,10 +4,10 @@ import "datatables.net-bs";
 import "select2";
 
 export module front {
-    let table : DataTables.DataTable;
-    function onSubmit() : void {
-        let about : string = $("#input-about").val();
-        let message : string = $("#input-message").val();
+    let table: DataTables.DataTable;
+    function onSubmit(): void {
+        let about: string = $("#input-about").val();
+        let message: string = $("#input-message").val();
         $("#input-message").val("");
         $.post("/office/post/add-log", {
             "about": about,
@@ -16,7 +16,7 @@ export module front {
         }, function(log) {
             $("#modal-error").html("");
             $("#modal-success").html("Successfully logged message.");
-            let $row : JQuery = $("<tr>");
+            let $row: JQuery = $("<tr>");
             $row.append($("<td>").text(new Date(log.timestamp).toLocaleString()));
             $row.append($("<td>").text(log.author));
             $row.append($("<td>").text(log.about));

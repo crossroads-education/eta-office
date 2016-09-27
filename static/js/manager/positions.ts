@@ -1,13 +1,13 @@
 import "bootstrap-switch";
-import {HelperStatus} from "lib/helpers/HelperStatus";
+import { HelperStatus } from "lib/helpers/HelperStatus";
 
 export module positions {
-    let status : HelperStatus;
+    let status: HelperStatus;
 
     function onSubmit() {
-        let changed : {[key : string] : boolean} = {};
-        let count : number = 0;
-        $(".input-toggle[data-changed='true']").each(function(index : number, element : HTMLElement) {
+        let changed: { [key: string]: boolean } = {};
+        let count: number = 0;
+        $(".input-toggle[data-changed='true']").each(function(index: number, element: HTMLElement) {
             changed[$(element).data("position")] = <any>$(element).bootstrapSwitch("state");
             count++;
         });
@@ -26,7 +26,7 @@ export module positions {
 
     $(document).ready(function() {
         status = new HelperStatus("#success", "#error");
-        $(".input-toggle").bootstrapSwitch().on("switchChange.bootstrapSwitch", function(event : Event, state : string) {
+        $(".input-toggle").bootstrapSwitch().on("switchChange.bootstrapSwitch", function(event: Event, state: string) {
             $(this).attr("data-changed", "true");
         });
         $("#btn-submit").on("click", onSubmit);

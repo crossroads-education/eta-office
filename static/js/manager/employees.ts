@@ -6,37 +6,37 @@ import "datatables.net";
 import "datatables.net-bs";
 import "templates/modal";
 import * as moment from "moment";
-import {timesheet} from "templates/timesheet";
+import { timesheet } from "templates/timesheet";
 
-import {HelperStatus} from "lib/helpers/HelperStatus";
-import {HelperUrl} from "lib/helpers/HelperUrl";
+import { HelperStatus } from "lib/helpers/HelperStatus";
+import { HelperUrl } from "lib/helpers/HelperUrl";
 
 export module employees {
 
     interface NetworkEmployeePosition {
-        id : number;
-        start : string;
-        end : string;
+        id: number;
+        start: string;
+        end: string;
     }
 
     interface EmployeePosition extends NetworkEmployeePosition {
-        name : string;
-        category : string;
+        name: string;
+        category: string;
     }
 
     interface Log {
-        about : string;
-        author : string;
-        message : string;
-        timestamp : string;
-        type : string;
+        about: string;
+        author: string;
+        message: string;
+        timestamp: string;
+        type: string;
     }
 
-    let modalStatus : HelperStatus;
+    let modalStatus: HelperStatus;
 
-    function addPositionRow(position : EmployeePosition) : void {
-        let startDate : moment.Moment = moment(position.start);
-        let endDate : moment.Moment = moment(position.end);
+    function addPositionRow(position: EmployeePosition): void {
+        let startDate: moment.Moment = moment(position.start);
+        let endDate: moment.Moment = moment(position.end);
         let $row = $("<tr>");
         $row.addClass("position-row");
         $row.attr("data-id", position.id);
@@ -47,10 +47,10 @@ export module employees {
         $("#modal-positions").append($row);
     }
 
-    function addLogRow(log : Log) : void {
-        let $row : JQuery = $("<tr>");
-        let timestamp : Date = new Date(log.timestamp);
-        let category : string = log.type;
+    function addLogRow(log: Log): void {
+        let $row: JQuery = $("<tr>");
+        let timestamp: Date = new Date(log.timestamp);
+        let category: string = log.type;
         if (category == "FRONT") {
             category = "Front Desk";
         } else if (category == "CLOCK") {
@@ -65,24 +65,24 @@ export module employees {
         $("#table-log").prepend($row);
     }
 
-    function onEmployeeOpen() : void {
+    function onEmployeeOpen(): void {
         $("#modal-positions").html("");
         $("#table-log").html("");
-        let $this : JQuery = $(this);
-        let $data : JQuery = $this.find(".employee-data");
-        let name : string = $this.find(".employee-name").text();
-        let photoUrl : string = $this.find(".employee-photo").attr("src");
-        let positions : any[] = $data.data("positions");
-        let allowances : {[key : string] : boolean} = $data.data("allowances");
-        let userid : string = $this.attr("data-id");
+        let $this: JQuery = $(this);
+        let $data: JQuery = $this.find(".employee-data");
+        let name: string = $this.find(".employee-name").text();
+        let photoUrl: string = $this.find(".employee-photo").attr("src");
+        let positions: any[] = $data.data("positions");
+        let allowances: { [key: string]: boolean } = $data.data("allowances");
+        let userid: string = $this.attr("data-id");
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
         $("#modal-positions").attr("data-employee", userid);
         $("#input-nametag-id").val(userid);
         $("#output-notes").text($data.attr("data-notes"));
-        let timesheetRows : timesheet.TimesheetRow[] = $data.data("timesheet");
+        let timesheetRows: timesheet.TimesheetRow[] = $data.data("timesheet");
         timesheet.table.fnClearTable();
-        for (let i : number = 0; i < timesheetRows.length; i++) {
+        for (let i: number = 0; i < timesheetRows.length; i++) {
             timesheet.addRow(timesheetRows[i]);
         }
         timesheet.table.fnDraw();
@@ -95,13 +95,13 @@ export module employees {
         } else {
             $("#mentor-container").addClass("hidden");
         }
-        for (let i : number = 0; i < positions.length; i++) {
+        for (let i: number = 0; i < positions.length; i++) {
             addPositionRow(positions[i]);
         }
         $.post("/office/post/get-log", {
             "userid": userid
         }, function(log) {
-            for (let i : number = 0; i < log.length; i++) {
+            for (let i: number = 0; i < log.length; i++) {
                 addLogRow(log[i]);
             }
         }, "json").fail(function(data) {
@@ -110,8 +110,8 @@ export module employees {
     }
 
     function onPositionAdd() {
-        let $select : JQuery = $("#select-position");
-        let $selected : JQuery = $select.find(`option[value="${$select.val()}"]`);
+        let $select: JQuery = $("#select-position");
+        let $selected: JQuery = $select.find(`option[value="${$select.val()}"]`);
         addPositionRow({
             "id": $select.val(),
             "start": null,
@@ -123,16 +123,16 @@ export module employees {
 
     function onSave() {
         $("#modal-error").html("");
-        let errorMessage : string = "";
-        let positions : NetworkEmployeePosition[] = [];
-        $("#modal-positions .position-row").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
-            let id : number = $this.data("id");
-            let startDate : string = $this.find(".position-start").val();
-            let endDate : string = $this.find(".position-end").val();
+        let errorMessage: string = "";
+        let positions: NetworkEmployeePosition[] = [];
+        $("#modal-positions .position-row").each(function(index: number, element: HTMLElement) {
+            let $this: JQuery = $(this);
+            let id: number = $this.data("id");
+            let startDate: string = $this.find(".position-start").val();
+            let endDate: string = $this.find(".position-end").val();
             if (startDate == "") {
-                let name : string = $this.find(".position-name").text();
-                let category : string = $this.find(".position-category").text();
+                let name: string = $this.find(".position-name").text();
+                let category: string = $this.find(".position-category").text();
                 errorMessage += `Position ${name} (${category}) cannot have an empty start date.<br/>`;
             }
             if (endDate == "") {
@@ -144,12 +144,12 @@ export module employees {
                 "end": endDate
             });
         });
-        let allowances : {[key : string] : boolean} = {};
-        $("input.modal-allowance").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
+        let allowances: { [key: string]: boolean } = {};
+        $("input.modal-allowance").each(function(index: number, element: HTMLElement) {
+            let $this: JQuery = $(this);
             allowances[$this.data("name")] = <any>$this.bootstrapSwitch("state");
         });
-        let mentor : number = -1;
+        let mentor: number = -1;
         if (!$("#mentor-container").hasClass("hidden")) {
             mentor = $("#input-mentor").val();
         }
@@ -169,13 +169,13 @@ export module employees {
         });
     }
 
-    function onLogSubmit() : void {
-        let message : string = $("#input-log-message").val();
+    function onLogSubmit(): void {
+        let message: string = $("#input-log-message").val();
         $.post("/office/post/add-log", {
             "about": $("#modal-positions").attr("data-employee"),
             "message": message,
             "type": "MANGR"
-        }, function(log : Log) {
+        }, function(log: Log) {
             addLogRow(log);
             modalStatus.success("Successfully submitted new log entry.");
         }, "json").fail(function(data) {
@@ -183,7 +183,7 @@ export module employees {
         });
     }
 
-    function onImageSetup(index : number, element : HTMLImageElement) : void {
+    function onImageSetup(index: number, element: HTMLImageElement): void {
         $(element).on("error", function() {
             $(this).attr("src", "https://mac.iupui.edu/img/MissingPhotos.svg");
         });
@@ -191,14 +191,14 @@ export module employees {
     }
 
     function onFilter() {
-        let $this : JQuery = $(this);
+        let $this: JQuery = $(this);
         HelperUrl.setParameterByName($this.attr("data-filter"), $this.val());
     }
 
     function setupModalInputs() {
         $("input.modal-allowance").bootstrapSwitch();
         $("input.modal-allowance + span").on("click", function() {
-            let $checkbox : JQuery = $(this).prev();
+            let $checkbox: JQuery = $(this).prev();
             $checkbox.bootstrapSwitch("toggleState");
         });
     }
@@ -209,7 +209,7 @@ export module employees {
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-save").on("click", onSave);
-        $("#input-log-message").on("keyup", function(evt : any) {
+        $("#input-log-message").on("keyup", function(evt: any) {
             if (evt.which == 13) {
                 onLogSubmit();
             }

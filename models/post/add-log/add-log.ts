@@ -3,29 +3,29 @@ import * as eta from "eta-lib";
 import * as express from "express";
 
 export class Model implements eta.Model {
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
         if (!eta.params.test(req.body, ["about", "message", "type"])) {
-            callback({errcode: eta.http.InvalidParameters});
+            callback({ errcode: eta.http.InvalidParameters });
             return;
         }
-        let user : eta.PermissionUser = req.session["permissions"];
+        let user: eta.PermissionUser = req.session["permissions"];
         if ((req.body.type == "FRONT" && !user.has("add/log/front")) ||
             (req.body.type == "MANGR" && !user.has("add/log/manager")) ||
             (req.body.type == "CLOCK" && !user.has("add/log/clock"))) {
-                callback({errcode: eta.http.Forbidden});
-                return;
+            callback({ errcode: eta.http.Forbidden });
+            return;
         }
         if (req.body.about == "userid") {
             req.body.about = req.session["userid"];
         }
-        let nowDate : Date = new Date();
-        let now : string = eta.time.getStandardDatetime(nowDate);
-        let sql : string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`, `timestamp`) VALUES(?, ?, ?, ?, ?)";
-        let params : string[] = [req.session["userid"], req.body.about, req.body.message, req.body.type, now];
-        eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
+        let nowDate: Date = new Date();
+        let now: string = eta.time.getStandardDatetime(nowDate);
+        let sql: string = "INSERT IGNORE INTO `Log`(`author`, `about`, `message`, `type`, `timestamp`) VALUES(?, ?, ?, ?, ?)";
+        let params: string[] = [req.session["userid"], req.body.about, req.body.message, req.body.type, now];
+        eta.db.query(sql, params, (err: eta.DBError, rows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({errcode: eta.http.InternalError});
+                callback({ errcode: eta.http.InternalError });
                 return;
             }
             sql = `
@@ -42,13 +42,13 @@ export class Model implements eta.Model {
                     Log.author = ? AND
                     Log.timestamp = ?`;
             params = [req.session["userid"], now];
-            eta.db.query(sql, params, (err : eta.DBError, rows : any[]) => {
+            eta.db.query(sql, params, (err: eta.DBError, rows: any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
-                    callback({errcode: eta.http.InternalError});
+                    callback({ errcode: eta.http.InternalError });
                     return;
                 }
-                let data : {[key : string] : any} = {
+                let data: { [key: string]: any } = {
                     "about": rows[0].about,
                     "author": rows[0].author,
                     "message": req.body.message,

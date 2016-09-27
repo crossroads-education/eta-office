@@ -6,23 +6,23 @@ import "datatables.net-buttons-html5";
 import "datatables.net-buttons-print";
 import "select2";
 
-import {HelperStatus} from "lib/helpers/HelperStatus";
+import { HelperStatus } from "lib/helpers/HelperStatus";
 
 export module reports {
 
-    let table : any;
-    let status : HelperStatus;
+    let table: any;
+    let status: HelperStatus;
 
-    function onSelect2All() : void {
+    function onSelect2All(): void {
         $($(this).attr("data-select2")).select2('destroy').find('option').prop('selected', 'selected').end().select2();
     }
 
-    function onReportChange() : void {
-        let fadeDuration : number = 200;
-        let reportType : string = $("#input-report").val();
-        let hideSelector : string = `.report-section:not([data-report="${reportType}"])`;
-        let showSelector : string = `.report-section[data-report="${reportType}"]`;
-        let hideElements : JQuery = $(hideSelector);
+    function onReportChange(): void {
+        let fadeDuration: number = 200;
+        let reportType: string = $("#input-report").val();
+        let hideSelector: string = `.report-section:not([data-report="${reportType}"])`;
+        let showSelector: string = `.report-section[data-report="${reportType}"]`;
+        let hideElements: JQuery = $(hideSelector);
 
         // fadeOut won't callback if it's operating on an empty JQuery array
         if (hideElements.length === 0) {
@@ -35,7 +35,7 @@ export module reports {
         }
     }
 
-    function onReportLoad(rows : any[]) : void {
+    function onReportLoad(rows: any[]): void {
         if (rows.length === 0) {
             status.error("No data matched your parameters.");
             return;
@@ -44,14 +44,14 @@ export module reports {
             table.clear();
             table.destroy();
         }
-        let $headerRow : JQuery = $("<tr>");
+        let $headerRow: JQuery = $("<tr>");
         for (let columnName in rows[0]) {
             $headerRow.append($("<th>").text(columnName));
         }
         $("#table-results").find("thead").html("").append($headerRow);
-        let $body : JQuery = $("#table-results").find("tbody").html("");
-        for (let i : number = 0; i < rows.length; i++) {
-            let $row : JQuery = $("<tr>");
+        let $body: JQuery = $("#table-results").find("tbody").html("");
+        for (let i: number = 0; i < rows.length; i++) {
+            let $row: JQuery = $("<tr>");
             for (let columnName in rows[i]) {
                 $row.append($("<td>").text(rows[i][columnName]));
             }
@@ -63,8 +63,8 @@ export module reports {
         });
         (<any>window).table = table;
         if ($("#input-report").val() == "payroll") {
-            let total : number = 0;
-            for (let i : number = 0; i < rows.length; i++) {
+            let total: number = 0;
+            for (let i: number = 0; i < rows.length; i++) {
                 total += Number(rows[i]["Weekly Expenditure"].substring(1));
             }
             $("#results-total").parent().show();
@@ -72,16 +72,16 @@ export module reports {
         }
     }
 
-    function onReportSubmit() : void {
-        let $parent : JQuery = $(this).closest(".section-input");
-        let params : {[key : string] : any} = {
+    function onReportSubmit(): void {
+        let $parent: JQuery = $(this).closest(".section-input");
+        let params: { [key: string]: any } = {
             "reportName": $("#input-report").val(),
             "jsonParams": []
         };
-        $parent.find("input,select,textarea[data-name]").each(function(index : number, element : HTMLElement) {
-            let $input : JQuery = $(element);
-            let name : string = $input.attr("data-name");
-            let val : any = $input.val();
+        $parent.find("input,select,textarea[data-name]").each(function(index: number, element: HTMLElement) {
+            let $input: JQuery = $(element);
+            let name: string = $input.attr("data-name");
+            let val: any = $input.val();
             if ($input.hasClass("report-select2")) {
                 val = JSON.stringify(val);
                 params["jsonParams"].push(name);
@@ -100,7 +100,7 @@ export module reports {
         $(".btn-report-submit").on("click", onReportSubmit);
         $(".select-2-all").on("click", onSelect2All);
         $(".report-select2").each(function() {
-            let $this : JQuery = $(this);
+            let $this: JQuery = $(this);
             $this.select2(<any>{
                 "placeholder": $this.attr("data-placeholder")
             });

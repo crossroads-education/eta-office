@@ -1,8 +1,8 @@
 export class HelperStatus {
-    private $success : JQuery;
-    private $error : JQuery;
+    private $success: JQuery;
+    private $error: JQuery;
 
-    public constructor(successSelector : string, errorSelector : string) {
+    public constructor(successSelector: string, errorSelector: string) {
         this.$success = $(successSelector);
         this.$error = $(errorSelector);
         this.$success.fadeOut();
@@ -11,7 +11,7 @@ export class HelperStatus {
         this.$error.addClass("text-danger hidden");
     }
 
-    private fadeOut($element : JQuery, callback? : () => void) : void {
+    private fadeOut($element: JQuery, callback?: () => void): void {
         $element.fadeOut(200, function() {
             $element.addClass("hidden");
             if (callback) {
@@ -20,7 +20,7 @@ export class HelperStatus {
         });
     }
 
-    public success(message : string) : void {
+    public success(message: string): void {
         this.fadeOut(this.$error, () => {
             this.$success.removeClass("hidden").fadeIn().text(message);
             setTimeout(() => {
@@ -29,7 +29,7 @@ export class HelperStatus {
         });
     }
 
-    public error(message : string) : void {
+    public error(message: string): void {
         this.fadeOut(this.$success, () => {
             this.$error.removeClass("hidden").fadeIn().text(message);
             setTimeout(() => {

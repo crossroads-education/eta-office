@@ -3,13 +3,13 @@ import * as eta from "eta-lib";
 import * as express from "express";
 
 export class Model implements eta.Model {
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
         if (!req.query.term) {
             req.query.term = eta.term.getCurrent().id;
         }
-        let positions : string[] = [];
-        let categories : string[] = [];
-        var sql : string = `
+        let positions: string[] = [];
+        let categories: string[] = [];
+        var sql: string = `
             SELECT
                 GROUP_CONCAT(DISTINCT Position.name ORDER BY Position.name) AS names,
                 GROUP_CONCAT(DISTINCT Position.category ORDER BY Position.category) AS categories
@@ -20,14 +20,14 @@ export class Model implements eta.Model {
             WHERE
                 Position.active = 1 AND
                 Center.department = ?`;
-        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, rows : any[]) => {
+        eta.db.query(sql, [req.session["department"]], (err: eta.DBError, rows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({errcode: eta.http.InternalError});
+                callback({ errcode: eta.http.InternalError });
                 return;
             }
-            let terms : eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term));
-            for (let i : number = 0; i < terms.length; i++) {
+            let terms: eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term));
+            for (let i: number = 0; i < terms.length; i++) {
                 if (terms[i].session != "1") {
                     terms[i].name += ` (${terms[i].session})`;
                 }

@@ -1,18 +1,18 @@
-import {HelperStatus} from "lib/helpers/HelperStatus";
+import { HelperStatus } from "lib/helpers/HelperStatus";
 
 export module logins {
-    let status : HelperStatus;
+    let status: HelperStatus;
 
     function onAddSubmit() {
-        let params : {[key : string] : any} = {};
-        $(".input-add").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
+        let params: { [key: string]: any } = {};
+        $(".input-add").each(function(index: number, element: HTMLElement) {
+            let $this: JQuery = $(this);
             params[$this.data("name")] = $this.val();
         });
         $.post("/office/post/update-login", params, function(data) {
             status.success("Successfully added login data.");
             $(".input-add").val("");
-            let $row : JQuery = $("#row-template").clone();
+            let $row: JQuery = $("#row-template").clone();
             $row.removeClass("hidden");
             $row.attr("id", "");
             $row.find(".cell-name").text(params["name"]);
@@ -26,8 +26,8 @@ export module logins {
     }
 
     function onValueToggle() {
-        let $password : JQuery = $(this).closest("tr").find(".input-password");
-        let isHidden : boolean = $password.data("hidden") == "yes";
+        let $password: JQuery = $(this).closest("tr").find(".input-password");
+        let isHidden: boolean = $password.data("hidden") == "yes";
         if (isHidden) { // need to show
             $password.val($password.data("value"));
             $password.prop("disabled", false);
@@ -41,10 +41,10 @@ export module logins {
 
     function onUpdateSubmit() {
         let $row = $(this).closest("tr");
-        let name : string = $row.find(".cell-name").text();
-        let username : string = $row.find(".input-username").val();
-        let $password : JQuery = $row.find(".input-password");
-        let password : string = $password.data("hidden") == "yes" ? $password.data("value") : $password.val();
+        let name: string = $row.find(".cell-name").text();
+        let username: string = $row.find(".input-username").val();
+        let $password: JQuery = $row.find(".input-password");
+        let password: string = $password.data("hidden") == "yes" ? $password.data("value") : $password.val();
         $.post("/office/post/update-login", {
             "name": name,
             "username": username,
@@ -57,8 +57,8 @@ export module logins {
     }
 
     function onDeleteSubmit() {
-        let $row : JQuery = $(this).closest("tr");
-        let name : string = $row.find(".cell-name").text();
+        let $row: JQuery = $(this).closest("tr");
+        let name: string = $row.find(".cell-name").text();
         if (!confirm("Are you sure you want to delete " + name + "?")) {
             return;
         }
@@ -72,7 +72,7 @@ export module logins {
         });
     }
 
-    function setupRowHandlers($parent : JQuery) {
+    function setupRowHandlers($parent: JQuery) {
         $parent.find(".btn-toggle").on("click", onValueToggle);
         $parent.find(".btn-update").on("click", onUpdateSubmit);
         $parent.find(".btn-delete").on("click", onDeleteSubmit);
@@ -80,7 +80,7 @@ export module logins {
 
     $(document).ready(function() {
         status = new HelperStatus("#success-add", "#error-add");
-        $(".input-add").on("keyup", function(evt : Event) {
+        $(".input-add").on("keyup", function(evt: Event) {
             if ((<any>evt).which === 13) {
                 onAddSubmit.apply(this);
             }

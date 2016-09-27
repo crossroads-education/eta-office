@@ -4,8 +4,8 @@ import * as express from "express";
 import * as querystring from "querystring";
 
 export class Model implements eta.Model {
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
-        let sql : string = `
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
+        let sql: string = `
             SELECT
                 shirt.size,
                 shirt.count AS "shirtCount",
@@ -44,14 +44,14 @@ export class Model implements eta.Model {
                         GROUP BY Employee.hoodie
                     ) AS hoodie ON
                         shirt.size = hoodie.size`;
-        eta.db.query(sql, [req.session["department"], req.session["department"]], (err : eta.DBError, shirtRows : any[]) => {
+        eta.db.query(sql, [req.session["department"], req.session["department"]], (err: eta.DBError, shirtRows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({errcode: eta.http.InternalError});
+                callback({ errcode: eta.http.InternalError });
                 return;
             }
-            let shirtSizes : {[key : string] : any} = {};
-            for (let i : number = 0; i < shirtRows.length; i++) {
+            let shirtSizes: { [key: string]: any } = {};
+            for (let i: number = 0; i < shirtRows.length; i++) {
                 shirtSizes[shirtRows[i].size] = shirtRows[i];
             }
             sql = `
@@ -80,14 +80,14 @@ export class Model implements eta.Model {
                     Center.department = ?
                 GROUP BY Position.name
                 ORDER BY Position.name, category`;
-            eta.db.query(sql, [req.session["department"]], (err : eta.DBError, positionCounts : any[]) => {
+            eta.db.query(sql, [req.session["department"]], (err: eta.DBError, positionCounts: any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
-                    callback({errcode: eta.http.InternalError});
+                    callback({ errcode: eta.http.InternalError });
                     return;
                 }
-                let params : string[] = [req.query.allowanceTerm ? req.query.allowanceTerm : eta.term.getCurrent().id];
-                let whereSql : string = "Employee.current = 1";
+                let params: string[] = [req.query.allowanceTerm ? req.query.allowanceTerm : eta.term.getCurrent().id];
+                let whereSql: string = "Employee.current = 1";
                 if (req.query.positionName && req.query.positionName != "") {
                     whereSql += " AND Position.name = ?";
                     params.push(req.query.positionName);
@@ -133,18 +133,18 @@ export class Model implements eta.Model {
                     GROUP BY Employee.id
                     ORDER BY Person.lastName, Person.firstName`;
                 params.push(req.session["department"]);
-                eta.db.query(sql, params, (err : eta.DBError, employeeRows : any[]) => {
+                eta.db.query(sql, params, (err: eta.DBError, employeeRows: any[]) => {
                     if (err) {
                         eta.logger.dbError(err);
-                        callback({errcode: eta.http.InternalError});
+                        callback({ errcode: eta.http.InternalError });
                         return;
                     }
                     if (employeeRows.length === 0) {
                         res.redirect("/office/manager/employees?error=404");
                         return;
                     }
-                    let employeeIDs : string[] = [];
-                    for (let i : number = 0; i < employeeRows.length; i++) {
+                    let employeeIDs: string[] = [];
+                    for (let i: number = 0; i < employeeRows.length; i++) {
                         employeeIDs.push(employeeRows[i].id);
                     }
                     sql = `
@@ -164,18 +164,18 @@ export class Model implements eta.Model {
                         WHERE
                             EmployeePosition.id IN (?) AND
                             Center.department = ?`;
-                    eta.db.query(sql, [employeeIDs, req.session["department"]], (err : eta.DBError, employeePositionRows : any[]) => {
+                    eta.db.query(sql, [employeeIDs, req.session["department"]], (err: eta.DBError, employeePositionRows: any[]) => {
                         if (err) {
                             eta.logger.dbError(err);
-                            callback({errcode: eta.http.InternalError});
+                            callback({ errcode: eta.http.InternalError });
                             return;
                         }
-                        let rawEmployees : {[key : string] : any} = {};
-                        for (let i : number = 0; i < employeePositionRows.length; i++) {
-                            let id : string = employeePositionRows[i].employee;
+                        let rawEmployees: { [key: string]: any } = {};
+                        for (let i: number = 0; i < employeePositionRows.length; i++) {
+                            let id: string = employeePositionRows[i].employee;
                             if (!rawEmployees[id]) {
-                                let employeeIndex : number = -1;
-                                for (let k : number = 0; k < employeeRows.length; k++) {
+                                let employeeIndex: number = -1;
+                                for (let k: number = 0; k < employeeRows.length; k++) {
                                     if (employeeRows[k].id == id) {
                                         employeeIndex = k;
                                     }
@@ -190,16 +190,16 @@ export class Model implements eta.Model {
                             rawEmployees[id].positionNames.push(employeePositionRows[i].name);
                             rawEmployees[id].positionCategories.push(employeePositionRows[i].category);
                         }
-                        let employees : any[] = [];
+                        let employees: any[] = [];
                         for (let i in rawEmployees) { // converting from object to array
-                            rawEmployees[i].positions.sort((a : any, b : any) : number => {
-                                let aTime : number = a.start.getTime();
-                                let bTime : number = b.start.getTime();
+                            rawEmployees[i].positions.sort((a: any, b: any): number => {
+                                let aTime: number = a.start.getTime();
+                                let bTime: number = b.start.getTime();
                                 return aTime > bTime ? 1 : (aTime < bTime ? -1 : 0);
                             });
                             employees.push(rawEmployees[i]);
                         }
-                        employees.sort((a : any, b : any) : number => {
+                        employees.sort((a: any, b: any): number => {
                             if (a.lastName == b.lastName) {
                                 return a.firstName.localeCompare(b.firstName);
                             }
@@ -218,22 +218,22 @@ export class Model implements eta.Model {
                             ORDER BY
                                 Position.category,
                                 Position.name`;
-                        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, positionRows : any[]) => {
+                        eta.db.query(sql, [req.session["department"]], (err: eta.DBError, positionRows: any[]) => {
                             if (err) {
                                 eta.logger.dbError(err);
-                                callback({errcode: eta.http.InternalError});
+                                callback({ errcode: eta.http.InternalError });
                                 return;
                             }
                             sql = "SELECT * FROM EmployeeTimesheet";
-                            eta.db.query(sql, [], (err : eta.DBError, timesheetRows : any[]) => {
+                            eta.db.query(sql, [], (err: eta.DBError, timesheetRows: any[]) => {
                                 if (err) {
                                     eta.logger.dbError(err);
-                                    callback({errcode: eta.http.InternalError});
+                                    callback({ errcode: eta.http.InternalError });
                                     return;
                                 }
-                                for (let i : number = 0; i < timesheetRows.length; i++) {
-                                    let employeeIndex : number = -1;
-                                    for (let k : number = 0; k < employees.length; k++) {
+                                for (let i: number = 0; i < timesheetRows.length; i++) {
+                                    let employeeIndex: number = -1;
+                                    for (let k: number = 0; k < employees.length; k++) {
                                         if (timesheetRows[i].id == employees[k].id) {
                                             employeeIndex = k;
                                             break;

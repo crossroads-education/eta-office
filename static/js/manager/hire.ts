@@ -44,7 +44,7 @@ export module hire {
         let flags: { [key: string]: boolean } = {};
         $(this).closest(".applicant-row").find(".input-applicant").each(function() {
             flags[this.getAttribute("data-name")] = this.checked;
-        })
+        });
         $.post("/office/post/update-applicant", {
             "userid": $(this).closest(".applicant-row").data("id"),
             "flags": JSON.stringify(flags)
@@ -117,7 +117,7 @@ export module hire {
                     positions[i].position,
                     new Date(positions[i].evalDate).toLocaleDateString(),
                     positions[i].evalScore
-                )
+                );
             }
         }
 

@@ -9,8 +9,8 @@ import * as moment from "moment";
 export module system {
 
     function fixTimeCell() {
-        let $this : JQuery = $(this);
-        let time : string = moment($this.text(), ["h:mm:ss A"]).format("HH:mm:ss");
+        let $this: JQuery = $(this);
+        let time: string = moment($this.text(), ["h:mm:ss A"]).format("HH:mm:ss");
         $this.text(time);
     }
 

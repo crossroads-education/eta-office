@@ -5,15 +5,15 @@ import * as schedule from "node-schedule";
 
 export class Model implements eta.Model {
 
-    private onDatabaseQuery(err : eta.DBError, rows : any[]) : void {
+    private onDatabaseQuery(err: eta.DBError, rows: any[]): void {
         if (err) {
             eta.logger.dbError(err);
         }
         eta.logger.trace("Job complete.");
     }
 
-    private updateEmployeeCurrent() : void {
-        let sql : string = `
+    private updateEmployeeCurrent(): void {
+        let sql: string = `
             SELECT
                 EmployeePosition.*
             FROM
@@ -22,14 +22,14 @@ export class Model implements eta.Model {
                         EmployeePosition.id = Employee.id
             WHERE
                 Employee.current = 1`;
-        eta.db.query(sql, [], (err : eta.DBError, rows : any[]) => {
+        eta.db.query(sql, [], (err: eta.DBError, rows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
                 return;
             }
-            let ids : string[] = [];
-            let goodIDs : {[key : string] : boolean} = {};
-            for (let i : number = 0; i < rows.length; i++) {
+            let ids: string[] = [];
+            let goodIDs: { [key: string]: boolean } = {};
+            for (let i: number = 0; i < rows.length; i++) {
                 if (goodIDs[rows[i].id]) {
                     continue;
                 }
@@ -40,8 +40,8 @@ export class Model implements eta.Model {
                     ids.push(rows[i].id);
                 }
             }
-            let badIDs : string[] = [];
-            for (let i : number = 0; i < ids.length; i++) {
+            let badIDs: string[] = [];
+            for (let i: number = 0; i < ids.length; i++) {
                 if (!goodIDs[ids[i]]) {
                     badIDs.push(ids[i]);
                 }
@@ -60,14 +60,14 @@ export class Model implements eta.Model {
         });
     }
 
-    public onScheduleInit() : void {
+    public onScheduleInit(): void {
         schedule.scheduleJob("0 0 2 * * *", () => {
             this.updateEmployeeCurrent();
         });
     }
 
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
         this.updateEmployeeCurrent();
-        callback({"errcode": 200})
+        callback({ "errcode": 200 })
     }
 }

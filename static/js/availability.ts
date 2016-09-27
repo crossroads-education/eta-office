@@ -1,18 +1,18 @@
 /// <amd-dependency path="./templates/schedule.js"/>
-import {HelperStatus} from "lib/helpers/HelperStatus";
+import { HelperStatus } from "lib/helpers/HelperStatus";
 
 export module availability {
-    let status : HelperStatus;
-    function onSubmit() : void {
-        let params : {[key : string] : any} = {
+    let status: HelperStatus;
+    function onSubmit(): void {
+        let params: { [key: string]: any } = {
             "term": $("#schedule-term").val(),
             "cells": []
         };
-        $(".schedule-cell-quarter[data-changed]").each(function(index : number, element : HTMLElement) {
-            let $this : JQuery = $(this);
-            let day : string = $this.closest(".schedule-cell-row").attr("data-day");
-            let time : string = $this.attr("data-time");
-            let location : string = $this.attr("data-previous-color");
+        $(".schedule-cell-quarter[data-changed]").each(function(index: number, element: HTMLElement) {
+            let $this: JQuery = $(this);
+            let day: string = $this.closest(".schedule-cell-row").attr("data-day");
+            let time: string = $this.attr("data-time");
+            let location: string = $this.attr("data-previous-color");
             params["cells"].push({
                 "day": day,
                 "time": time,

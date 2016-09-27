@@ -1,21 +1,21 @@
-import {HelperStatus} from "lib/helpers/HelperStatus";
-import {HelperUrl} from "lib/helpers/HelperUrl";
+import { HelperStatus } from "lib/helpers/HelperStatus";
+import { HelperUrl } from "lib/helpers/HelperUrl";
 
 export module centers {
-    let status : HelperStatus;
+    let status: HelperStatus;
 
-    function onSubmit() : void {
-        let term : string = $("#input-term").val();
-        let center : string = $("#input-center").val();
-        let hours : {open : string, close : string}[] = [];
-        $("tr[data-day]").each(function(index : number, element : HTMLElement) {
-            let $row : JQuery = $(this);
+    function onSubmit(): void {
+        let term: string = $("#input-term").val();
+        let center: string = $("#input-center").val();
+        let hours: { open: string, close: string }[] = [];
+        $("tr[data-day]").each(function(index: number, element: HTMLElement) {
+            let $row: JQuery = $(this);
             hours[$row.data("day")] = {
                 "open": $row.find(`[data-type="open"]`).val(),
                 "close": $row.find(`[data-type="close"]`).val()
             };
         });
-        let centerName : string = $(`#input-center option[value="${center}"]`).text();
+        let centerName: string = $(`#input-center option[value="${center}"]`).text();
         $.post("/office/post/update-center", {
             "term": term,
             "center": center,
@@ -27,8 +27,8 @@ export module centers {
         });
     }
 
-    function onFilter() : void {
-        let $this : JQuery = $(this);
+    function onFilter(): void {
+        let $this: JQuery = $(this);
         HelperUrl.setParameterByName($this.data("param"), $this.val());
     }
 

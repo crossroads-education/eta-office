@@ -4,12 +4,12 @@ import * as schedule from "../../lib/templates/Schedule";
 import * as express from "express";
 
 export class Model implements eta.Model {
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
         if (!req.query.userid) {
             req.query.userid = req.session["userid"];
         }
         // Day name from http://stackoverflow.com/a/32908851/5850070
-        let sql : string = `
+        let sql: string = `
             SELECT
                 EmployeeSchedule.center,
                 EmployeeSchedule.time,
@@ -62,12 +62,12 @@ export class Model implements eta.Model {
             ORDER BY
                 EmployeeSchedule.day,
                 EmployeeSchedule.time`;
-        let term : string = req.query.term ? req.query.term : eta.term.getCurrent().id;
-        let params : string[] = [term, req.query.userid, req.session["department"]];
-        eta.db.query(sql, params, (err : eta.DBError, raw : any[]) => {
+        let term: string = req.query.term ? req.query.term : eta.term.getCurrent().id;
+        let params: string[] = [term, req.query.userid, req.session["department"]];
+        eta.db.query(sql, params, (err: eta.DBError, raw: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({errcode: eta.http.InternalError});
+                callback({ errcode: eta.http.InternalError });
                 return;
             }
             sql = `
@@ -85,19 +85,19 @@ export class Model implements eta.Model {
                     Center.department = ?
                 ORDER BY HoursOfOperation.day ASC`;
             params = [term, eta.setting.get("/center", "main").value.toString(), req.session["department"]];
-            eta.db.query(sql, params, (err : eta.DBError, hourRows : any[]) => {
+            eta.db.query(sql, params, (err: eta.DBError, hourRows: any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
-                    callback({errcode: eta.http.InternalError});
+                    callback({ errcode: eta.http.InternalError });
                     return;
                 }
                 if (hourRows.length === 0) {
-                    callback({errcode: eta.http.NotFound});
+                    callback({ errcode: eta.http.NotFound });
                     return;
                 }
-                let hours : {open : number, close : number} = eta.object.copy(hourRows[0]);
-                for (let i : number = 0; i < hourRows.length; i++) {
-                    if(hourRows[i].open != 0 || hourRows[i].close != 0) {
+                let hours: { open: number, close: number } = eta.object.copy(hourRows[0]);
+                for (let i: number = 0; i < hourRows.length; i++) {
+                    if (hourRows[i].open != 0 || hourRows[i].close != 0) {
                         if (hourRows[i].open < hours.open) {
                             hours.open = hourRows[i].open;
                         }
@@ -106,18 +106,18 @@ export class Model implements eta.Model {
                         }
                     }
                 }
-                let openHourDate : Date = new Date();
+                let openHourDate: Date = new Date();
                 openHourDate.setHours(hours.open);
-                let closeHourDate : Date = new Date();
+                let closeHourDate: Date = new Date();
                 closeHourDate.setHours(hours.close);
-                let allHoursOpen : string[] = eta.time.fillTimes(openHourDate, closeHourDate, eta.time.span1Hour, "ht");
-                let rows : schedule.Row[] = [];
-                for (let i : number = 0; i < raw.length; i++) {
-                    let rowIndex : number = -1;
+                let allHoursOpen: string[] = eta.time.fillTimes(openHourDate, closeHourDate, eta.time.span1Hour, "ht");
+                let rows: schedule.Row[] = [];
+                for (let i: number = 0; i < raw.length; i++) {
+                    let rowIndex: number = -1;
                     if (raw[i].hour >= hours.close || raw[i].open < hours.open) {
                         continue;
                     }
-                    for (let k : number = 0; k < rows.length; k++) {
+                    for (let k: number = 0; k < rows.length; k++) {
                         if (rows[k].day == raw[i].day) {
                             rowIndex = k;
                             break;
@@ -136,8 +136,8 @@ export class Model implements eta.Model {
                             "isScheduled": false
                         });
                     }
-                    let hourIndex : number = raw[i].hour - hours.open;
-                    let minuteIndex : number = Math.floor(raw[i].minute / 15);
+                    let hourIndex: number = raw[i].hour - hours.open;
+                    let minuteIndex: number = Math.floor(raw[i].minute / 15);
                     if (!rows[rowIndex].slots[hourIndex]) {
                         rows[rowIndex].slots[hourIndex] = [];
                     }
@@ -154,11 +154,11 @@ export class Model implements eta.Model {
                         rows[rowIndex].isScheduled = true;
                     }
                 }
-                let dayNames : string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-                let closedDays : number[] = [];
-                for (let i : number = 0; i < dayNames.length; i++) {
-                    let isSet : boolean = false;
-                    for (let k : number = 0; k < rows.length; k++) {
+                let dayNames: string[] = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                let closedDays: number[] = [];
+                for (let i: number = 0; i < dayNames.length; i++) {
+                    let isSet: boolean = false;
+                    for (let k: number = 0; k < rows.length; k++) {
                         if (rows[k].day == i) {
                             isSet = true;
                             break;
@@ -178,24 +178,24 @@ export class Model implements eta.Model {
                     }
                 }
 
-                rows.sort(function(a : schedule.Row, b : schedule.Row) : number {
+                rows.sort(function(a: schedule.Row, b: schedule.Row): number {
                     return a.day == b.day ? 0 : (a.day > b.day ? 1 : -1);
                 });
 
-                let locationPalette : {[key : string] : string} = {
+                let locationPalette: { [key: string]: string } = {
                     "Available": "AV",
                     "Unavailable": "UV"
                 };
 
-                for (let i : number = 0; i < rows.length; i++) {
-                    for (let k : number = 0; k < hours.close - hours.open; k++) {
+                for (let i: number = 0; i < rows.length; i++) {
+                    for (let k: number = 0; k < hours.close - hours.open; k++) {
                         if (!rows[i].slots[k]) {
                             rows[i].slots[k] = [];
                         }
-                        for (let j : number = 0; j < 4; j++) {
+                        for (let j: number = 0; j < 4; j++) {
                             if (!rows[i].slots[k][j]) {
-                                let hour : number = k + hours.open;
-                                let time : string = `${hour}:${j == 0 ? "00" : j * 15}:00`;
+                                let hour: number = k + hours.open;
+                                let time: string = `${hour}:${j == 0 ? "00" : j * 15}:00`;
                                 if (closedDays.indexOf(i) !== -1 || hour < hourRows[i].open || hour >= hourRows[i].close) {
                                     time = "00:00:00";
                                 }
@@ -208,8 +208,8 @@ export class Model implements eta.Model {
                         }
                     }
                 }
-                let permissions : eta.PermissionUser = req.session["permissions"];
-                let env : {[key : string] : any} = {
+                let permissions: eta.PermissionUser = req.session["permissions"];
+                let env: { [key: string]: any } = {
                     "isOther": req.query.userid != req.session["userid"],
                     "isManager": permissions.has("edit/schedule/master"),
                     "scheduleRowType": "day",
@@ -234,10 +234,10 @@ export class Model implements eta.Model {
                                     Employee.id = Person.id
                         WHERE
                             Employee.id = ?`;
-                    eta.db.query(sql, [req.query.userid], (err : eta.DBError, rows : any[]) => {
+                    eta.db.query(sql, [req.query.userid], (err: eta.DBError, rows: any[]) => {
                         if (err) {
                             eta.logger.dbError(err);
-                            callback({errcode: eta.http.InternalError});
+                            callback({ errcode: eta.http.InternalError });
                             return;
                         }
                         env["about"] = rows[0];

@@ -1,21 +1,21 @@
 import "templates/timesheet";
-import {HelperStatus} from "lib/helpers/HelperStatus";
+import { HelperStatus } from "lib/helpers/HelperStatus";
 
 export module clock {
-    let status : HelperStatus;
+    let status: HelperStatus;
 
     function updateTime() {
-        let now : Date = new Date();
-        let time : string = now.toLocaleTimeString();
+        let now: Date = new Date();
+        let time: string = now.toLocaleTimeString();
         $(".time").text(time);
     }
 
     function onNoteSubmit() {
-        let message : string = $("#input-notes").val();
+        let message: string = $("#input-notes").val();
         $.post("/office/post/add-log", {
-            "message" : message,
-            "type" : "CLOCK",
-            "about" : "userid"
+            "message": message,
+            "type": "CLOCK",
+            "about": "userid"
         }, function(data) {
             status.success("Successfully logged note");
             $("#container-note").fadeOut(function() {
@@ -27,12 +27,12 @@ export module clock {
     }
 
     function onNoteExpand() {
-        let $container : JQuery = $("#container-note");
+        let $container: JQuery = $("#container-note");
         if ($container.hasClass("hidden")) {
             $container.fadeIn();
             $container.removeClass("hidden");
         } else {
-            $container.fadeOut(function(){
+            $container.fadeOut(function() {
                 $container.addClass("hidden");
             });
         }

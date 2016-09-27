@@ -31,48 +31,48 @@ export interface Row {
     /**
     If this represents a person, their ID
     */
-    userid? : string;
+    userid?: string;
 
     /**
     If this represents a day, the index (0=Sunday)
     */
-    day? : number;
+    day?: number;
 
     /**
     Person: name
     Day: full day name (Monday, Tuesday...)
     */
-    label : string;
+    label: string;
 
     /**
     Values to check filters against.
     */
-    filterables : {[key : string] : any};
+    filterables: { [key: string]: any };
 
     /**
     Sum of scheduled time for this day in hours (decimal possible)
     */
-    dayTotal : number;
+    dayTotal: number;
 
     /**
     Sum of scheduled time for this person (week) in hours (decimal possible)
     */
-    weekTotal : number;
+    weekTotal: number;
 
     /**
     Indexes: hour (from 0), minutes / 15 (0, 15, 30, 45)
     */
-    slots : Slot[][];
+    slots: Slot[][];
 
     /**
     If the row has any available slots
     */
-    isAvailable : boolean;
+    isAvailable: boolean;
 
     /**
     If the row has any scheduled slots (center != -1)
     */
-    isScheduled : boolean;
+    isScheduled: boolean;
 }
 
 /**
@@ -83,24 +83,24 @@ export interface Slot {
     Center ID. If not scheduled, should be -1.
     Can be center code - if not scheduled, should be UV or AV. Empty slots should be UV.
     */
-    center : number | string;
+    center: number | string;
 
     /**
     Whether this is marked available
     */
-    isAvailable : boolean;
+    isAvailable: boolean;
 
     /**
     Format: HH:MM:SS
     Seconds should always be 0.
     Minutes should always be a multiple of 15, 0 <= minutes <= 45
     */
-    time : string;
+    time: string;
 }
 
 export function getEmptyHour() {
-    let emptyHour : Slot[] = [];
-    for (let i : number = 0; i < 4; i++) {
+    let emptyHour: Slot[] = [];
+    for (let i: number = 0; i < 4; i++) {
         emptyHour.push({
             "isAvailable": false,
             "center": -1,

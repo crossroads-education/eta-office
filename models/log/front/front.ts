@@ -3,8 +3,8 @@ import * as eta from "eta-lib";
 import * as express from "express";
 
 export class Model implements eta.Model {
-    public render(req : express.Request, res : express.Response, callback : (env : {[key : string] : any}) => void) : void {
-        let sql : string = `
+    public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
+        let sql: string = `
             SELECT DISTINCT
                 Person.firstName,
                 Person.lastName,
@@ -23,10 +23,10 @@ export class Model implements eta.Model {
                 Employee.current = 1 AND
                 Center.department = ?
             ORDER BY Person.lastName, Person.firstName`;
-        eta.db.query(sql, [req.session["department"]], (err : eta.DBError, employeeRows : any[]) => {
+        eta.db.query(sql, [req.session["department"]], (err: eta.DBError, employeeRows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({errcode: eta.http.InternalError});
+                callback({ errcode: eta.http.InternalError });
                 return;
             }
             sql = `
@@ -43,10 +43,10 @@ export class Model implements eta.Model {
                             Log.author = AuthorPerson.id
                 WHERE
                     Log.type = 'FRONT'`;
-            eta.db.query(sql, [], (err : eta.DBError, logRows : any[]) => {
+            eta.db.query(sql, [], (err: eta.DBError, logRows: any[]) => {
                 if (err) {
                     eta.logger.dbError(err);
-                    callback({errcode: eta.http.InternalError});
+                    callback({ errcode: eta.http.InternalError });
                     return;
                 }
                 callback({
