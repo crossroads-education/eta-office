@@ -8,18 +8,18 @@ import "datatables.net-buttons-print";
 import "select2";
 import "templates/modal";
 
-import {HelperStatus} from "lib/helpers/HelperStatus";
-import {HelperUrl} from "lib/helpers/HelperUrl";
+import { HelperStatus } from "lib/helpers/HelperStatus";
+import { HelperUrl } from "lib/helpers/HelperUrl";
 
 export module hire {
-    let status : HelperStatus;
-    let modalStatus : HelperStatus;
+    let status: HelperStatus;
+    let modalStatus: HelperStatus;
 
-    function addEvaluationRow(level : string, date : string, score : number) : void {
-        let $row : JQuery = $("<tr>");
+    function addEvaluationRow(level: string, date: string, score: number): void {
+        let $row: JQuery = $("<tr>");
         $row.append($("<td>").text(level));
         $row.append($("<td>").text(date));
-        let $score : JQuery = $("<td>").text(score);
+        let $score: JQuery = $("<td>").text(score);
         if (score >= 60) {
             $score.addClass("score-good");
         } else if (score >= 50) {
@@ -31,17 +31,17 @@ export module hire {
         $("#modal-evaluations").append($row);
     }
 
-    function onFilter() : void {
-        let $this : JQuery = $(this);
+    function onFilter(): void {
+        let $this: JQuery = $(this);
         HelperUrl.setParameterByName($this.data("param"), $this.val());
     }
 
-    function onApplicantFlagChange() : void {
+    function onApplicantFlagChange(): void {
         $(this).closest(".applicant-row").find(".btn-update").prop("disabled", false);
     }
 
-    function onApplicantFlagSubmit() : void {
-        let flags : {[key : string] : boolean} = {};
+    function onApplicantFlagSubmit(): void {
+        let flags: { [key: string]: boolean } = {};
         $(this).closest(".applicant-row").find(".input-applicant").each(function() {
             flags[this.getAttribute("data-name")] = this.checked;
         })
@@ -55,7 +55,7 @@ export module hire {
         });
     }
 
-    function onApplicantSave() : void {
+    function onApplicantSave(): void {
         $.post("/office/post/update-applicant", {
             "userid": $("#modal").attr("data-id"),
             "flags": JSON.stringify({
@@ -81,7 +81,7 @@ export module hire {
             "date": $("#input-evaluation-date").val(),
             "score": $("#input-evaluation-score").val()
         }, function(data) {
-            status.success("Succesfully submitted evulation");
+            status.success("Succesfully submitted evaluation.");
         }).fail(function(data) {
             status.error("Error code " + data.status + " has occurred.");
         });
@@ -99,23 +99,23 @@ export module hire {
     }
 
     function onApplicantOpen() {
-        let $row : JQuery = $(this).closest(".applicant-row");
+        let $row: JQuery = $(this).closest(".applicant-row");
         $("#modal-positions").html("");
         $("#modal").attr("data-id", $row.data("id"));
         $("#modal-title").text($row.find(".cell-first-name").text() + " " + $row.find(".cell-last-name").text());
         $("#input-notes").html($row.data("notes"));
-        let positions : any[] = $row.data("positions");
-        for (let i : number = 0; i < positions.length; i++) {
-            let $positionRow : JQuery = $("<tr>");
+        let positions: any[] = $row.data("positions");
+        for (let i: number = 0; i < positions.length; i++) {
+            let $positionRow: JQuery = $("<tr>");
             $positionRow.append($("<td>").text(positions[i].position));
-            let lastApplied : string = new Date(positions[i].lastApplied).toLocaleDateString();
+            let lastApplied: string = new Date(positions[i].lastApplied).toLocaleDateString();
             $positionRow.append($("<td>").text(lastApplied));
             $positionRow.append($("<td>").text(positions[i].count.toString()));
             $("#modal-positions").append($positionRow);
             if (positions[i].evalScore) {
                 addEvaluationRow(
                     positions[i].position,
-                    new Date (positions[i].evalDate).toLocaleDateString(),
+                    new Date(positions[i].evalDate).toLocaleDateString(),
                     positions[i].evalScore
                 )
             }
