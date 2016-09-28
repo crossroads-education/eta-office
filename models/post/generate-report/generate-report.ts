@@ -16,7 +16,7 @@ export class Model implements eta.Model {
                 req.body[jsonParams[i]] = JSON.parse(param);
             }
         }
-        let sqlFilename: string = "modules/office/lib/reports/" + req.body.reportName + ".sql";
+        let sqlFilename: string = eta.server.modules["office"].baseDir + "lib/reports/" + req.body.reportName + ".sql";
         eta.fs.exists(sqlFilename, (exists: boolean) => {
             if (!exists) {
                 callback({ errcode: eta.http.NotFound });
