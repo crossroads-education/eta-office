@@ -40,89 +40,148 @@ div.text-center#container-status
     }]
 div
     input#row-type(type="hidden", value=scheduleRowType)
-    div.schedule-filter-row.row
-        div.col-xs-4.center-vertical
-            if scheduleRowType == "person"
-                - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-                each day, index in days
-                    - var className = scheduleFilters.day == index ? "border-rounded" : "";
-                    span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index, class=className) &nbsp; #{day.toUpperCase()} &nbsp;
-        div.col-xs-3.center-vertical
-            if scheduleRowType == "person"
-                | SORT BY
-                select.schedule-filter-link.border-rounded(data-param="sort")
-                    - var sortables = ["name", "daily hours", "weekly hours"];
-                    each sortable in sortables
-                        - var isSelected = scheduleFilters.sort == sortable ? {"selected": "selected"} : {}
-                        option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
-                if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
-                    span.schedule-filter-link(data-param="edit", data-value="yes")
-                        button.border-rounded MANAGER ACCESS
-            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
-                button.btn.btn-success.btn-schedule-submit Submit
-        div.col-xs-5.center-vertical.row
-            each legend in legendData
-                div.col-xs-2.text-center.schedule-legend-label #{legend.name}
-    div.schedule-filter-row.row
-        div.col-xs-4.center-vertical
-            if scheduleRowType == "person"
-                div.row
-                    div.col-xs-12
-                        select.border-rounded.input-filter(data-filter="position-names", multiple, style="width: 100%;")
-                            option
-                            for position in schedulePositionNames
-                                - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
-                                option(value=position)&attributes(isSelected) #{position}
-        div.col-xs-3.center-vertical
-            if scheduleRowType == "day" || (permissions.has("edit/schedule/master") && scheduleMode == "manager")
-                | PALETTE
-                select.border-rounded#schedule-palette
-                    for location, name in scheduleLocationPalette
-                        option(value=location) #{name}
-            | &nbsp; TERM
-            select.schedule-filter-link.border-rounded#schedule-term(data-param="term")
-                for term in scheduleTerms
-                    - var isSelected = scheduleFilters.term == term.id ? {"selected": true} : {}
-                    option(value=term.id)&attributes(isSelected) #{term.name.toUpperCase()}
-        div.col-xs-5.center-vertical.row
-            each legend in legendData
-                div.col-xs-1.schedule-cell-quarter.schedule-legend-cell(class=legend.class, data-available)
-    div.schedule-filter-row.row
-        if scheduleRowType == "person"
-            div.col-xs-4.center-vertical
-                div.row
-                    div.col-xs-12
-                        select.border-rounded.input-filter(data-filter="position-categories", multiple, style="width: 100%;")
-                            option
-                            for category in schedulePositionCategories
-                                - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
-                                option(value=category)&attributes(isSelected) #{category}
+    //div.schedule-filter-row.row
+    //    div.col-xs-4.center-vertical
+    //        if scheduleRowType == "person"
+    //            - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    //            each day, index in days
+    //                - var className = scheduleFilters.day == index ? "border-rounded" : "";
+    //                span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index, class=className) &nbsp; #{day.toUpperCase()} &nbsp;
+    //    div.col-xs-3.center-vertical
+    //        if scheduleRowType == "person"
+    //            | SORT BY
+    //            select.schedule-filter-link.border-rounded(data-param="sort")
+    //                - var sortables = ["name", "daily hours", "weekly hours"];
+    //                each sortable in sortables
+    //                    - var isSelected = scheduleFilters.sort == sortable ? {"selected": "selected"} : {}
+    //                    option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
+    //            if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
+    //                span.schedule-filter-link(data-param="edit", data-value="yes")
+    //                    button.border-rounded MANAGER ACCESS
+    //        if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
+    //            button.btn.btn-success.btn-schedule-submit Submit
+    //    div.col-xs-5.center-vertical.row
+    //        each legend in legendData
+    //            div.col-xs-2.text-center.schedule-legend-label #{legend.name}
+    //div.schedule-filter-row.row
+    //    div.col-xs-4.center-vertical
+    //        if scheduleRowType == "person"
+    //            div.row
+    //                div.col-xs-12
+    //                    select.border-rounded.input-filter(data-filter="position-names", multiple, style="width: 100%;")
+    //                        option
+    //                        for position in schedulePositionNames
+    //                            - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
+    //                            option(value=position)&attributes(isSelected) #{position}
+    //    div.col-xs-3.center-vertical
+    //        if scheduleRowType == "day" || (permissions.has("edit/schedule/master") && scheduleMode == "manager")
+    //            | PALETTE
+    //            select.border-rounded#schedule-palette
+    //                for location, name in scheduleLocationPalette
+    //                    option(value=location) #{name}
+    //        | &nbsp; TERM
+    //        select.schedule-filter-link.border-rounded#schedule-term(data-param="term")
+    //            for term in scheduleTerms
+    //                - var isSelected = scheduleFilters.term == term.id ? {"selected": true} : {}
+    //                option(value=term.id)&attributes(isSelected) #{term.name.toUpperCase()}
+    //    div.col-xs-5.center-vertical.row
+    //        each legend in legendData
+    //            div.col-xs-1.schedule-cell-quarter.schedule-legend-cell(class=legend.class, data-available)
+    //div.schedule-filter-row.row
+    //    if scheduleRowType == "person"
+    //        div.col-xs-4.center-vertical
+    //            div.row
+    //                div.col-xs-12
+    //                    select.border-rounded.input-filter(data-filter="position-categories", multiple, style="width: 100%;")
+    //                        option
+    //                        for category in schedulePositionCategories
+    //                            - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
+    //                            option(value=category)&attributes(isSelected) #{category}
+    //div.schedule-box
+    //    div.schedule-row
+    //        div.schedule-left-col.col-xs-4.row
+    //            div.col-xs-8
+    //            div.col-xs-4.schedule-header-hours
+    //                span.col-xs-1 Day
+    //                span.col-xs-1  /
+    //                span.col-xs-1  Week
+    //        div.schedule-cell-row.schedule-header-row.col-xs-8
+    //            for hour in scheduleHours
+    //                div.schedule-cell.schedule-header-cell.col-md-2 #{hour}
+    //    for row, rowID in scheduleRows
+    //        - var column = 0
+    //        div.schedule-row.schedule-row-filterable.hvr-border-fade&attributes(row.filterables)
+    //            div.schedule-left-col.col-xs-4.row
+    //                div.col-xs-8
+    //                    if scheduleRowType == "person"
+    //                        a(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
+    //                            div.schedule-label #{row.label}
+    //                    else
+    //                        div.schedule-label #{row.label}
+    //                div.schedule-hours.col-xs-4.row
+    //                    span.col-xs-1 #{row.dayTotal ? row.dayTotal : "0"}
+    //                    span.col-xs-1  /
+    //                    span.col-xs-1  #{row.weekTotal ? row.weekTotal : "0"}
+    //            div.schedule-cell-row.col-xs-8(data-userid=row.userid, data-day=row.day)
+    //                +schedule-empty-hour(rowID, column)
+    //                - column += 4
+    //                for hour, hourID in row.slots
+    //                    div.schedule-cell
+    //                        for slot, slotID in hour
+    //                            - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
+    //                            div.schedule-cell-quarter(
+    //                                data-row=rowID,
+    //                                data-cell=hourID,
+    //                                data-quarter=slotID,
+    //                                data-column=column,
+    //                                data-previous-color="none",
+    //                                data-location=location,
+    //                                data-available=slot.isAvailable,
+    //                                data-time=slot.time)
+    //                            - column++
+    //                +schedule-empty-hour(rowID, column)
+    //                - column += 4
+    div.navbar.navbar-inverse.navbar-fixed-top#sidebar-wrapper
+        ul.nav.sidebar-nav
+            li.sidebar-brand
+                a(href="#") Settings
+            li
+                if scheduleRowType == "person"
+                    - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                    each day, index in days
+                        span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index) &nbsp; #{day.toUpperCase()} &nbsp;
+            li
+                a(href="#") Category
     div.schedule-box
-        div.schedule-row
-            div.schedule-left-col.col-xs-4.row
-                div.col-xs-8
-                div.col-xs-4.schedule-header-hours
-                    span.col-xs-1 Day
-                    span.col-xs-1  /
-                    span.col-xs-1  Week
-            div.schedule-cell-row.schedule-header-row.col-xs-8
-                for hour in scheduleHours
-                    div.schedule-cell.schedule-header-cell.col-md-2 #{hour}
+        button.hamburger.is-closed.animated.fadeInLeft
         for row, rowID in scheduleRows
-            - var column = 0
-            div.schedule-row.schedule-row-filterable.hvr-border-fade&attributes(row.filterables)
-                div.schedule-left-col.col-xs-4.row
-                    div.col-xs-8
-                        if scheduleRowType == "person"
-                            a(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
-                                div.schedule-label #{row.label}
-                        else
+            div.person-box
+                - var column = 0
+                - var today = new Date().getDate()
+                div(style="height: 40px; text-align: center;")
+                    if scheduleRowType == "person"
+                        a.person-link(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
                             div.schedule-label #{row.label}
-                    div.schedule-hours.col-xs-4.row
-                        span.col-xs-1 #{row.dayTotal ? row.dayTotal : "0"}
-                        span.col-xs-1  /
-                        span.col-xs-1  #{row.weekTotal ? row.weekTotal : "0"}
-                div.schedule-cell-row.col-xs-8(data-userid=row.userid, data-day=row.day)
+                    else
+                        div.schedule-label #{row.label}
+                div.col-xs-3
+                    span Legend
+                div.col-xs-2
+                    span Hours
+                div.col-xs-7(style="height: 40px;")
+                    span.day-week-hours Today
+                    span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
+                    span.day-week-hours /
+                    span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
+                    span.day-week-hours Week
+                div.col-xs-3
+                    each legend in legendData
+                        span #{legend.name}
+                        div.schedule-legend-cell(class=legend.class, data-available)
+                div.col-xs-2
+                    for hour in scheduleHours
+                        div.schedule-cell.schedule-header-cell #{hour}
+                div.col-xs-7
                     +schedule-empty-hour(rowID, column)
                     - column += 4
                     for hour, hourID in row.slots

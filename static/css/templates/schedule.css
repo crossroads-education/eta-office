@@ -104,17 +104,15 @@
 
 /* Styling for the "cells", each representing an hour */
 .schedule-cell {
-    float: left;
-    width: 7%;
-    text-align: center;
+    /* float: left; */
+    /* width: 7%; */
+    /* text-align: center; */
     background-color: #efefef;
-    height: 20px;
-    border-width: 1px;
-    border-style: dashed;
-    border-color: white;
-    border-top: none;
-    border-bottom: none;
-    margin: 1px 0;
+    height: 25px;
+    /* border: 1px none white; */
+    /* border-right-style: dashed; */
+    /* border-left-style: dashed; */
+    margin: 2px 0;
 }
 
 .schedule-cell:hover {
@@ -122,30 +120,33 @@
 }
 
 /* Round off the left of the first cell and right of the last cell in each row */
-.schedule-cell:first-child {
-    border-radius: 10px 0 0 10px;
-    border-left: none
-}
-.schedule-cell:last-child {
-    border-radius: 0 10px 10px 0;
-    border-right: none;
-}
+/*.schedule-cell:first-child {*/
+    /*border-radius: 10px 0 0 10px;*/
+    /*border-left: none*/
+/*}*/
+/*.schedule-cell:last-child {*/
+    /*border-radius: 0 10px 10px 0;*/
+    /*border-right: none;*/
+/*}*/
 
 .schedule-header-cell {
     font-weight: bold;
     background-color: inherit;
     border: none;
     border-radius: 0;
+    width: 100%;
+    height: 25px;
     /*width: 8%;*/
+    text-align: right;
 }
 
 /* Quarters are 15-minute subsections of cells */
 .schedule-cell-quarter {
-    width: 24.5%;
-    height: 20px;
+    width: 25%;
+    border-right: 1px solid #efefef;
+    border-left: 1px solid #efefef;
     float: left;
-    margin: 0 auto;
-    z-index: 10;
+    height: 100%;
 }
 
 .schedule-legend-label {
@@ -153,10 +154,10 @@
 }
 
 .schedule-legend-cell {
-    width: 16.66%;
-    border-width: 1px;
-    border-color: black;
-    border-style: solid;
+    /*width: 16.66%;*/
+    width: 100%;
+    height: 25px;
+    border: 1px solid black;
 }
 
 .schedule-cell-quarter.inactive:hover {
@@ -175,47 +176,109 @@
 
 /* Colors for different scheduling locations/states */
 /* MAC Regular */
-.schedule-cell-quarter.MA {
+.schedule-cell-quarter.MA, .schedule-legend-cell.MA{
     background-color: #56A042;
 }
 /* MAC Online */
-.schedule-cell-quarter.MO {
+.schedule-cell-quarter.MO, .schedule-legend-cell.MO{
     background-color: #4B4084;
 }
 /* STAT Regular */
-.schedule-cell-quarter.ST {
+.schedule-cell-quarter.ST, .schedule-legend-cell.ST{
     background-color: #BEA84E;
 }
 /* STAT Online */
-.schedule-cell-quarter.SO {
+.schedule-cell-quarter.SO, .schedule-legend-cell.SO{
     background-color: #B74B58;
 }
 /* Available */
-.schedule-cell-quarter.AV {
+.schedule-cell-quarter.AV, .schedule-legend-cell.AV{
     /*background-color: #FFFFFF;*/
 }
 /* Unavailable */
-.schedule-cell-quarter.UV {
+.schedule-cell-quarter.UV, .schedule-legend-cell.UV{
     background-color: #AAAAAA;
 }
 /* Inactive */
-.schedule-cell-quarter.inactive {
+.schedule-cell-quarter.inactive, .schedule-legend-cell.inactive{
     background-color: #000000;
 }
 
 /* Rounded borders */
-.schedule-cell-quarter.first {
-    border-radius: 10px 0 0 10px;
-}
-.schedule-cell-quarter.last {
-    border-radius: 0 10px 10px 0;
-}
-.schedule-cell-quarter.first.last {
-    border-radius: 10px;
-}
+/*.schedule-cell-quarter.first {*/
+    /*border-radius: 10px 0 0 10px;*/
+/*}*/
+/*.schedule-cell-quarter.last {*/
+    /*border-radius: 0 10px 10px 0;*/
+/*}*/
+/*.schedule-cell-quarter.first.last {*/
+    /*border-radius: 10px;*/
+/*}*/
 
 #container-status {
     margin-bottom: 25px;
-    font-weight: 350;
+    font-weight: 400;
     font-size: 1.75em;
+}
+
+.day-week-hours {
+    margin-right: 5px;
+}
+
+.person-box {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    height: 475px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.person-link {
+    font-size: 20px;
+}
+
+#body {
+    margin-right: 10px;
+}
+
+#sidebar-wrapper {
+    -moz-transition: all 0.5s ease;
+    -o-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    background: #1a1a1a;
+    height: 100%;
+    left: 220px;
+    margin-left: -220px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    transition: all 0.5s ease;
+    width: 0;
+    z-index: 1000;
+}
+
+.sidebar-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    width: 220px;
+}
+
+.sidebar-nav > li {
+    display: inline-block;
+    line-height: 20px;
+    position: relative;
+    width: 100%;
+}
+
+.sidebar-nav > li:before {
+    background-color: #1c1c1c;
+    content: '';
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transition: width .2s ease-in;
+    width: 3px;
+    z-index: -1;
 }
