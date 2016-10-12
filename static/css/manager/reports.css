@@ -19,3 +19,8 @@
 .section-input > .section-divider {
     margin-bottom: 0.5em;
 }
+
+.section-input .no-col-padding {
+    padding-left: 0px;
+    padding-right: 0px;
+}

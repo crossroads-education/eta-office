@@ -22,6 +22,7 @@ block body
             option(value="schedule") Schedule Data
             option(value="sections") Section Data
             option(value="payroll") Payroll Expenditure
+            option(value="visits") Visits
     +report-section("schedule")
         h3 Get Scheduled Hours Per Employee
         div.section-input
@@ -46,6 +47,13 @@ block body
                     each position in positionNames
                         option(value=position.name) #{position.name}
                 button.btn.btn-primary.select-2-all(data-select2="#select-payroll-positions") Select All
+            +report-submit()
+    +report-section("visits")
+        h3 Get Visits By Student
+        div.section-input
+            div.section-divider.row
+                div.col-xs-3.no-col-padding
+                    input.form-control(type="text", data-name="id", placeholder="Student ID / Username")
             +report-submit()
     div
         span.text-success#success
