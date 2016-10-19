@@ -13,4 +13,6 @@ WHERE
     `EmployeeSchedule`.`center` != -1 AND
     `EmployeeSchedule`.`term` = ?
 GROUP BY `Employee`.`id`
-ORDER BY `Person`.`lastName`, `Person`.`firstName`
+ORDER BY
+    `Person`.`lastName` ASC,
+    `Person`.`firstName` ASC

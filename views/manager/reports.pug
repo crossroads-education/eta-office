@@ -23,6 +23,7 @@ block body
             option(value="sections") Section Data
             option(value="payroll") Payroll Expenditure
             option(value="visits") Visits
+            option(value="studentsection") Student Enrollment
     +report-section("schedule")
         h3 Get Scheduled Hours Per Employee
         div.section-input
@@ -55,6 +56,23 @@ block body
                 div.col-xs-3.no-col-padding
                     input.form-control(type="text", data-name="id", placeholder="Student ID / Username")
             +report-submit()
+    +report-section("studentsection")
+        h3 Get Student Enrolled Courses
+        div.section-input
+            div.section-divider.row
+                div.col-xs-3.no-col-padding
+                    input.form-control(type="text", data-name="id", placeholder="Student ID / Username")
+            +report-submit()
+    //- +report-section("examjam")
+    //-     h3 Get Exam Jam Visits
+    //-     div.section-input
+    //-         div.section-divider
+    //-             +select-term()
+    //-         div.section-divider
+    //-             select.border-rounded.keep-caret(data-name="level")
+    //-                 each level in examJamLevels
+    //-                     option(value=level) level
+
     div
         span.text-success#success
         span.text-error#error

@@ -18,3 +18,7 @@ FROM
 WHERE
     `Course`.`supported` = 1 AND
     `Section`.`term` = ?
+ORDER BY
+    `Course`.`subject` ASC,
+    `Course`.`number` ASC,
+    `Section`.`number` ASC

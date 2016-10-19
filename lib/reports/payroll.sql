@@ -43,4 +43,7 @@ FROM
             )
         GROUP BY `Position`.`name`, `Position`.`category`, `Person`.`id`
     ) AS `t1`
-ORDER BY `firstName`, `lastName`, `totalPay`
+ORDER BY
+    `firstName` ASC,
+    `lastName` ASC,
+    `totalPay` DESC

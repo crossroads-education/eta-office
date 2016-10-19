@@ -60,7 +60,7 @@ export module reports {
         table = (<any>$("#table-results")).DataTable({
             "buttons": ["csv", "print"],
             "dom": "Blftipr",
-            "order": [[0, "desc"]]
+            "order": []
         });
         (<any>window).table = table;
         if ($("#input-report").val() == "payroll") {

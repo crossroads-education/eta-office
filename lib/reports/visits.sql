@@ -26,5 +26,8 @@ WHERE
         `Person`.`username` = ? OR
         `Person`.`id` = ?
     )
-GROUP BY `Visit`.`student`, `Visit`.`timeIn`, `Visit`.`section`
+GROUP BY
+    `Visit`.`student`,
+    `Visit`.`timeIn`,
+    `Visit`.`section`
 ORDER BY `Visit`.`timeIn` DESC;
