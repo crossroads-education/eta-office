@@ -141,62 +141,93 @@ div
     //                            - column++
     //                +schedule-empty-hour(rowID, column)
     //                - column += 4
-    div.navbar.navbar-inverse.navbar-fixed-top#sidebar-wrapper
-        ul.nav.sidebar-nav
-            li.sidebar-brand
-                a(href="#") Settings
-            li
-                if scheduleRowType == "person"
-                    - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-                    each day, index in days
-                        span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index) &nbsp; #{day.toUpperCase()} &nbsp;
-            li
-                a(href="#") Category
+    div.side-bar-toggle(data-toggle="false")
+    div.side-bar
+        ul.side-bar-links
+            if scheduleRowType == "person"
+                li.side-bar-link Choose Day
+                    div.days.link-content
+                        - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                        each day, index in days
+                            span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index) #{day.toUpperCase()}
+                li.side-bar-link Sort By
+                    div.sort-types.link-content
+                        select.schedule-filter-link(data-param="sort")
+                            - var sortables = ["name", "daily hours", "weekly hours"];
+                            each sortable in sortables
+                                option(value=sortable) #{sortable.toUpperCase()}
+                    //    select.border-rounded.input-filter(data-filter="position-names", multiple)
+                    //        option
+                    //        for position in schedulePositionNames
+                    //            option(value=position)&attributes(isSelected) #{position}
+                li.side-bar-link Term
+                    div.terms.link-content
+                        select.schedule-filter-link#schedule-term(data-param="term")
+                            for term in scheduleTerms
+                                option(value=term.id) #{term.name.toUpperCase()}
+            if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
+                li.side-bar-link Manager Access
+                    div.manager-access.link-content
+                        span.schedule-filter-link(data-param="edit", data-value="yes")
+                            button.btn-schedule-edit Edit Schedules
+            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
+                li.side-bar-link Manager Access
+                    div.manager-access.link-content
+                        select#schedule-palette
+                            for location, name in scheduleLocationPalette
+                                option(value=location) #{name}
+                        button.btn-schedule-submit Submit
     div.schedule-box
-        button.hamburger.is-closed.animated.fadeInLeft
         for row, rowID in scheduleRows
             div.person-box
                 - var column = 0
-                - var today = new Date().getDate()
-                div(style="height: 40px; text-align: center;")
+                div.person-box-person
                     if scheduleRowType == "person"
-                        a.person-link(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
+                        //a.person-link(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
                             div.schedule-label #{row.label}
+                        p #{row.label}
                     else
                         div.schedule-label #{row.label}
-                div.col-xs-3
-                    span Legend
-                div.col-xs-2
-                    span Hours
-                div.col-xs-7(style="height: 40px;")
-                    span.day-week-hours Today
-                    span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
-                    span.day-week-hours /
-                    span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
-                    span.day-week-hours Week
-                div.col-xs-3
-                    each legend in legendData
-                        span #{legend.name}
-                        div.schedule-legend-cell(class=legend.class, data-available)
-                div.col-xs-2
-                    for hour in scheduleHours
-                        div.schedule-cell.schedule-header-cell #{hour}
-                div.col-xs-7
-                    +schedule-empty-hour(rowID, column)
-                    - column += 4
-                    for hour, hourID in row.slots
-                        div.schedule-cell
-                            for slot, slotID in hour
-                                - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
-                                div.schedule-cell-quarter(
-                                    data-row=rowID,
-                                    data-cell=hourID,
-                                    data-quarter=slotID,
-                                    data-column=column,
-                                    data-previous-color="none",
-                                    data-location=location,
-                                    data-available=slot.isAvailable,
-                                    data-time=slot.time)
-                                - column++
-                    +schedule-empty-hour(rowID, column)
-                    - column += 4
+                div.person-box-content
+                    div.col-xs-3(style="height: 25px; margin-bottom: 12px; border-bottom: 1px solid #000")
+                        span Legend
+                    div.col-xs-9(style="height: 25px; margin-bottom: 12px; text-align: right; border-bottom: 1px solid #000")
+                        span Total Hours:&nbsp&nbsp&nbsp&nbsp;
+                        span.day-week-hours Day
+                        span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
+                        span.day-week-hours /
+                        span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
+                        span.day-week-hours Week
+                    div.col-xs-3(style="padding-right: 0")
+                        each legend in legendData
+                            span #{legend.name}
+                            div.schedule-legend-cell(class=legend.class, data-available)
+                    div.col-xs-2(style="padding-right: 0")
+                        div
+                            span &nbsp;
+                        div.schedule-cell.schedule-header-cell
+                        - for(var i = 0; i < scheduleHours.length - 1; i++)
+                            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
+                    div.col-xs-7.schedule(style="padding-left: 2px")
+                        div.quarters
+                            span(style="text-align: right") :15&nbsp&nbsp&nbsp;
+                            span(style="text-align: center") :30
+                            span(style="text-align: left") &nbsp&nbsp&nbsp;:45
+                        +schedule-empty-hour(rowID, column)
+                        - column += 4
+                        for hour, hourID in row.slots
+                            div.schedule-cell
+                                for slot, slotID in hour
+                                    - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
+                                    div.schedule-cell-quarter(
+                                        data-row=rowID,
+                                        data-cell=hourID,
+                                        data-quarter=slotID,
+                                        data-column=column,
+                                        data-previous-color="none",
+                                        data-location=location,
+                                        data-available=slot.isAvailable,
+                                        data-time=slot.time)
+                                    - column++
+                        +schedule-empty-hour(rowID, column)
+                        - column += 4

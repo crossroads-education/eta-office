@@ -220,7 +220,7 @@ export module TemplateSchedule {
 
         if ($("#schedule-palette")[0]) { // if they're allowed to select things
             // use jqueryui's selectable
-            $(".schedule-box").selectable({
+            $(".schedule-box").find('.schedule').selectable({
                 filter: ".schedule-cell-quarter:not(.inactive)",
                 delay: 50,
                 distance: 1,
@@ -233,5 +233,40 @@ export module TemplateSchedule {
             });
         }
         filter(); // some values are set by server on load, and .on(change) doesn't recognize them
+
+        $('.side-bar-toggle').on('click', function () {
+            let current = $(this).attr('data-toggle');
+            $(this).attr('data-toggle', current == "false" ? "true" : "false");
+            current == "false" ? $('.side-bar').addClass('enabled') : $('.side-bar').removeClass('enabled');
+            $('.side-bar').hasClass('enabled') ? $(this).addClass('disabled') : $(this).removeClass('disabled');
+        });
+
+        $('html').on('click', function(e){
+            if($(e.target).is($('.side-bar-toggle'))) return;
+            if($('.side-bar').hasClass('enabled')){
+                if($(e.target).is($('.side-bar')) || $(e.target).is($('.side-bar').find('*'))){
+                    return;
+                }
+                $('.side-bar-toggle').attr('data-toggle', 'false').removeClass('disabled');
+                $('.side-bar').removeClass('enabled');
+            }
+        });
+
+        $('.side-bar-link').on('click', function (e) {
+            if($(e.target).is($('.side-bar-link').find('*'))) return;
+            $('.side-bar-link').each(function () {
+                $(this).find('.link-content').removeClass('enabled');
+            });
+            let content = $(this).find('.link-content');
+            content.hasClass('enabled') ? content.removeClass('enabled') : content.addClass('enabled');
+        });
+
+        $('.person-box-person').on('click', function () {
+            if($(this).parent().find('.person-box-content').css('display') == 'none'){
+                $(this).parent().find('.person-box-content').slideDown(200);
+            } else {
+                $(this).parent().find('.person-box-content').slideUp(200);
+            }
+        });
     });
 }
