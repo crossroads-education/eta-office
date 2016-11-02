@@ -125,6 +125,16 @@ export module hire {
         (<any>$("#input-evaluation-date")[0]).valueAsDate = new Date(); // reset to today
     }
 
+    function onTablePageChange(): void {
+        console.log("page changed");
+        setTimeout(function() {
+            $(".input-applicant").bootstrapSwitch({
+                "onText": "Yes",
+                "offText": "No"
+            });
+        }, 100);
+    }
+
     $(document).ready(function() {
         status = new HelperStatus("#success", "#error");
         modalStatus = new HelperStatus("#modal-success", "#modal-error");
@@ -136,14 +146,15 @@ export module hire {
             "dom": "Blftipr",
             "order": [[1, "asc"], [2, "asc"]]
         });
+        onTablePageChange();
+        $("#table-applicants")
+            .on("page.dt", onTablePageChange)
+            .on("length.dt", onTablePageChange)
+            .on("order.dt", onTablePageChange);
         $(".input-filter").on("change", onFilter);
         $(".btn-toggle-notes").on("click", onApplicantOpen);
         $("#btn-evaluation-submit").on("click", onEvaluationSubmit);
         $(".btn-update").on("click", onApplicantFlagSubmit);
-        $(".input-applicant").bootstrapSwitch({
-            "onText": "Yes",
-            "offText": "No"
-        });
         $(".input-applicant").on("switchChange.bootstrapSwitch", onApplicantFlagChange);
         $("#btn-submit-hire").on("click", onManualHireSubmit);
         $("#btn-save").on("click", onApplicantSave);
