@@ -14,7 +14,7 @@ export class Model implements eta.Model {
                 (
                     SELECT
                         Employee.shirt AS size,
-                        COUNT(*) AS count
+                        COUNT(DISTINCT Employee.id) AS count
                     FROM
                         Employee
                             LEFT JOIN EmployeePosition ON
@@ -24,13 +24,14 @@ export class Model implements eta.Model {
                             LEFT JOIN Center ON
                                 Position.center = Center.id
                     WHERE
+                        Employee.current = 1 AND
                         Center.department = ?
                     GROUP BY Employee.shirt
                 ) AS shirt
                     LEFT JOIN (
                         SELECT
                             Employee.hoodie AS size,
-                            COUNT(*) AS count
+                            COUNT(DISTINCT Employee.id) AS count
                         FROM
                             Employee
                                 LEFT JOIN EmployeePosition ON
@@ -40,6 +41,7 @@ export class Model implements eta.Model {
                                 LEFT JOIN Center ON
                                     Position.center = Center.id
                         WHERE
+                            Employee.current = 1 AND
                             Center.department = ?
                         GROUP BY Employee.hoodie
                     ) AS hoodie ON
