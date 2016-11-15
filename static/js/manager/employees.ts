@@ -185,7 +185,7 @@ export module employees {
 
     function onImageSetup(index: number, element: HTMLImageElement): void {
         $(element).on("error", function() {
-            $(this).attr("src", "https://mac.iupui.edu/img/MissingPhotos.svg");
+            $(this).attr("src", "https://mac.iupui.edu/img/missing-photo.svg");
         });
         element.src = "https://mac.iupui.edu/img/team-xsmall/" + $(element).data("username") + ".jpg";
     }
