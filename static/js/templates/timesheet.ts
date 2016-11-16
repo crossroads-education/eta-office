@@ -39,7 +39,9 @@ export module timesheet {
         //algorithm from https://weeknumber.net/how-to/javascript
     }
     export function updateRowBorders(): void{
+        let rows : JQuery = $("#table-timesheet tbody tr"); //converts the jquery object of the timesheet into an array
         for(let i : number = 0; i < rows.length - 1; i++){
+            let date1 : Date = new Date(rows[i].children[0].innerHTML); //takes the first i and second i from the array and compares them as date objects
             let date2 : Date = new Date(rows[i+1].children[0].innerHTML);
             if(getWeekOfTheYear(date1) != getWeekOfTheYear(date2)){
                 $(rows[i + 1].children).css("border-top-width", "5px")
