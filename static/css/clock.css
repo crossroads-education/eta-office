@@ -47,6 +47,11 @@
     font-size: 1.75em;
 }
 
+.table>tbody>tr>td {
+    border-top: 1px solid #ddd !important;
+    /* we dont need the weekly seperation in clock for datatables*/
+}
+
 #error {
     margin-top: 10px;
 }
