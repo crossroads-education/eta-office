@@ -144,7 +144,9 @@ export class Model implements eta.Model {
                     rows[rowIndex].slots[hourIndex][minuteIndex] = {
                         "isAvailable": raw[i].isAvailable == 1,
                         "center": raw[i].centerCode ? raw[i].centerCode : -1,
-                        "time": raw[i].time
+                        "time": raw[i].time,
+                        "isLast": false,
+                        "isFirst": false
                     };
 
                     if (rows[rowIndex].slots[hourIndex][minuteIndex].isAvailable) {
@@ -202,11 +204,16 @@ export class Model implements eta.Model {
                                 rows[i].slots[k][j] = {
                                     "center": -1,
                                     "isAvailable": false,
-                                    "time": time
+                                    "time": time,
+                                    "isLast": false,
+                                    "isFirst": false
                                 };
                             }
                         }
                     }
+                }
+                for (let i: number = 0; i < rows.length; i++) {
+                    rows[i].slots = schedule.checkFirstLast(rows[i].slots);
                 }
                 let permissions: eta.PermissionUser = req.session["permissions"];
                 let env: { [key: string]: any } = {

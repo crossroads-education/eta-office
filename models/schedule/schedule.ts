@@ -1,6 +1,7 @@
 import * as eta from "eta-lib";
 import * as schedule from "../../lib/templates/Schedule";
 
+import * as util from "util";
 import * as express from "express";
 
 export class Model implements eta.Model {
@@ -184,7 +185,9 @@ export class Model implements eta.Model {
                         rows[rowIndex].slots[hourIndex][minuteIndex] = {
                             "isAvailable": raw[i].isAvailable == 1,
                             "center": raw[i].centerCode ? raw[i].centerCode : -1,
-                            "time": raw[i].time
+                            "time": raw[i].time,
+                            "isLast": false,
+                            "isFirst": false
                         };
 
                         if (rows[rowIndex].slots[hourIndex][minuteIndex].isAvailable) {
@@ -222,7 +225,9 @@ export class Model implements eta.Model {
                                         rows[i].slots[k][j] = {
                                             "center": -1,
                                             "isAvailable": false,
-                                            "time": `${k + hours["open"]}:${j == 0 ? "00" : j * 15}:00`
+                                            "time": `${k + hours["open"]}:${j == 0 ? "00" : j * 15}:00`,
+                                            "isLast": false,
+                                            "isFirst": false
                                         };
                                     }
                                 }
@@ -243,6 +248,10 @@ export class Model implements eta.Model {
                             rows.sort((a: schedule.Row, b: schedule.Row): number => {
                                 return a.weekTotal == b.weekTotal ? 0 : (a.weekTotal < b.weekTotal ? 1 : -1);
                             });
+                        }
+
+                        for (let i: number = 0; i < rows.length; i++) {
+                            rows[i].slots = schedule.checkFirstLast(rows[i].slots);
                         }
 
                         callback({

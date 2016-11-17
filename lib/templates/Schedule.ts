@@ -96,15 +96,65 @@ export interface Slot {
     Minutes should always be a multiple of 15, 0 <= minutes <= 45
     */
     time: string;
+
+    /**
+    Whether this slot is the last of its center in the row
+    */
+    isLast: boolean;
+
+    /**
+    Whether this slot is the first of its center in the row
+    */
+    isFirst: boolean;
 }
 
-export function getEmptyHour() {
+export function checkFirstLast(slots: Slot[][]): Slot[][] {
+    let lastSlot: Slot = null;
+    // since slots and slots[i] may not start at zero, this is how we get first element
+    for (let i in slots) {
+        for (let k in slots[i]) {
+            lastSlot = slots[i][k];
+            break;
+        }
+        if (i == "0") { // index is a string
+            slots.splice(0, 0, getEmptyHour());
+        } else {
+            slots[Number(i) - 1] = getEmptyHour();
+        }
+        break;
+    }
+    slots.push(getEmptyHour());
+    for (let i in slots) {
+        for (let k in slots[i]) {
+            lastSlot = slots[i][k];
+            break;
+        }
+        break;
+    }
+    console.log(slots[slots.length - 1]);
+    for (let i in slots) {
+        for (let k in slots[i]) {
+            if ((lastSlot.center != slots[i][k].center) ||
+                ((lastSlot.time == "00:00:00" || slots[i][k].time == "00:00:00") && slots[i][k].time != lastSlot.time) ||
+                (lastSlot.center == -1 && slots[i][k].center == -1 && lastSlot.isAvailable != slots[i][k].isAvailable)) {
+                lastSlot.isLast = true;
+                slots[i][k].isFirst = true;
+            }
+            lastSlot = slots[i][k];
+        }
+    }
+    return slots;
+}
+
+export function getEmptyHour(): Slot[] {
     let emptyHour: Slot[] = [];
     for (let i: number = 0; i < 4; i++) {
         emptyHour.push({
             "isAvailable": false,
             "center": -1,
-            "time": "00:00:00"
+            "time": "00:00:00",
+            "isLast": false,
+            "isFirst": false
         });
     }
     return emptyHour;

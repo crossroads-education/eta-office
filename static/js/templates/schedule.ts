@@ -57,33 +57,6 @@ export module TemplateSchedule {
         element.attr("data-previous-color", isActive ? colorClass : "none");
     }
 
-    function onPageSetup(index: number, element: HTMLElement): void {
-        let $this = $(this);
-        let time: string = $this.attr("data-time");
-        if (time == "00:00:00") {
-            $this.addClass("inactive");
-            return;
-        }
-        let location: string = $this.attr("data-location");
-        if (location != "") {
-            setActive($this, location, true);
-        }
-    }
-
-    function onInactiveSetup(index: number, element: HTMLElement): void {
-        let $this = $(this);
-        let row: number = $this.data("row");
-        let col: number = $this.data("column");
-        let $before: JQuery = getQuarter(row, col - 1);
-        let $after: JQuery = getQuarter(row, col + 1);
-        if ($before.length == 0 || !$before.hasClass("inactive")) {
-            $this.addClass("first");
-        }
-        if ($after.length == 0 || !$after.hasClass("inactive")) {
-            $this.addClass("last");
-        }
-    }
-
     function filter(): void {
         // $(".schedule-row-filterable").show();
         let shouldFilter: boolean = false;
@@ -183,12 +156,6 @@ export module TemplateSchedule {
 
     $(document).ready(function() {
         cellCount = $(".schedule-cell-quarter[data-row='0']").length;
-
-        // Initialize cell quarters
-        // First and last cells are inactive
-        $(".schedule-cell-quarter").each(onPageSetup);
-        $(".schedule-cell-quarter.inactive").each(onInactiveSetup);
-
         $(".input-filter").each(function(index: number, element: HTMLElement) {
             let $this: JQuery = $(this);
             let placeholder: string = "";

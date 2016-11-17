@@ -1,19 +1,3 @@
-mixin schedule-empty-hour(rowID, column)
-    div.schedule-cell
-        - var count = 0
-        while count < 4
-            div.schedule-cell-quarter(
-                data-row=rowID,
-                data-cell=-1,
-                data-quarter=count,
-                data-column=column,
-                data-previous-color="none",
-                data-location="",
-                data-available="false",
-                data-time="00:00:00")
-            - column++
-            - count++
-
 link(rel="stylesheet",href=baseurl + "css/templates/schedule.css")
 div.text-center#container-status
     span.text-success.status-message#success
@@ -123,21 +107,30 @@ div
                         span.col-xs-1  /
                         span.col-xs-1  #{row.weekTotal ? row.weekTotal : "0"}
                 div.schedule-cell-row.col-xs-8(data-userid=row.userid, data-day=row.day)
-                    +schedule-empty-hour(rowID, column)
-                    - column += 4
                     for hour, hourID in row.slots
                         div.schedule-cell
                             for slot, slotID in hour
-                                - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
-                                div.schedule-cell-quarter(
+                                -
+                                    var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
+                                    var className = "schedule-cell-quarter " + location;
+                                    if (slot.isFirst || column == 0) {
+                                        className += " first";
+                                    }
+                                    if (slot.isLast || ((hourID == row.slots.length - 1) && (slotID == hour.length - 1))) {
+                                        className += " last";
+                                    }
+                                    if (slot.time == "00:00:00") {
+                                        className += " inactive";
+                                    } else {
+                                        className += " active";
+                                    }
+                                div(class=className,
                                     data-row=rowID,
                                     data-cell=hourID,
                                     data-quarter=slotID,
                                     data-column=column,
-                                    data-previous-color="none",
+                                    data-previous-color=location,
                                     data-location=location,
                                     data-available=slot.isAvailable,
                                     data-time=slot.time)
                                 - column++
-                    +schedule-empty-hour(rowID, column)
-                    - column += 4
