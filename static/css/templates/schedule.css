@@ -7,7 +7,7 @@
 }
 
 .schedule-row-filterable.hvr-border-fade:hover {
-    box-shadow: inset 0 0 0 4px #2098d1,0 0 1px rgba(0,0,0,0);
+    box-shadow: inset 0 0 0 4px #2098d1, 0 0 1px rgba(0, 0, 0, 0);
 }
 
 #schedule-error {
@@ -49,7 +49,7 @@
     margin-bottom: 0;
 }
 
-./* Container for schedule */
+. /* Container for schedule */
 .schedule-box {
     width: 100%;
 }
@@ -98,6 +98,7 @@
 .schedule-header-row {
     padding: 0 3%;
 }
+
 .schedule-header-row .schedule-cell {
     margin: 1px .25%;
 }
@@ -121,12 +122,12 @@
 
 /* Round off the left of the first cell and right of the last cell in each row */
 /*.schedule-cell:first-child {*/
-    /*border-radius: 10px 0 0 10px;*/
-    /*border-left: none*/
+/*border-radius: 10px 0 0 10px;*/
+/*border-left: none*/
 /*}*/
 /*.schedule-cell:last-child {*/
-    /*border-radius: 0 10px 10px 0;*/
-    /*border-right: none;*/
+/*border-radius: 0 10px 10px 0;*/
+/*border-right: none;*/
 /*}*/
 
 .schedule-header-cell {
@@ -177,43 +178,49 @@
 
 /* Colors for different scheduling locations/states */
 /* MAC Regular */
-.schedule-cell-quarter.MA, .schedule-legend-cell.MA{
+.schedule-cell-quarter.MA, .schedule-legend-cell.MA {
     background-color: #56A042;
 }
+
 /* MAC Online */
-.schedule-cell-quarter.MO, .schedule-legend-cell.MO{
+.schedule-cell-quarter.MO, .schedule-legend-cell.MO {
     background-color: #4B4084;
 }
+
 /* STAT Regular */
-.schedule-cell-quarter.ST, .schedule-legend-cell.ST{
+.schedule-cell-quarter.ST, .schedule-legend-cell.ST {
     background-color: #BEA84E;
 }
+
 /* STAT Online */
-.schedule-cell-quarter.SO, .schedule-legend-cell.SO{
+.schedule-cell-quarter.SO, .schedule-legend-cell.SO {
     background-color: #B74B58;
 }
+
 /* Available */
-.schedule-cell-quarter.AV, .schedule-legend-cell.AV{
+.schedule-cell-quarter.AV, .schedule-legend-cell.AV {
     /*background-color: #FFFFFF;*/
 }
+
 /* Unavailable */
-.schedule-cell-quarter.UV, .schedule-legend-cell.UV{
+.schedule-cell-quarter.UV, .schedule-legend-cell.UV {
     background-color: #AAAAAA;
 }
+
 /* Inactive */
-.schedule-cell-quarter.inactive, .schedule-legend-cell.inactive{
+.schedule-cell-quarter.inactive, .schedule-legend-cell.inactive {
     background-color: #000000;
 }
 
 /* Rounded borders */
 /*.schedule-cell-quarter.first {*/
-    /*border-radius: 10px 0 0 10px;*/
+/*border-radius: 10px 0 0 10px;*/
 /*}*/
 /*.schedule-cell-quarter.last {*/
-    /*border-radius: 0 10px 10px 0;*/
+/*border-radius: 0 10px 10px 0;*/
 /*}*/
 /*.schedule-cell-quarter.first.last {*/
-    /*border-radius: 10px;*/
+/*border-radius: 10px;*/
 /*}*/
 
 #container-status {
@@ -227,7 +234,7 @@
 }
 
 .person-box {
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin-bottom: 10px;
     overflow: hidden;
 }
@@ -258,10 +265,59 @@
     margin-top: -35px;
 }
 
+.legend-column-top {
+    height: 25px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #000;
+}
+
+.total-hours-column {
+    padding: 0;
+    height: 25px;
+    margin-bottom: 12px;
+    text-align: right;
+    border-bottom: 1px solid #000;
+}
+
+.legend-column-sections {
+    padding-right: 0;
+}
+
+.daily-hours-column {
+    padding-right: 0;
+}
+
+.schedule {
+    padding-left: 2px;
+}
+
+.schedule-box.loading {
+    width: 100%;
+    min-height: 260px;
+    background-size: 50% 50%;
+    background: transparent url("../../img/rolling.gif") no-repeat center center;
+}
+
 .quarters > span {
     font-weight: bold;
     width: 33%;
     display: inline-block;
+}
+
+.quarters > span:nth-child(1) {
+    text-align: right;
+}
+
+.quarters > span:nth-child(2) {
+    text-align: center;
+}
+
+.quarters > span:nth-child(3) {
+    text-align: left;
+}
+
+.clone {
+    display: none;
 }
 
 .side-bar-toggle {
@@ -270,7 +326,7 @@
     width: 50px;
     background-color: #3c3c3c;
     top: 46px;
-    left: -35px;
+    left: -20px;
     border-radius: 5px;
     -webkit-transition: left .2s;
     -moz-transition: left .2s;
@@ -301,14 +357,27 @@
     -ms-transition: left .2s;
     -o-transition: left .2s;
     transition: left .2s;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
 }
 
 .side-bar.enabled {
     left: 0;
 }
 
+.exit {
+    position: absolute;
+    top: -9px;
+    right: 7px;
+    color: #fff;
+    font-size: 24px;
+}
+
+.exit:hover {
+    cursor: pointer;
+}
+
 .side-bar-links {
+    position: relative;
     list-style-type: none;
     width: 100%;
     height: 100%;

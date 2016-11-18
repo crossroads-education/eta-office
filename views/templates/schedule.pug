@@ -37,7 +37,9 @@ div.text-center#container-status
     }, {
         "name": "Unavailable",
         "class": "UV"
-    }]
+    }];
+
+- var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 div
     input#row-type(type="hidden", value=scheduleRowType)
     //div.schedule-filter-row.row
@@ -144,6 +146,8 @@ div
     div.side-bar-toggle(data-toggle="false")
     div.side-bar
         ul.side-bar-links
+            div.exit
+                span x
             if scheduleRowType == "person"
                 li.side-bar-link Choose Day
                     div.days.link-content
@@ -181,7 +185,11 @@ div
         for row, rowID in scheduleRows
             div.person-box
                 - var column = 0
-                div.person-box-person
+                div.person-box-person(
+                    data-selected-day=scheduleFilters.day,
+                    data-selected-term=scheduleFilters.term,
+                    data-userid=row.userid,
+                    data-rowid=rowID)
                     if scheduleRowType == "person"
                         //a.person-link(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
                             div.schedule-label #{row.label}
@@ -189,45 +197,77 @@ div
                     else
                         div.schedule-label #{row.label}
                 div.person-box-content
-                    div.col-xs-3(style="height: 25px; margin-bottom: 12px; border-bottom: 1px solid #000")
+                    div.col-xs-2.legend-column-top
                         span Legend
-                    div.col-xs-9(style="height: 25px; margin-bottom: 12px; text-align: right; border-bottom: 1px solid #000")
+                    div.col-xs-10.total-hours-column
                         span Total Hours:&nbsp&nbsp&nbsp&nbsp;
-                        span.day-week-hours Day
+                        span.day-week-hours #{days[scheduleFilters.day]}
                         span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
                         span.day-week-hours /
                         span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
                         span.day-week-hours Week
-                    div.col-xs-3(style="padding-right: 0")
-                        each legend in legendData
-                            span #{legend.name}
-                            div.schedule-legend-cell(class=legend.class, data-available)
-                    div.col-xs-2(style="padding-right: 0")
+                    div.col-xs-3.legend-column-sections
+                    div.col-xs-2.daily-hours-column
                         div
                             span &nbsp;
                         div.schedule-cell.schedule-header-cell
                         - for(var i = 0; i < scheduleHours.length - 1; i++)
                             div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
-                    div.col-xs-7.schedule(style="padding-left: 2px")
+                    div.col-xs-7.schedule
                         div.quarters
-                            span(style="text-align: right") :15&nbsp&nbsp&nbsp;
-                            span(style="text-align: center") :30
-                            span(style="text-align: left") &nbsp&nbsp&nbsp;:45
-                        +schedule-empty-hour(rowID, column)
-                        - column += 4
-                        for hour, hourID in row.slots
-                            div.schedule-cell
-                                for slot, slotID in hour
-                                    - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
-                                    div.schedule-cell-quarter(
-                                        data-row=rowID,
-                                        data-cell=hourID,
-                                        data-quarter=slotID,
-                                        data-column=column,
-                                        data-previous-color="none",
-                                        data-location=location,
-                                        data-available=slot.isAvailable,
-                                        data-time=slot.time)
-                                    - column++
-                        +schedule-empty-hour(rowID, column)
-                        - column += 4
+                            span :15&nbsp&nbsp&nbsp;
+                            span :30
+                            span &nbsp&nbsp&nbsp;:45
+                        div.schedule-box
+                            div.schedule-cell-quarter.clone(
+                                data-row="",
+                                data-cell="",
+                                data-quarter="",
+                                data-column="",
+                                data-previous-color="none",
+                                data-location="",
+                                data-available="",
+                                data-time="")
+                //div.person-box-content
+                //    div.col-xs-3(style="height: 25px; margin-bottom: 12px; border-bottom: 1px solid #000")
+                //        span Legend
+                //    div.col-xs-9(style="height: 25px; margin-bottom: 12px; text-align: right; border-bottom: 1px solid #000")
+                //        span Total Hours:&nbsp&nbsp&nbsp&nbsp;
+                //        span.day-week-hours Day
+                //        span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
+                //        span.day-week-hours /
+                //        span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
+                //        span.day-week-hours Week
+                //    div.col-xs-3(style="padding-right: 0")
+                //        each legend in legendData
+                //            span #{legend.name}
+                //            div.schedule-legend-cell(class=legend.class, data-available)
+                //    div.col-xs-2(style="padding-right: 0")
+                //        div
+                //            span &nbsp;
+                //        div.schedule-cell.schedule-header-cell
+                //        - for(var i = 0; i < scheduleHours.length - 1; i++)
+                //            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
+                //    div.col-xs-7.schedule(style="padding-left: 2px")
+                //        div.quarters
+                //            span(style="text-align: right") :15&nbsp&nbsp&nbsp;
+                //            span(style="text-align: center") :30
+                //            span(style="text-align: left") &nbsp&nbsp&nbsp;:45
+                //        +schedule-empty-hour(rowID, column)
+                //        - column += 4
+                //        for hour, hourID in row.slots
+                //            div.schedule-cell
+                //                for slot, slotID in hour
+                //                    - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
+                //                    div.schedule-cell-quarter(
+                //                        data-row=rowID,
+                //                        data-cell=hourID,
+                //                        data-quarter=slotID,
+                //                        data-column=column,
+                //                        data-previous-color="none",
+                //                        data-location=location,
+                //                        data-available=slot.isAvailable,
+                //                        data-time=slot.time)
+                //                    - column++
+                //        +schedule-empty-hour(rowID, column)
+                //        - column += 4
