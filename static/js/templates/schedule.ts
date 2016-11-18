@@ -209,10 +209,25 @@ export module TemplateSchedule {
 
             $(categories).each(function () {
                 var that = this;
-                $(schedules)
-                if(~$(that).attr('data-position-categories').indexOf(that)){
-                    console.log('true');
-                }
+                let categoryContainer: JQuery = $('<div data-grouping="'+ that +'"><span class="grouping-name">'+ that +'</span></div>');
+                $(schedules).each(function () {
+                    if ($(this).attr('data-position-categories').indexOf(that) > - 1) {
+                        categoryContainer.append(this);
+                    }
+                });
+                // console.log(categoryContainer);
+                // $('.schedule-box').append(categoryContainer);
+            });
+
+            $(positions).each(function () {
+                var that = this;
+                let positionsContainer: JQuery = $('<div data-grouping="'+ that +'"><span class="grouping-name">'+ that +'</span></div>');
+                $(schedules).each(function () {
+                    if ($(this).attr('data-position-names').indexOf(that) > - 1) {
+                        positionsContainer.append(this);
+                    }
+                });
+                // $('.schedule-box').append(positionsContainer);
             });
         } else {
             HelperUrl.setParameterByName(this.getAttribute("data-param"), value);
