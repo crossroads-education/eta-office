@@ -29,7 +29,7 @@ export class Model implements eta.Model {
             let lastTime: Date = new Date(); // current time will always be greater than result of getDateFromTime()
             for (let i: number = 0; i < slots.length; i++) {
                 let slotTime: Date = eta.time.getDateFromTime(slots[i].time);
-                let missingSlots: number = (slotTime.getTime() - lastTime.getTime()) / eta.time.span15Minutes - 1;
+                let missingSlots: number = Number(((slotTime.getTime() - lastTime.getTime()) / eta.time.span15Minutes - 1).toFixed(0));
                 if (missingSlots > 0) { // difference is greater than 15 minutes
                     // there's a missing slot in between the last slot and this one
                     let params: any[] = [i, 0];
@@ -45,7 +45,6 @@ export class Model implements eta.Model {
                         });
                     }
                     Array.prototype.splice.apply(slots, params);
-                    i += missingSlots;
                 }
                 lastTime = slotTime;
             }
