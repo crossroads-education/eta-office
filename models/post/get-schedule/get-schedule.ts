@@ -48,7 +48,32 @@ export class Model implements eta.Model {
                 }
                 lastTime = slotTime;
             }
-            callback({ raw: JSON.stringify(slots) });
+            eta.center.getLongestHoursForDay(eta.time.getCurrentDayOfWeek(), eta.term.getCurrent().id, (err : Error, hours? : eta.HoursOfOperation) => {
+                if (err) {
+                    eta.logger.dbError(<any>err);
+                    return callback({errcode: eta.http.InternalError});
+                }
+                if (!hours) {
+                    return callback({errcode: eta.http.NotFound});
+                }
+                function fillMissingTimes(open : string, slotTime : string) : schedule.Slot[] {
+                    let slots : schedule.Slot[] = [];
+                    if (open != slotTime) {
+                        let times : string[] = eta.time.fillTimes(eta.time.getDateFromTime(open), eta.time.getDateFromTime(slotTime), eta.time.span15Minutes, "HH:MM:ss");
+                        for (let i : number = 0; i < times.length; i++) {
+                            slots.push({
+                                "time": times[i],
+                                "center": -1,
+                                "isAvailable": false
+                            });
+                        }
+                    }
+                    return slots;
+                }
+                slots = fillMissingTimes(hours.open, slots[0].time).concat(slots);
+                slots = slots.concat(fillMissingTimes(slots[slots.length - 1].time, hours.close));
+                callback({ raw: JSON.stringify(slots) });
+            });
         });
     }
 }
