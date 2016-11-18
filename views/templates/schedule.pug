@@ -143,6 +143,13 @@ div
     //                            - column++
     //                +schedule-empty-hour(rowID, column)
     //                - column += 4
+    div.row
+        div.col-xs-12
+            select.border-rounded.input-filter(data-filter="position-names", multiple, style="width: 100%;")
+                option
+                for position in schedulePositionNames
+                    - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
+                    option(value=position)&attributes(isSelected) #{position}
     div.side-bar-toggle(data-toggle="false")
     div.side-bar
         ul.side-bar-links
@@ -160,6 +167,8 @@ div
                             - var sortables = ["name", "daily hours", "weekly hours"];
                             each sortable in sortables
                                 option(value=sortable) #{sortable.toUpperCase()}
+                            option(value="positions") POSITIONS
+                            option(value="categories") CATEGORIES
                     //    select.border-rounded.input-filter(data-filter="position-names", multiple)
                     //        option
                     //        for position in schedulePositionNames
@@ -169,22 +178,25 @@ div
                         select.schedule-filter-link#schedule-term(data-param="term")
                             for term in scheduleTerms
                                 option(value=term.id) #{term.name.toUpperCase()}
-            if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
-                li.side-bar-link Manager Access
-                    div.manager-access.link-content
-                        span.schedule-filter-link(data-param="edit", data-value="yes")
-                            button.btn-schedule-edit Edit Schedules
-            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
-                li.side-bar-link Manager Access
-                    div.manager-access.link-content
-                        select#schedule-palette
-                            for location, name in scheduleLocationPalette
-                                option(value=location) #{name}
-                        button.btn-schedule-submit Submit
+            //if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
+            //    li.side-bar-link Manager Access
+            //        div.manager-access.link-content
+            //            span.schedule-filter-link(data-param="edit", data-value="yes")
+            //                button.btn-schedule-edit Edit Schedules
+            //if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
+            //    li.side-bar-link Manager Access
+            //        div.manager-access.link-content
+            //            select#schedule-palette
+            //                for location, name in scheduleLocationPalette
+            //                    option(value=location) #{name}
+            //            button.btn-schedule-submit Submit
     div.schedule-box
+        div.selected-day
+            p
+                strong Selected Day:&nbsp&nbsp
+                | #{days[scheduleFilters.day]}
         for row, rowID in scheduleRows
-            div.person-box
-                - var column = 0
+            div.person-box.schedule-row-filterable&attributes(row.filterables)
                 div.person-box-person(
                     data-selected-day=scheduleFilters.day,
                     data-selected-term=scheduleFilters.term,

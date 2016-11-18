@@ -233,6 +233,11 @@
     margin-right: 5px;
 }
 
+.selected-day > p {
+    font-size: 24px;
+    text-align: center;
+}
+
 .person-box {
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     margin-bottom: 10px;
@@ -322,6 +327,7 @@
 
 .side-bar-toggle {
     position: fixed;
+    z-index: 9001;
     height: 70px;
     width: 50px;
     background-color: #3c3c3c;
@@ -396,11 +402,11 @@
     max-height: 0;
     padding: 0;
     overflow: hidden;
-    -webkit-transition: max-height .2s;
-    -moz-transition: max-height .2s;
-    -ms-transition: max-height .2s;
-    -o-transition: max-height .2s;
-    transition: max-height .2s;
+    -webkit-transition: max-height, padding .2s, .4s;
+    -moz-transition: max-height, padding .2s, .4s;
+    -ms-transition: max-height, padding .2s, .4s;
+    -o-transition: max-height, padding .2s, .4s;
+    transition: max-height, padding .2s, .4s;
 }
 
 .days.enabled, .sort-types.enabled, .sort-positions.enabled, .terms.enabled, .manager-access.enabled {

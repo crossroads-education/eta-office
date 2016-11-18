@@ -105,27 +105,27 @@ export module TemplateSchedule {
                     if (!selectors[filterName]) {
                         selectors[filterName] = [];
                     }
-                    selectors[filterName].push(`[data-${filterName}*='${values[i]}']`);
+                    selectors[filterName].push(`[data-${filterName}='${values[i]}']`);
                 }
                 filters[filterName] = values;
             }
         });
         if (shouldFilter) {
             location.hash = "#" + JSON.stringify(filters);
-            let $hide: JQuery = $(".schedule-row-filterable");
+            // let $hide: JQuery = $(".schedule-row-filterable");
             let $show: JQuery = $(".schedule-row-filterable");
-            let final: string = "";
+            // let final: string = "";
             for (let i in selectors) {
                 let selector: string = selectors[i].join(",");
                 $show = $show.filter(selector);
             }
-            let notSelector: string = ".schedule-cell-row:not(.schedule-header-row)";
+            let notSelector: string = ".person-box-person";
             $show.each(function (index: number, element: HTMLElement): void {
-                let userid: string = $(this).find(".schedule-cell-row").attr("data-userid");
+                let userid: string = $(this).find(".person-box-person").attr("data-userid");
                 notSelector += `:not([data-userid='${userid}'])`;
             });
-            $(notSelector).parent().hide();
             $show.show();
+            $(notSelector).parent().hide();
         } else {
             location.hash = ""; // reset filters to empty
             $(".schedule-row-filterable").show(); // no filters are selected, so show everything
@@ -174,10 +174,49 @@ export module TemplateSchedule {
 
     function onFilterLink(): void {
         let value: string = this.value;
+        let positions: string[] = [];
+        let categories: string[] = [];
         if (value == undefined) {
             value = this.getAttribute("data-value");
         }
-        HelperUrl.setParameterByName(this.getAttribute("data-param"), value);
+        if (value == "positions" || value == "categories") {
+            let schedules: JQuery = $('.person-box');
+            if (value == "positions") {
+                schedules.each(function () {
+                    let scheduleValue: any = $(this).attr('data-position-names');
+                    scheduleValue = scheduleValue.substr(2);
+                    scheduleValue = scheduleValue.substr(0, scheduleValue.length - 2);
+                    scheduleValue = scheduleValue.split('","');
+                    $(scheduleValue).each(function () {
+                        if ($.inArray(this, positions) <= -1) {
+                            positions.push(this);
+                        }
+                    });
+                });
+            } else if (value == "categories") {
+                schedules.each(function () {
+                    let scheduleValue: any = $(this).attr('data-position-categories');
+                    scheduleValue = scheduleValue.substr(2);
+                    scheduleValue = scheduleValue.substr(0, scheduleValue.length - 2);
+                    scheduleValue = scheduleValue.split('","');
+                    $(scheduleValue).each(function () {
+                        if ($.inArray(this, categories) <= -1) {
+                            categories.push(this);
+                        }
+                    });
+                });
+            }
+
+            $(categories).each(function () {
+                var that = this;
+                $(schedules)
+                if(~$(that).attr('data-position-categories').indexOf(that)){
+                    console.log('true');
+                }
+            });
+        } else {
+            HelperUrl.setParameterByName(this.getAttribute("data-param"), value);
+        }
     }
 
     function onWindowResize() {
@@ -212,7 +251,7 @@ export module TemplateSchedule {
         emptyCell.attr('data-location', '');
         emptyCell.attr('data-available', 'false');
         emptyCell.attr('data-time', '00:00:00');
-        for(let i: number = 0; i < 4; i++){
+        for (let i: number = 0; i < 4; i++) {
             emptyRow.append(emptyCell.clone());
         }
         scheduleContainer.append(emptyRow);
@@ -229,13 +268,13 @@ export module TemplateSchedule {
             scheduleCellQuarter.attr('data-time', this.time);
             cellsInRow.push(scheduleCellQuarter[0]);
             scheduleContainer.append(scheduleCellQuarter);
-            if(cellsInRow.length == 4){
+            if (cellsInRow.length == 4) {
                 $(cellsInRow).wrapAll('<div class="schedule-cell"></div>');
                 cellsInRow = [];
             }
         });
         emptyRow = $('<div class="schedule-cell"></div>');
-        for(let i: number = 0; i < 4; i++){
+        for (let i: number = 0; i < 4; i++) {
             emptyRow.append(emptyCell.clone());
         }
         scheduleContainer.append(emptyRow);
@@ -262,9 +301,9 @@ export module TemplateSchedule {
             section: "UV"
         }];
         let legendContainer: JQuery = container.find('.legend-column-sections');
-        for(let i = 0; i < legendData.length; i++){
-            legendContainer.append('<span>'+ legendData[i].name +'</span>');
-            legendContainer.append('<div class="schedule-legend-cell '+ legendData[i].section +'" data-available></div>')
+        for (let i = 0; i < legendData.length; i++) {
+            legendContainer.append('<span>' + legendData[i].name + '</span>');
+            legendContainer.append('<div class="schedule-legend-cell ' + legendData[i].section + '" data-available></div>')
         }
     }
 
@@ -344,10 +383,11 @@ export module TemplateSchedule {
 
         $('.side-bar-link').on('click', function (e) {
             if ($(e.target).is($('.side-bar-link').find('*'))) return;
+            let content = $(this).find('.link-content');
             $('.side-bar-link').each(function () {
+                if ($(this).find('.link-content').is(content)) return;
                 $(this).find('.link-content').removeClass('enabled');
             });
-            let content = $(this).find('.link-content');
             content.hasClass('enabled') ? content.removeClass('enabled') : content.addClass('enabled');
         });
 
