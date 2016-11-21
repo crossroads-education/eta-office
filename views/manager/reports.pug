@@ -20,7 +20,7 @@ block body
         h2 Select Report
         select.border-rounded.keep-caret#input-report
             option(value="schedule") Schedule Data
-            option(value="sections") Section Data
+            option(value="visitation") Visitation Info
             option(value="payroll") Payroll Expenditure
             option(value="visits") Visits
             option(value="studentsection") Student Enrollment
@@ -29,10 +29,15 @@ block body
         div.section-input
             +select-term()
             +report-submit()
-    +report-section("sections")
-        h3 Get Section Data
+    +report-section("visitation")
+        h3 Get Course Info For Visitations
         div.section-input
-            +select-term()
+            div.section-divider
+                +select-term()
+            div.section-divider
+                select.border-rounded.keep-caret(data-name="tutor")
+                    each tutorLevel in tutorLevels
+                        option(value=tutorLevel.levelName) #{tutorLevel.levelName}
             +report-submit()
     +report-section("payroll")
         h3 Get Payroll Expenditure

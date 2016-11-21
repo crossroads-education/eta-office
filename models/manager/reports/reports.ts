@@ -28,11 +28,27 @@ export class Model implements eta.Model {
                     callback({ errcode: eta.http.InternalError });
                     return;
                 }
-                callback({
-                    "currentTerm": eta.term.getCurrent().id,
-                    "departments": departments,
-                    "positionNames": positionNames,
-                    "terms": eta.term.getClosest(eta.term.getCurrent())
+                sql = `
+                    SELECT DISTINCT
+                        Course.tutor AS levelName
+                    FROM
+                        Course
+                    WHERE
+                        Course.tutor IS NOT NULL
+                    ORDER BY
+                        Course.tutor ASC`;
+                eta.db.query(sql, [], (err: eta.DBError, tutorLevels: any[]) => {
+                    if (err) {
+                        eta.logger.dbError(<any>err);
+                        return callback({ errcode: eta.http.InternalError });
+                    }
+                    callback({
+                        "currentTerm": eta.term.getCurrent().id,
+                        "departments": departments,
+                        "positionNames": positionNames,
+                        "terms": eta.term.getClosest(eta.term.getCurrent()),
+                        "tutorLevels": tutorLevels
+                    });
                 });
             });
         });

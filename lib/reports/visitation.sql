@@ -1,23 +1,21 @@
--- term
+-- term,tutor
 SELECT
-    `Course`.`subject` AS "Course Subject",
-    `Course`.`number` AS "Course Number",
-    `Section`.`number` AS "Section Number",
-    `Section`.`room` AS "Room",
+    CONCAT(`Course`.`subject`, ' ', `Course`.`number`) AS "Course",
+    `Section`.`number` AS "Section",
+    `Section`.`room` AS "Location",
     CONCAT(`Professor`.`lastName`, ', ', `Professor`.`firstName`) AS "Professor",
-    `Section`.`totalEnrolled` AS "Enrollment Count",
     `Section`.`days` AS "Days",
-    `Section`.`start` AS "Start Time",
-    `Section`.`end` AS "End Time"
+    CONCAT(`Section`.`start`, ' - ', `Section`.`end`) AS "Time"
 FROM
     `Section`
         LEFT JOIN `Course` ON
             `Section`.`course` = `Course`.`id`
-        LEFT JOIN `Person` `Professor` ON
+        LEFT JOIN `Person` AS `Professor` ON
             `Section`.`professor` = `Professor`.`id`
 WHERE
     `Course`.`supported` = 1 AND
-    `Section`.`term` = ?
+    `Section`.`term` = ? AND
+    `Course`.`tutor` = ?
 ORDER BY
     `Course`.`subject` ASC,
     `Course`.`number` ASC,
