@@ -6,7 +6,7 @@ SELECT
     CONCAT(`Professor`.`lastName`, ', ', `Professor`.`firstName`) AS "Professor",
     `Section`.`days` AS "Days",
     CONCAT(`Section`.`start`, ' - ', `Section`.`end`) AS "Time",
-    `Section`.`totalEnroled` AS "Enrolled Count"
+    `Section`.`totalEnrolled` AS "Enrolled Count"
 FROM
     `Section`
         LEFT JOIN `Course` ON
