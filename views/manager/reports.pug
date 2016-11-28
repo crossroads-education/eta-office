@@ -24,6 +24,7 @@ block body
             option(value="payroll") Payroll Expenditure
             option(value="visits") Visits
             option(value="studentsection") Student Enrollment
+            option(value="deviation") Visit Deviation
     +report-section("schedule")
         h3 Get Scheduled Hours Per Employee
         div.section-input
@@ -67,6 +68,16 @@ block body
             div.section-divider.row
                 div.col-xs-3.no-col-padding
                     input.form-control(type="text", data-name="id", placeholder="Student ID / Username")
+            +report-submit()
+    +report-section("deviation")
+        h3 Get Visit Deviation From Term
+        div.section-input
+            div.section-divider
+                +select-term()
+            div.section-divider
+                select.border-rounded.keep-caret(data-name="center")
+                    each center in centers
+                        option(value=center.id) #{center.name}
             +report-submit()
     //- +report-section("examjam")
     //-     h3 Get Exam Jam Visits
