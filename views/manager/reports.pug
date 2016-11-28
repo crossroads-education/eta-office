@@ -77,7 +77,8 @@ block body
             div.section-divider
                 select.border-rounded.keep-caret(data-name="center")
                     each center in centers
-                        option(value=center.id) #{center.name}
+                        if center.address != ""
+                            option(value=center.id) #{center.shorthand}
             +report-submit()
     //- +report-section("examjam")
     //-     h3 Get Exam Jam Visits
