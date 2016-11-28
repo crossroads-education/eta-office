@@ -125,19 +125,23 @@ export module hire {
         (<any>$("#input-evaluation-date")[0]).valueAsDate = new Date(); // reset to today
     }
 
-    function onTablePageChange(): void {
-        console.log("page changed");
+    function setupFlagSwitches(): void {
+        $(".input-applicant").bootstrapSwitch({
+            "onText": "Yes",
+            "offText": "No"
+        });
+    }
+
+    function onPageChange() {
         setTimeout(function() {
-            $(".input-applicant").bootstrapSwitch({
-                "onText": "Yes",
-                "offText": "No"
-            });
+            setupFlagSwitches();
+            $(".btn-toggle-notes").on("click", onApplicantOpen);
+            $(".btn-update").on("click", onApplicantFlagSubmit);
+            $(".input-applicant").on("switchChange.bootstrapSwitch", onApplicantFlagChange);
         }, 100);
     }
 
-    $(document).ready(function() {
-        status = new HelperStatus("#success", "#error");
-        modalStatus = new HelperStatus("#modal-success", "#modal-error");
+    function onPageSetup() {
         $("#input-hire-positions").select2({
             "placeholder": "Positions"
         });
@@ -146,17 +150,17 @@ export module hire {
             "dom": "Blftipr",
             "order": [[1, "asc"], [2, "asc"]]
         });
-        onTablePageChange();
-        $("#table-applicants")
-            .on("page.dt", onTablePageChange)
-            .on("length.dt", onTablePageChange)
-            .on("order.dt", onTablePageChange);
+        onPageChange();
         $(".input-filter").on("change", onFilter);
-        $(".btn-toggle-notes").on("click", onApplicantOpen);
         $("#btn-evaluation-submit").on("click", onEvaluationSubmit);
-        $(".btn-update").on("click", onApplicantFlagSubmit);
-        $(".input-applicant").on("switchChange.bootstrapSwitch", onApplicantFlagChange);
         $("#btn-submit-hire").on("click", onManualHireSubmit);
         $("#btn-save").on("click", onApplicantSave);
+    }
+
+    $(document).ready(function() {
+        status = new HelperStatus("#success", "#error");
+        modalStatus = new HelperStatus("#modal-success", "#modal-error");
+        onPageSetup();
+        $("#table-applicants").on("draw.dt", onPageChange);
     });
 }
