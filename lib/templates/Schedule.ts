@@ -131,7 +131,6 @@ export function checkFirstLast(slots: Slot[][]): Slot[][] {
         }
         break;
     }
-    console.log(slots[slots.length - 1]);
     for (let i in slots) {
         for (let k in slots[i]) {
             if ((lastSlot.center != slots[i][k].center) ||
