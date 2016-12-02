@@ -105,28 +105,46 @@ export module TemplateSchedule {
                     if (!selectors[filterName]) {
                         selectors[filterName] = [];
                     }
-                    selectors[filterName].push(`[data-${filterName}='${values[i]}']`);
+                    // selectors[filterName].push(`[data-${filterName}='${values[i]}']`);
+                    selectors[filterName].push(`${values[i]}`);
                 }
                 filters[filterName] = values;
             }
         });
         if (shouldFilter) {
             location.hash = "#" + JSON.stringify(filters);
-            // let $hide: JQuery = $(".schedule-row-filterable");
-            let $show: JQuery = $(".schedule-row-filterable");
-            // let final: string = "";
+            let show: any = [];
+            let $rows: JQuery = $(".schedule-row-filterable");
+            let selected: any = [];
+            $rows.show();
             for (let i in selectors) {
-                let selector: string = selectors[i].join(",");
-                $show = $show.filter(selector);
+                $(selectors[i]).each(function () {
+                    let that = this;
+                    selected.push(that);
+                    let $showGroup: JQuery;
+                    $showGroup = $rows.filter(function () {
+                        return $(this).attr(`data-${i}`).indexOf(that) >= 0;
+                    });
+                    show.push($showGroup);
+                });
             }
+            updateSelectedFilters(selected);
             let notSelector: string = ".person-box-person";
-            $show.each(function (index: number, element: HTMLElement): void {
-                let userid: string = $(this).find(".person-box-person").attr("data-userid");
-                notSelector += `:not([data-userid='${userid}'])`;
-            });
-            $show.show();
+            for (let i: number = 0; i < show.length; i++) {
+                show[i].each(function () {
+                    let userid: string = $(this).find(".person-box-person").attr("data-userid");
+                    if (notSelector.indexOf(userid) == -1) {
+                        notSelector += `:not([data-userid='${userid}'])`;
+                    }
+                });
+            }
+            // $(show).each(function (index: number, element: HTMLElement): void {
+            //     let userid: string = $(this).find(".person-box-person").attr("data-userid");
+            //     notSelector += `:not([data-userid='${userid}'])`;
+            // });
             $(notSelector).parent().hide();
         } else {
+            updateSelectedFilters("");
             location.hash = ""; // reset filters to empty
             $(".schedule-row-filterable").show(); // no filters are selected, so show everything
         }
@@ -179,59 +197,7 @@ export module TemplateSchedule {
         if (value == undefined) {
             value = this.getAttribute("data-value");
         }
-        if (value == "positions" || value == "categories") {
-            let schedules: JQuery = $('.person-box');
-            if (value == "positions") {
-                schedules.each(function () {
-                    let scheduleValue: any = $(this).attr('data-position-names');
-                    scheduleValue = scheduleValue.substr(2);
-                    scheduleValue = scheduleValue.substr(0, scheduleValue.length - 2);
-                    scheduleValue = scheduleValue.split('","');
-                    $(scheduleValue).each(function () {
-                        if ($.inArray(this, positions) <= -1) {
-                            positions.push(this);
-                        }
-                    });
-                });
-            } else if (value == "categories") {
-                schedules.each(function () {
-                    let scheduleValue: any = $(this).attr('data-position-categories');
-                    scheduleValue = scheduleValue.substr(2);
-                    scheduleValue = scheduleValue.substr(0, scheduleValue.length - 2);
-                    scheduleValue = scheduleValue.split('","');
-                    $(scheduleValue).each(function () {
-                        if ($.inArray(this, categories) <= -1) {
-                            categories.push(this);
-                        }
-                    });
-                });
-            }
-
-            $(categories).each(function () {
-                var that = this;
-                let categoryContainer: JQuery = $('<div data-grouping="'+ that +'"><span class="grouping-name">'+ that +'</span></div>');
-                $(schedules).each(function () {
-                    if ($(this).attr('data-position-categories').indexOf(that) > - 1) {
-                        categoryContainer.append(this);
-                    }
-                });
-                // console.log(categoryContainer);
-                // $('.schedule-box').append(categoryContainer);
-            });
-
-            $(positions).each(function () {
-                var that = this;
-                let positionsContainer: JQuery = $('<div data-grouping="'+ that +'"><span class="grouping-name">'+ that +'</span></div>');
-                $(schedules).each(function () {
-                    if ($(this).attr('data-position-names').indexOf(that) > - 1) {
-                        positionsContainer.append(this);
-                    }
-                });
-                // $('.schedule-box').append(positionsContainer);
-            });
-        } else {
-            HelperUrl.setParameterByName(this.getAttribute("data-param"), value);
-        }
+        HelperUrl.setParameterByName(this.getAttribute("data-param"), value);
     }
 
     function onWindowResize() {
@@ -254,7 +220,6 @@ export module TemplateSchedule {
     }
 
     function constructSchedule(schedule: any, rowID: number, parent: HTMLElement): void {
-        console.log(schedule);
         let cellsInRow: any = [];
         let scheduleContainer: JQuery = $(parent).parent().find('.schedule-box');
         let emptyCell: JQuery = scheduleContainer.find('.clone').clone();
@@ -293,6 +258,12 @@ export module TemplateSchedule {
             emptyRow.append(emptyCell.clone());
         }
         scheduleContainer.append(emptyRow);
+        let delay: number = 10;
+        let count: number = 1;
+        scheduleContainer.find($('.schedule-cell-quarter')).not($('.clone')).each(function () {
+            $(this).delay(delay * count).animate({width: '25%'});
+            count++;
+        });
     }
 
     function constructLegend(container: JQuery) {
@@ -322,28 +293,50 @@ export module TemplateSchedule {
         }
     }
 
+    function compareTime(hour: number, minute: number): boolean {
+        let gap: number = 60 * 15 * 1000; //milliseconds for 15 minutes
+        let now = new Date();
+        let time = new Date();
+        time.setHours(hour);
+        time.setMinutes(minute);
+        time.setSeconds(0);
+        return now.getTime() > time.getTime() + gap;
+    }
+
+    function drawCurrentTime(element: JQuery): void {
+        let dot: JQuery = $('<div class="current-time"></div>');
+        element.append(dot);
+    }
+
+    function updateSelectedFilters(filters: any): void {
+        if (filters) {
+            let filterString: string = "";
+            for (let i: number = 0; i < filters.length; i++) {
+                if (i == filters.length - 1) {
+                    filterString += filters[i]
+                } else {
+                    filterString += filters[i] + ", ";
+                }
+            }
+            $('.selected-filter-by > p').html('<strong>Filtering By:</strong>&nbsp;&nbsp;' + filterString);
+        } else {
+            $('.selected-filter-by > p').html('');
+        }
+    }
+
     $(document).ready(function () {
         cellCount = $(".schedule-cell-quarter[data-row='0']").length;
-
-        // Initialize cell quarters
-        // First and last cells are inactive
 
         $(".input-filter").each(function (index: number, element: HTMLElement) {
             let $this: JQuery = $(this);
             let placeholder: string = "";
             let filter: string = $this.data("filter");
-            if (filter == "position-names") {
-                placeholder = "Position";
-            } else if (filter == "position-categories") {
-                placeholder = "Category";
-            }
             $this.select2(<any>{
-                "maximumSelectionLength": 4,
-                "placeholder": placeholder
+                "maximumSelectionLength": 4
             });
         });
-        $(".input-filter").on("change", filter);
 
+        $(".input-filter").on("change", filter);
         $("span.schedule-filter-link").on("click", onFilterLink);
         $("select.schedule-filter-link").on("change", onFilterLink);
 
@@ -383,7 +376,7 @@ export module TemplateSchedule {
         $('html').on('click', function (e) {
             if ($(e.target).is($('.side-bar-toggle'))) return;
             if ($('.side-bar').hasClass('enabled')) {
-                if ($(e.target).is($('.side-bar')) || $(e.target).is($('.side-bar').find('*'))) {
+                if ($(e.target).is($('.side-bar')) || $(e.target).is($('.side-bar').find('*')) || $(e.target).hasClass('select2-selection__choice__remove')) {
                     return;
                 }
                 $('.side-bar-toggle').attr('data-toggle', 'false').removeClass('disabled');
@@ -397,7 +390,7 @@ export module TemplateSchedule {
         });
 
         $('.side-bar-link').on('click', function (e) {
-            if ($(e.target).is($('.side-bar-link').find('*'))) return;
+            if ($(e.target).is($('.side-bar-link').find('*')) || $(e.target).hasClass('select2-selection__choice__remove')) return;
             let content = $(this).find('.link-content');
             $('.side-bar-link').each(function () {
                 if ($(this).find('.link-content').is(content)) return;
@@ -421,13 +414,30 @@ export module TemplateSchedule {
                     parent.find(".schedule-cell-quarter:not(.clone)").each(onPageSetup);
                     parent.find(".schedule-cell-quarter.inactive:not(.clone)").each(onInactiveSetup);
                     parent.find('.schedule-box').removeClass('loading');
+                    if (day == new Date().getDay()) {
+                        let cells: JQuery = $(this).parent().find('.schedule-cell-quarter:not(.inactive, .clone)');
+                        let currentTime: any;
+                        cells.each(function () {
+                            let time: any = $(this).attr('data-time').split(':');
+                            let hour: number = Number(time[0]);
+                            let minute: number = Number(time[1]);
+                            if (compareTime(hour, minute)) {
+                                currentTime = $(this).next();
+                            }
+                        });
+                        if (currentTime) {
+                            if (currentTime.find($('.current-time')).length == 0) {
+                                // currentTime.prev().find($('.current-time')).remove();
+                                drawCurrentTime(currentTime);
+                            }
+                        }
+                    }
                 });
             } else {
-                parent.find('.person-box-content').slideUp(200);
-                setTimeout(()=> {
+                parent.find('.person-box-content').slideUp(200, function () {
                     parent.find('.legend-column-sections').children().remove();
-                    parent.find('.schedule .schedule-cell').remove();
-                }, 200);
+                    parent.find('.schedule .schedule-box').children().not($('.clone')).remove();
+                });
             }
         });
     });

@@ -40,6 +40,7 @@ div.text-center#container-status
     }];
 
 - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
 div
     input#row-type(type="hidden", value=scheduleRowType)
     //div.schedule-filter-row.row
@@ -143,13 +144,6 @@ div
     //                            - column++
     //                +schedule-empty-hour(rowID, column)
     //                - column += 4
-    div.row
-        div.col-xs-12
-            select.border-rounded.input-filter(data-filter="position-names", multiple, style="width: 100%;")
-                option
-                for position in schedulePositionNames
-                    - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
-                    option(value=position)&attributes(isSelected) #{position}
     div.side-bar-toggle(data-toggle="false")
     div.side-bar
         ul.side-bar-links
@@ -160,24 +154,28 @@ div
                     div.days.link-content
                         - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
                         each day, index in days
-                            span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index) #{day.toUpperCase()}
+                            span.schedule-filter-link.schedule-filter-cell(data-selected=index == scheduleFilters.day data-param="day",data-value=index) #{day.toUpperCase()}
                 li.side-bar-link Sort By
                     div.sort-types.link-content
                         select.schedule-filter-link(data-param="sort")
                             - var sortables = ["name", "daily hours", "weekly hours"];
                             each sortable in sortables
-                                option(value=sortable) #{sortable.toUpperCase()}
-                            option(value="positions") POSITIONS
-                            option(value="categories") CATEGORIES
-                    //    select.border-rounded.input-filter(data-filter="position-names", multiple)
-                    //        option
-                    //        for position in schedulePositionNames
-                    //            option(value=position)&attributes(isSelected) #{position}
+                                option(value=sortable selected=sortable == scheduleFilters.sort) #{sortable.toUpperCase()}
+                li.side-bar-link Filter By
+                    div.filter-options.link-content
+                        label(for="position-names") Position
+                            select.border-rounded.input-filter#position-names(data-filter="position-names", multiple, style="width: 100%;")
+                                for position in schedulePositionNames
+                                    option(value=position) #{position}
+                        label(for="position-categories") Category
+                            select.border-rounded.input-filter(data-filter="position-categories", multiple, style="width: 100%;")
+                                for category in schedulePositionCategories
+                                    option(value=category) #{category}
                 li.side-bar-link Term
                     div.terms.link-content
                         select.schedule-filter-link#schedule-term(data-param="term")
                             for term in scheduleTerms
-                                option(value=term.id) #{term.name.toUpperCase()}
+                                option(value=term.id selected=term.id == scheduleFilters.term) #{term.name.toUpperCase()}
             //if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
             //    li.side-bar-link Manager Access
             //        div.manager-access.link-content
@@ -191,12 +189,24 @@ div
             //                    option(value=location) #{name}
             //            button.btn-schedule-submit Submit
     div.schedule-box
-        div.selected-day
+        div.selected-term.headers
+            p
+                strong Selected Term:&nbsp&nbsp
+                for term in scheduleTerms
+                    if term.id == scheduleFilters.term
+                        | #{term.name.toUpperCase()}
+        div.selected-day.headers
             p
                 strong Selected Day:&nbsp&nbsp
                 | #{days[scheduleFilters.day]}
+        div.selected-sort-by.headers
+            p
+                strong Sorting By:&nbsp&nbsp
+                | #{scheduleFilters.sort.toUpperCase()}
+        div.selected-filter-by.headers
+            p
         for row, rowID in scheduleRows
-            div.person-box.schedule-row-filterable&attributes(row.filterables)
+            div.person-box.schedule-row-filterable.col-xs-12.col-md-4&attributes(row.filterables)
                 div.person-box-person(
                     data-selected-day=scheduleFilters.day,
                     data-selected-term=scheduleFilters.term,
@@ -204,7 +214,7 @@ div
                     data-rowid=rowID)
                     if scheduleRowType == "person"
                         //a.person-link(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
-                            div.schedule-label #{row.label}
+                        //    div.schedule-label #{row.label}
                         p #{row.label}
                     else
                         div.schedule-label #{row.label}
@@ -240,46 +250,3 @@ div
                                 data-location="",
                                 data-available="",
                                 data-time="")
-                //div.person-box-content
-                //    div.col-xs-3(style="height: 25px; margin-bottom: 12px; border-bottom: 1px solid #000")
-                //        span Legend
-                //    div.col-xs-9(style="height: 25px; margin-bottom: 12px; text-align: right; border-bottom: 1px solid #000")
-                //        span Total Hours:&nbsp&nbsp&nbsp&nbsp;
-                //        span.day-week-hours Day
-                //        span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
-                //        span.day-week-hours /
-                //        span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
-                //        span.day-week-hours Week
-                //    div.col-xs-3(style="padding-right: 0")
-                //        each legend in legendData
-                //            span #{legend.name}
-                //            div.schedule-legend-cell(class=legend.class, data-available)
-                //    div.col-xs-2(style="padding-right: 0")
-                //        div
-                //            span &nbsp;
-                //        div.schedule-cell.schedule-header-cell
-                //        - for(var i = 0; i < scheduleHours.length - 1; i++)
-                //            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
-                //    div.col-xs-7.schedule(style="padding-left: 2px")
-                //        div.quarters
-                //            span(style="text-align: right") :15&nbsp&nbsp&nbsp;
-                //            span(style="text-align: center") :30
-                //            span(style="text-align: left") &nbsp&nbsp&nbsp;:45
-                //        +schedule-empty-hour(rowID, column)
-                //        - column += 4
-                //        for hour, hourID in row.slots
-                //            div.schedule-cell
-                //                for slot, slotID in hour
-                //                    - var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
-                //                    div.schedule-cell-quarter(
-                //                        data-row=rowID,
-                //                        data-cell=hourID,
-                //                        data-quarter=slotID,
-                //                        data-column=column,
-                //                        data-previous-color="none",
-                //                        data-location=location,
-                //                        data-available=slot.isAvailable,
-                //                        data-time=slot.time)
-                //                    - column++
-                //        +schedule-empty-hour(rowID, column)
-                //        - column += 4

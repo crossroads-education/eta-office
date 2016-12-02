@@ -2,6 +2,20 @@
     white-space: nowrap;
 }
 
+.select2-container--default .select2-selection--multiple {
+    background-color: #808080;
+    border-radius: 0;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #808080;
+    border: 2px solid #fff;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    color: #fff;
+}
+
 .schedule-row-filterable.hvr-border-fade {
     box-shadow: none;
 }
@@ -110,6 +124,7 @@
     /* text-align: center; */
     background-color: #efefef;
     height: 25px;
+    position: relative;
     /* border: 1px none white; */
     /* border-right-style: dashed; */
     /* border-left-style: dashed; */
@@ -144,9 +159,13 @@
 
 /* Quarters are 15-minute subsections of cells */
 .schedule-cell-quarter {
-    width: 25%;
-    border-right: 1px solid #efefef;
-    border-left: 1px solid #efefef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /*width: 25%;*/
+    width: 1%;
+    border-right: 1px solid #fff;
+    border-left: 1px solid #fff;
     float: left;
     height: 100%;
 }
@@ -199,7 +218,7 @@
 
 /* Available */
 .schedule-cell-quarter.AV, .schedule-legend-cell.AV {
-    /*background-color: #FFFFFF;*/
+    background-color:  #EFEFEF;
 }
 
 /* Unavailable */
@@ -223,6 +242,13 @@
 /*border-radius: 10px;*/
 /*}*/
 
+.current-time {
+    height: 15px;
+    width: 15px;
+    background-color: #000;
+    border-radius: 50%;
+}
+
 #container-status {
     margin-bottom: 25px;
     font-weight: 400;
@@ -233,9 +259,8 @@
     margin-right: 5px;
 }
 
-.selected-day > p {
-    font-size: 24px;
-    text-align: center;
+.headers > p {
+    font-size: 18px;
 }
 
 .person-box {
@@ -339,11 +364,11 @@
     -ms-transition: left .2s;
     -o-transition: left .2s;
     transition: left .2s;
-    -webkit-transition-delay: .4s;
-    -moz-transition-delay: .4s;
-    -ms-transition-delay: .4s;
-    -o-transition-delay: .4s;
-    transition-delay: .4s;
+    /*-webkit-transition-delay: .4s;*/
+    /*-moz-transition-delay: .4s;*/
+    /*-ms-transition-delay: .4s;*/
+    /*-o-transition-delay: .4s;*/
+    /*transition-delay: .4s;*/
 }
 
 .side-bar-toggle.disabled {
@@ -357,7 +382,7 @@
     color: #fff;
     left: -300px;
     top: 46px;
-    z-index: 9999;
+    z-index: 100;
     -webkit-transition: left .2s;
     -moz-transition: left .2s;
     -ms-transition: left .2s;
@@ -398,7 +423,7 @@
     border-right-width: 0;
 }
 
-.days, .sort-types, .sort-positions, .terms, .manager-access {
+.days, .sort-types, .filter-options, .terms, .manager-access {
     max-height: 0;
     padding: 0;
     overflow: hidden;
@@ -409,7 +434,7 @@
     transition: max-height, padding .2s, .4s;
 }
 
-.days.enabled, .sort-types.enabled, .sort-positions.enabled, .terms.enabled, .manager-access.enabled {
+.days.enabled, .sort-types.enabled, .filter-options.enabled, .terms.enabled, .manager-access.enabled {
     max-height: 300px;
     padding: 8px 0 8px 20px;
 }
@@ -422,12 +447,21 @@
     border-right-width: 0;
 }
 
-.sort-types > select, .sort-positions > select, .sort-category > select, .terms > select, .manager-access > select {
+.days > span[data-selected] {
+    background-color: #3C3C3C;
+    border: 5px inset #808080;
+}
+
+.sort-types > select, .terms > select, .manager-access > select {
     width: 100%;
     background-color: #808080;
     padding: 8px 20px;
     border-radius: 0;
     border: none;
+}
+
+.sort-types option[selected], .terms option[selected] {
+    background-color: #171422;
 }
 
 select:hover {
@@ -438,8 +472,12 @@ select option:hover {
     cursor: pointer;
 }
 
-.side-bar select, .side-bar select option {
-    z-index: 999999;
+/*.side-bar select, .side-bar select option {*/
+    /*z-index: 999999;*/
+/*}*/
+
+label[for="position-names"], label[for="position-categories"]{
+    width: 100%;
 }
 
 .btn-schedule-submit, .btn-schedule-edit {
