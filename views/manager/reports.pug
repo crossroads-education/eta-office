@@ -8,6 +8,12 @@ mixin select-term()
                 var name = term.name + (term.session == "1" ? "" : (" (" + term.session + ")"))
             option(value=term.id)&attributes(isSelected) #{name}
 
+mixin select-physical-center()
+    select.border-rounded.keep-caret(data-name="center")
+        each center in centers
+            if center.capacity > 0
+                option(value=center.id) #{center.shorthand}
+
 mixin report-section(name)
     div.report-section(data-report=name, style="display: none;")
         block
@@ -25,6 +31,7 @@ block body
             option(value="visits") Visits
             option(value="studentsection") Student Enrollment
             option(value="deviation") Visit Deviation
+            option(value="visits-center") Visits By Center
     +report-section("schedule")
         h3 Get Scheduled Hours Per Employee
         div.section-input
@@ -75,10 +82,15 @@ block body
             div.section-divider
                 +select-term()
             div.section-divider
-                select.border-rounded.keep-caret(data-name="center")
-                    each center in centers
-                        if center.address != ""
-                            option(value=center.id) #{center.shorthand}
+                +select-physical-center()
+            +report-submit()
+    +report-section("visits-center")
+        h3 Get Visits By Center
+        div.section-input
+            div.section-divider
+                +select-term()
+            div.section-divider
+                +select-physical-center()
             +report-submit()
     //- +report-section("examjam")
     //-     h3 Get Exam Jam Visits
