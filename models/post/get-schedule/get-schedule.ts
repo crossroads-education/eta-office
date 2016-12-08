@@ -48,7 +48,7 @@ export class Model implements eta.Model {
                 }
                 lastTime = slotTime;
             }
-            eta.center.getLongestHoursForDay(eta.time.getCurrentDayOfWeek(), eta.term.getCurrent().id, (err : Error, hours? : eta.HoursOfOperation) => {
+            eta.center.getLongestHoursForDay(req.body.day, req.body.term, (err : Error, hours? : eta.HoursOfOperation) => {
                 if (err) {
                     eta.logger.dbError(<any>err);
                     return callback({errcode: eta.http.InternalError});
@@ -59,7 +59,8 @@ export class Model implements eta.Model {
                 function fillMissingTimes(open : string, slotTime : string) : schedule.Slot[] {
                     let slots : schedule.Slot[] = [];
                     if (open != slotTime) {
-                        let times : string[] = eta.time.fillTimes(eta.time.getDateFromTime(open), eta.time.getDateFromTime(slotTime), eta.time.span15Minutes, "HH:MM:ss");
+                        let slotTimeFill: Date = new Date(eta.time.getDateFromTime(slotTime).getTime() - eta.time.span15Minutes);
+                        let times : string[] = eta.time.fillTimes(eta.time.getDateFromTime(open), slotTimeFill, eta.time.span15Minutes, "HH:MM:ss");
                         for (let i : number = 0; i < times.length; i++) {
                             slots.push({
                                 "time": times[i],
