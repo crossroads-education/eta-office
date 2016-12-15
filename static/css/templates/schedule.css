@@ -1,3 +1,7 @@
+body {
+
+}
+
 .select2-selection__rendered {
     white-space: nowrap;
 }
@@ -48,6 +52,10 @@
     margin-bottom: 5px;
 }
 
+#container-navbar {
+    display: none;
+}
+
 @media screen and (max-width: 697px) {
     .schedule-filter-row {
         display: none;
@@ -63,8 +71,9 @@
     margin-bottom: 0;
 }
 
-. /* Container for schedule */
+/* Container for schedule */
 .schedule-box {
+    margin-top: -2px;
     width: 100%;
 }
 
@@ -164,8 +173,8 @@
     justify-content: center;
     /*width: 25%;*/
     width: 1%;
-    border-right: 1px solid #fff;
-    border-left: 1px solid #fff;
+    border-right: 1px solid #EFEFEF;
+    border-left: 1px solid #EFEFEF;
     float: left;
     height: 100%;
 }
@@ -218,7 +227,7 @@
 
 /* Available */
 .schedule-cell-quarter.AV, .schedule-legend-cell.AV {
-    background-color:  #EFEFEF;
+    background-color: #FFFFFF;
 }
 
 /* Unavailable */
@@ -259,19 +268,30 @@
     margin-right: 5px;
 }
 
+.selected-filter-by {
+    border-bottom: 2px solid rgba(198,198,198,1);
+}
+
+.headers {
+    padding-left: 35px;
+}
+
 .headers > p {
     font-size: 18px;
+    margin-bottom: 0;
 }
 
 .person-box {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-    margin-bottom: 10px;
+    /*box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);*/
+    /*margin-bottom: 10px;*/
     overflow: hidden;
+    border-bottom: 2px solid rgba(198,198,198,1);
+    background-color: rgba(247,247,247,1);
 }
 
 .person-box-content {
     overflow: hidden;
-    padding: 10px 5px;
+    padding: 0 5px 10px 5px;
     display: none;
 }
 
@@ -291,26 +311,22 @@
 }
 
 #body {
-    margin-right: 10px;
-    margin-top: -35px;
-}
-
-.legend-column-top {
-    height: 25px;
-    margin-bottom: 12px;
-    border-bottom: 1px solid #000;
+    margin-right: 0;
+    margin-left: 0;
+    margin-top: -20px;
 }
 
 .total-hours-column {
     padding: 0;
     height: 25px;
     margin-bottom: 12px;
-    text-align: right;
+    text-align: center;
     border-bottom: 1px solid #000;
 }
 
 .legend-column-sections {
     padding-right: 0;
+    white-space: nowrap;
 }
 
 .daily-hours-column {
@@ -375,12 +391,23 @@
     left: -50px;
 }
 
+.side-bar-toggle > span {
+    position: absolute;
+    right: 5px;
+    color: #fff;
+    font-size: 36px;
+    top: 50%;
+    font-weight: bold;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
 .side-bar {
     position: fixed;
     width: 300px;
     background-color: #3C3C3C;
     color: #fff;
-    left: -300px;
+    left: -310px;
     top: 46px;
     z-index: 100;
     -webkit-transition: left .2s;
@@ -401,6 +428,7 @@
     right: 7px;
     color: #fff;
     font-size: 24px;
+    font-weight: bold;
 }
 
 .exit:hover {
@@ -412,12 +440,13 @@
     list-style-type: none;
     width: 100%;
     height: 100%;
-    padding: 20px 0 20px 10px;
+    padding: 20px 10px;
+    margin: 0;
 }
 
 .side-bar-link {
     display: block;
-    padding: 10px 0 10px 20px;
+    padding: 10px 20px;
     background-color: #171422;
     border: 1px solid #3C3C3C;
     border-right-width: 0;
@@ -473,10 +502,10 @@ select option:hover {
 }
 
 /*.side-bar select, .side-bar select option {*/
-    /*z-index: 999999;*/
+/*z-index: 999999;*/
 /*}*/
 
-label[for="position-names"], label[for="position-categories"]{
+label[for="position-names"], label[for="position-categories"] {
     width: 100%;
 }
 
@@ -485,4 +514,8 @@ label[for="position-names"], label[for="position-categories"]{
     padding: 5px 10px;
     background-color: #808080;
     width: 120px;
+}
+
+.availability-btn {
+    margin-top: 10px;
 }

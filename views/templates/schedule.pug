@@ -145,6 +145,7 @@ div
     //                +schedule-empty-hour(rowID, column)
     //                - column += 4
     div.side-bar-toggle(data-toggle="false")
+        span >
     div.side-bar
         ul.side-bar-links
             div.exit
@@ -219,9 +220,7 @@ div
                     else
                         div.schedule-label #{row.label}
                 div.person-box-content
-                    div.col-xs-2.legend-column-top
-                        span Legend
-                    div.col-xs-10.total-hours-column
+                    div.total-hours-column
                         span Total Hours:&nbsp&nbsp&nbsp&nbsp;
                         span.day-week-hours #{days[scheduleFilters.day]}
                         span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
@@ -229,6 +228,7 @@ div
                         span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
                         span.day-week-hours Week
                     div.col-xs-3.legend-column-sections
+                        a.btn.btn-default.availability-btn(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term) Availability
                     div.col-xs-2.daily-hours-column
                         div
                             span &nbsp;

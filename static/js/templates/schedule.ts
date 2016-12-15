@@ -92,7 +92,6 @@ export module TemplateSchedule {
     }
 
     function filter(): void {
-        // $(".schedule-row-filterable").show();
         let shouldFilter: boolean = false;
         let selectors: { [key: string]: string[] } = {};
         let filters: { [key: string]: string[] } = {};
@@ -105,7 +104,6 @@ export module TemplateSchedule {
                     if (!selectors[filterName]) {
                         selectors[filterName] = [];
                     }
-                    // selectors[filterName].push(`[data-${filterName}='${values[i]}']`);
                     selectors[filterName].push(`${values[i]}`);
                 }
                 filters[filterName] = values;
@@ -116,38 +114,42 @@ export module TemplateSchedule {
             let show: any = [];
             let $rows: JQuery = $(".schedule-row-filterable");
             let selected: any = [];
-            $rows.show();
+            $rows.hide();
             for (let i in selectors) {
-                $(selectors[i]).each(function () {
-                    let that = this;
-                    selected.push(that);
-                    let $showGroup: JQuery;
-                    $showGroup = $rows.filter(function () {
-                        return $(this).attr(`data-${i}`).indexOf(that) >= 0;
-                    });
-                    show.push($showGroup);
-                });
+                for (let j in selectors[i]) {
+                    selected.push(selectors[i][j]);
+                }
             }
+            $rows.each(function (i, el) {
+                if (passFilter(selectors, $(el))) {
+                    show.push(el);
+                }
+            });
+            $(show).each(function () {
+                $(this).show();
+            });
             updateSelectedFilters(selected);
-            let notSelector: string = ".person-box-person";
-            for (let i: number = 0; i < show.length; i++) {
-                show[i].each(function () {
-                    let userid: string = $(this).find(".person-box-person").attr("data-userid");
-                    if (notSelector.indexOf(userid) == -1) {
-                        notSelector += `:not([data-userid='${userid}'])`;
-                    }
-                });
-            }
-            // $(show).each(function (index: number, element: HTMLElement): void {
-            //     let userid: string = $(this).find(".person-box-person").attr("data-userid");
-            //     notSelector += `:not([data-userid='${userid}'])`;
-            // });
-            $(notSelector).parent().hide();
         } else {
             updateSelectedFilters("");
             location.hash = ""; // reset filters to empty
             $(".schedule-row-filterable").show(); // no filters are selected, so show everything
         }
+    }
+
+    function passFilter(filter: any, domElement: JQuery): boolean {
+        let count: number = 0;
+        let passCount: number = 0;
+        // let pass: boolean = false;
+        for (let i in filter) {
+            for (let j in filter[i]) {
+                count++;
+                if(domElement.attr('data-' + i).indexOf(filter[i][j]) != -1){
+                    passCount++;
+                }
+                // var pass = domElement.attr('data-' + i).indexOf(filter[i][j]) != -1;
+            }
+        }
+        return count == passCount;
     }
 
     function onSelect(event: Event, ui: { selecting?: Element }): void {
@@ -286,10 +288,20 @@ export module TemplateSchedule {
             name: "Unavailable",
             section: "UV"
         }];
-        let legendContainer: JQuery = container.find('.legend-column-sections');
+        let legendContainer: JQuery;
+        if($('.availability-btn').length > 0){
+            legendContainer = container.find('.legend-column-sections > .availability-btn');
+        } else {
+            legendContainer = container.find('.legend-column-sections');
+        }
         for (let i = 0; i < legendData.length; i++) {
-            legendContainer.append('<span>' + legendData[i].name + '</span>');
-            legendContainer.append('<div class="schedule-legend-cell ' + legendData[i].section + '" data-available></div>')
+            if($('.availability-btn').length > 0){
+                legendContainer.before('<span>' + legendData[i].name + '</span>');
+                legendContainer.before('<div class="schedule-legend-cell ' + legendData[i].section + '" data-available></div>')
+            } else {
+                legendContainer.append('<span>' + legendData[i].name + '</span>');
+                legendContainer.append('<div class="schedule-legend-cell ' + legendData[i].section + '" data-available></div>')
+            }
         }
     }
 
@@ -405,38 +417,42 @@ export module TemplateSchedule {
             let term: number = Number($(this).attr('data-selected-term'));
             let day: number = Number($(this).attr('data-selected-day'));
             let rowID: number = Number($(this).attr('data-rowid'));
+            var that = this;
             if (parent.find('.person-box-content').css('display') == 'none') {
-                onEmployeeClick(userID, term, day, rowID, this);
-                constructLegend(parent);
-                parent.find('.schedule-box').addClass('loading');
-                parent.find('.person-box-content').slideDown(200);
-                $(document).bind('schedule-complete', ()=> {
-                    parent.find(".schedule-cell-quarter:not(.clone)").each(onPageSetup);
-                    parent.find(".schedule-cell-quarter.inactive:not(.clone)").each(onInactiveSetup);
-                    parent.find('.schedule-box').removeClass('loading');
-                    if (day == new Date().getDay()) {
-                        let cells: JQuery = $(this).parent().find('.schedule-cell-quarter:not(.inactive, .clone)');
-                        let currentTime: any;
-                        cells.each(function () {
-                            let time: any = $(this).attr('data-time').split(':');
-                            let hour: number = Number(time[0]);
-                            let minute: number = Number(time[1]);
-                            if (compareTime(hour, minute)) {
-                                currentTime = $(this).next();
-                            }
-                        });
-                        if (currentTime) {
-                            if (currentTime.find($('.current-time')).length == 0) {
-                                // currentTime.prev().find($('.current-time')).remove();
-                                drawCurrentTime(currentTime);
+                $('body, html').animate({
+                    scrollTop: $(that).offset().top - 50
+                }, 400).promise().then(function () {
+                    onEmployeeClick(userID, term, day, rowID, that);
+                    constructLegend(parent);
+                    parent.find('.schedule-box').addClass('loading');
+                    parent.find('.person-box-content').slideDown(200);
+                    $(document).bind('schedule-complete', ()=> {
+                        parent.find(".schedule-cell-quarter:not(.clone)").each(onPageSetup);
+                        parent.find(".schedule-cell-quarter.inactive:not(.clone)").each(onInactiveSetup);
+                        parent.find('.schedule-box').removeClass('loading');
+                        if (day == new Date().getDay()) {
+                            let cells: JQuery = $(that).parent().find('.schedule-cell-quarter:not(.inactive, .clone)');
+                            let currentTime: any;
+                            cells.each(function (index, elem) {
+                                let time: any = $(this).attr('data-time').split(':');
+                                let hour: number = Number(time[0]);
+                                let minute: number = Number(time[1]);
+                                if (compareTime(hour, minute)) {
+                                    currentTime = $(cells[index + 1]);
+                                }
+                            });
+                            if (currentTime) {
+                                if (currentTime.find($('.current-time')).length == 0) {
+                                    drawCurrentTime(currentTime);
+                                }
                             }
                         }
-                    }
+                    });
                 });
             } else {
                 parent.find('.person-box-content').slideUp(200, function () {
-                    parent.find('.legend-column-sections').children().remove();
-                    parent.find('.schedule .schedule-box').children().not($('.clone')).remove();
+                    parent.find('.legend-column-sections').children().not('.availability-btn').remove();
+                    parent.find('.schedule .schedule-box').children().not('.clone').remove();
                 });
             }
         });
