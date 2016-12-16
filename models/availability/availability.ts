@@ -228,8 +228,8 @@ export class Model implements eta.Model {
                     "scheduleHours": allHoursOpen,
                     "scheduleLocationPalette": locationPalette
                 };
-                if (env["isOther"] && env["isManager"]) {
-                    sql = `
+                // if (env["isOther"] && env["isManager"]) {
+                sql = `
                         SELECT
                             Employee.id,
                             Person.firstName,
@@ -241,18 +241,18 @@ export class Model implements eta.Model {
                                     Employee.id = Person.id
                         WHERE
                             Employee.id = ?`;
-                    eta.db.query(sql, [req.query.userid], (err: eta.DBError, rows: any[]) => {
-                        if (err) {
-                            eta.logger.dbError(err);
-                            callback({ errcode: eta.http.InternalError });
-                            return;
-                        }
-                        env["about"] = rows[0];
-                        callback(env);
-                    })
-                } else {
+                eta.db.query(sql, [req.query.userid], (err: eta.DBError, rows: any[]) => {
+                    if (err) {
+                        eta.logger.dbError(err);
+                        callback({ errcode: eta.http.InternalError });
+                        return;
+                    }
+                    env["about"] = rows[0];
                     callback(env);
-                }
+                })
+                // } else {
+                //     callback(env);
+                // }
             });
         });
     }

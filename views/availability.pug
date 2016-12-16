@@ -1,14 +1,43 @@
 extends ./include/layout.pug
-
 block body
-    if isOther
-        div.text-center
-            span.form-label #{about.firstName} #{about.lastName}
-                if isManager
-                    |  (#{about.id})
-    include ./templates/schedule.pug
-    if isOther && isManager
-        div.row#container-notes
-            div.col-xs-offset-4.col-xs-4
-                span.form-label Scheduling Notes / Preferences
-                textarea.form-control(rows="5", cols="40", disabled) #{about.notes}
+    link(href="css/templates/schedule.css", rel="stylesheet")
+    div.availability-header
+        span #{about.firstName} #{about.lastName}
+    for row, rowID in scheduleRows
+        div.person-box.col-xs-12.col-md-4
+            div.person-box-person(data-selected-day=row.day, data-selected-term=scheduleFilters.term, data-userid=about.id, data-rowid=row.day)
+                div.schedule-label #{row.label}
+            div.person-box-content
+                div.total-hours-column
+                    span Total Hours:&nbsp;&nbsp;&nbsp;&nbsp;
+                    span.day-week-hours #{row.label}
+                    span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
+                    span.day-week-hours /
+                    span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
+                    span.day-week-hours Week
+                div.col-xs-3.legend-column-sections
+                div.col-xs-2.daily-hours-column
+                    div
+                        span &nbsp;
+                    div.schedule-cell.schedule-header-cell
+                    if rowID == 0 || rowID == 6
+                        - for(var i = 0; i < 8; i++)
+                            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
+                    else if rowID == 4 || rowID == 5
+                        - for(var i = 0; i < 9; i++)
+                            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
+                    else
+                        - for(var i = 0; i < scheduleHours.length - 1; i++)
+                            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
+                div.col-xs-7.schedule
+                    div.quarters
+                        span :15&nbsp;&nbsp;&nbsp;
+                        span :30
+                        span &nbsp;&nbsp;&nbsp;:45
+                    div.schedule-box
+                        div.schedule-cell-quarter.clone(data-row="", data-cell="", data-quarter="", data-column="", data-previous-color="none", data-location="", data-available="", data-time="")
+    if isOther && isManager && about.notes
+        div.container-notes
+            span.form-label Scheduling Notes / Preferences
+            div #{about.notes}
+    button.btn.btn-default.return Return to Schedules
