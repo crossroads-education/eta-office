@@ -23,8 +23,7 @@ export class Model implements eta.Model {
         eta.db.query(sql, [req.session["department"]], (err: eta.DBError, rows: any[]) => {
             if (err) {
                 eta.logger.dbError(err);
-                callback({ errcode: eta.http.InternalError });
-                return;
+                return callback({ errcode: eta.http.InternalError });
             }
             let terms: eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term));
             for (let i: number = 0; i < terms.length; i++) {
@@ -32,12 +31,25 @@ export class Model implements eta.Model {
                     terms[i].name += ` (${terms[i].session})`;
                 }
             }
-            callback({
-                "schedulePositionNames": rows[0].names.split(","),
-                "schedulePositionCategories": rows[0].categories.split(","),
-                "scheduleTerms": terms,
-                "scheduleMode": req.query.edit ? "edit" : "view",
-                "permissions": req.session["permissions"]
+            eta.center.getAll((centers: eta.Center[]) => {
+                if (!centers) {
+                    return callback({ errcode: eta.http.InternalError });
+                }
+                let legend: { [key: string]: string } = {};
+                for (let i: number = 0; i < centers.length; i++) {
+                    if (centers[i].capacity > 0 && centers[i].department == req.session["department"]) {
+                        legend[centers[i].code] = centers[i].shorthand;
+                    }
+                }
+                callback({
+                    "daysOfWeek": eta.time.daysOfWeek,
+                    // "scheduleLegend": legend,
+                    "schedulePositionNames": rows[0].names.split(","),
+                    "schedulePositionCategories": rows[0].categories.split(","),
+                    "scheduleTerms": terms,
+                    "scheduleMode": req.query.edit ? "edit" : "view",
+                    "permissions": req.session["permissions"]
+                });
             });
         });
     }

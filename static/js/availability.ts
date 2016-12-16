@@ -3,6 +3,7 @@ import { HelperStatus } from "lib/helpers/HelperStatus";
 
 export module availability {
     let status: HelperStatus;
+
     function onSubmit(): void {
         let params: { [key: string]: any } = {
             "term": $("#schedule-term").val(),
@@ -36,5 +37,9 @@ export module availability {
     $(document).ready(function() {
         status = new HelperStatus("#success", "#error");
         $(".btn-schedule-submit").on("click", onSubmit);
+
+        $('.return').on('click', function() {
+            parent.history.back();
+        });
     });
 }

@@ -1,136 +1,89 @@
-link(rel="stylesheet",href=baseurl + "css/templates/schedule.css")
+link(rel="stylesheet", href=baseurl + "css/templates/schedule.css")
 div.text-center#container-status
     span.text-success.status-message#success
     span.text-danger.status-message#error
--
-    var legendData = [{
-        "name": "MAC",
-        "class": "MA"
-    }, {
-        "name": "Stat",
-        "class": "ST"
-    }, {
-        "name": "MAC Online",
-        "class": "MO"
-    }, {
-        "name": "Stat Online",
-        "class": "SO"
-    }, {
-        "name": "Available",
-        "class": "AV"
-    }, {
-        "name": "Unavailable",
-        "class": "UV"
-    }]
 div
     input#row-type(type="hidden", value=scheduleRowType)
-    div.schedule-filter-row.row
-        div.col-xs-4.center-vertical
+    div.side-bar-toggle(data-toggle="false")
+        span &gt;
+    div.side-bar
+        ul.side-bar-links
+            div.exit
+                span x
             if scheduleRowType == "person"
-                - var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-                each day, index in days
-                    - var className = scheduleFilters.day == index ? "border-rounded" : "";
-                    span.schedule-filter-link.schedule-filter-cell(data-param="day",data-value=index, class=className) &nbsp; #{day.toUpperCase()} &nbsp;
-        div.col-xs-3.center-vertical
-            if scheduleRowType == "person"
-                | SORT BY
-                select.schedule-filter-link.border-rounded(data-param="sort")
-                    - var sortables = ["name", "daily hours", "weekly hours"];
-                    each sortable in sortables
-                        - var isSelected = scheduleFilters.sort == sortable ? {"selected": "selected"} : {}
-                        option(value=sortable)&attributes(isSelected) #{sortable.toUpperCase()}
-                if scheduleRowType == "person" && permissions.has("edit/schedule/master") && scheduleMode != "manager"
-                    span.schedule-filter-link(data-param="edit", data-value="yes")
-                        button.border-rounded MANAGER ACCESS
-            if scheduleMode == "availability" || (scheduleMode == "manager" && permissions.has("edit/schedule/master"))
-                button.btn.btn-success.btn-schedule-submit Submit
-        div.col-xs-5.center-vertical.row
-            each legend in legendData
-                div.col-xs-2.text-center.schedule-legend-label #{legend.name}
-    div.schedule-filter-row.row
-        div.col-xs-4.center-vertical
-            if scheduleRowType == "person"
-                div.row
-                    div.col-xs-12
-                        select.border-rounded.input-filter(data-filter="position-names", multiple, style="width: 100%;")
-                            option
-                            for position in schedulePositionNames
-                                - var isSelected = scheduleFilters.position == position ? {"selected": "selected"} : {}
-                                option(value=position)&attributes(isSelected) #{position}
-        div.col-xs-3.center-vertical
-            if scheduleRowType == "day" || (permissions.has("edit/schedule/master") && scheduleMode == "manager")
-                | PALETTE
-                select.border-rounded#schedule-palette
-                    for location, name in scheduleLocationPalette
-                        option(value=location) #{name}
-            | &nbsp; TERM
-            select.schedule-filter-link.border-rounded#schedule-term(data-param="term")
-                for term in scheduleTerms
-                    - var isSelected = scheduleFilters.term == term.id ? {"selected": true} : {}
-                    option(value=term.id)&attributes(isSelected) #{term.name.toUpperCase()}
-        div.col-xs-5.center-vertical.row
-            each legend in legendData
-                div.col-xs-1.schedule-cell-quarter.schedule-legend-cell(class=legend.class, data-available)
-    div.schedule-filter-row.row
-        if scheduleRowType == "person"
-            div.col-xs-4.center-vertical
-                div.row
-                    div.col-xs-12
-                        select.border-rounded.input-filter(data-filter="position-categories", multiple, style="width: 100%;")
-                            option
-                            for category in schedulePositionCategories
-                                - var isSelected = scheduleFilters.category == category ? {"selected": "selected"} : {}
-                                option(value=category)&attributes(isSelected) #{category}
+                li.side-bar-link Choose Day
+                    div.days.link-content
+                        each day, index in daysOfWeek
+                            - var isSelected = index == scheduleFilters.day;
+                            span.schedule-filter-link.schedule-filter-cell(data-selected=isSelected, data-param="day", data-value=index) #{day.toUpperCase()}
+                li.side-bar-link Sort By
+                    div.sort-types.link-content
+                        select.schedule-filter-link(data-param="sort")
+                            - var sortables = ["name", "daily hours", "weekly hours"];
+                            each sortable in sortables
+                                - var isSelected = sortable == scheduleFilters.sort;
+                                option(value=sortable, selected=isSelected) #{sortable.toUpperCase()}
+                li.side-bar-link Filter By
+                    div.filter-options.link-content
+                        //- TODO: Check if [for=''] is needed here, since select is nested in label
+                        label(for="position-names") Position
+                            select.border-rounded.input-filter#position-names(data-filter="position-names", multiple, style="width: 100%;")
+                                each position in schedulePositionNames
+                                    option(value=position) #{position}
+                        label(for="position-categories") Category
+                            select.border-rounded.input-filter(data-filter="position-categories", multiple, style="width: 100%;")
+                                each category in schedulePositionCategories
+                                    option(value=category) #{category}
+                li.side-bar-link Term
+                    div.terms.link-content
+                        select.schedule-filter-link#schedule-term(data-param="term")
+                            each term in scheduleTerms
+                                - var isSelected = term.id == scheduleFilters.term;
+                                option(value=term.id, selected=isSelected) #{term.name.toUpperCase()}
     div.schedule-box
-        div.schedule-row
-            div.schedule-left-col.col-xs-4.row
-                div.col-xs-8
-                div.col-xs-4.schedule-header-hours
-                    span.col-xs-1 Day
-                    span.col-xs-1  /
-                    span.col-xs-1  Week
-            div.schedule-cell-row.schedule-header-row.col-xs-8
-                for hour in scheduleHours
-                    div.schedule-cell.schedule-header-cell.col-md-2 #{hour}
-        for row, rowID in scheduleRows
-            - var column = 0
-            div.schedule-row.schedule-row-filterable.hvr-border-fade&attributes(row.filterables)
-                div.schedule-left-col.col-xs-4.row
-                    div.col-xs-8
-                        if scheduleRowType == "person"
-                            a(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term)
-                                div.schedule-label #{row.label}
-                        else
-                            div.schedule-label #{row.label}
-                    div.schedule-hours.col-xs-4.row
-                        span.col-xs-1 #{row.dayTotal ? row.dayTotal : "0"}
-                        span.col-xs-1  /
-                        span.col-xs-1  #{row.weekTotal ? row.weekTotal : "0"}
-                div.schedule-cell-row.col-xs-8(data-userid=row.userid, data-day=row.day)
-                    for hour, hourID in row.slots
-                        div.schedule-cell
-                            for slot, slotID in hour
-                                -
-                                    var location = slot.center == -1 ? ((slot.isAvailable == 1) ? "AV" : "UV") : slot.center
-                                    var className = "schedule-cell-quarter " + location;
-                                    if (slot.isFirst || column == 0) {
-                                        className += " first";
-                                    }
-                                    if (slot.isLast || ((hourID == row.slots.length - 1) && (slotID == hour.length - 1))) {
-                                        className += " last";
-                                    }
-                                    if (slot.time == "00:00:00") {
-                                        className += " inactive";
-                                    } else {
-                                        className += " active";
-                                    }
-                                div(class=className,
-                                    data-row=rowID,
-                                    data-cell=hourID,
-                                    data-quarter=slotID,
-                                    data-column=column,
-                                    data-previous-color=location,
-                                    data-location=location,
-                                    data-available=slot.isAvailable,
-                                    data-time=slot.time)
-                                - column++
+        div.selected-term.headers
+            p
+                strong Selected Term:&nbsp;&nbsp;
+                each term in scheduleTerms
+                    if term.id == scheduleFilters.term
+                        | #{term.name.toUpperCase()}
+        div.selected-day.headers
+            p
+                strong Selected Day:&nbsp;&nbsp;
+                | #{daysOfWeek[scheduleFilters.day]}
+        div.selected-sort-by.headers
+            p
+                strong Sorting By:&nbsp;&nbsp;
+                | #{scheduleFilters.sort.toUpperCase()}
+        div.selected-filter-by.headers
+            p
+        each row, rowID in scheduleRows
+            div.person-box.schedule-row-filterable.col-xs-12.col-md-4&attributes(row.filterables)
+                div.person-box-person(data-selected-day=scheduleFilters.day, data-selected-term=scheduleFilters.term, data-userid=row.userid, data-rowid=rowID)
+                    - if (scheduleRowType == "person")
+                        p #{row.label}
+                    - else
+                        div.schedule-label #{row.label}
+                div.person-box-content
+                    div.total-hours-column
+                        span Total Hours:&nbsp;&nbsp;&nbsp;&nbsp;
+                        span.day-week-hours #{daysOfWeek[scheduleFilters.day]}
+                        span.day-week-hours #{row.dayTotal ? row.dayTotal : "0"}
+                        span.day-week-hours /
+                        span.day-week-hours #{row.weekTotal ? row.weekTotal : "0"}
+                        span.day-week-hours Week
+                    div.col-xs-3.legend-column-sections
+                        a.btn.btn-default.availability-btn(href=baseurl + "availability?userid=" + row.userid + "&term=" + scheduleFilters.term) Availability
+                    div.col-xs-2.daily-hours-column
+                        div
+                            span &nbsp;
+                        div.schedule-cell.schedule-header-cell
+                        - for (var i = 0; i < scheduleHours.length - 1; i++)
+                            div.schedule-cell.schedule-header-cell #{scheduleHours[i]}
+                    div.col-xs-7.schedule
+                        div.quarters
+                            span :15&nbsp;&nbsp;&nbsp;
+                            span :30
+                            span &nbsp;&nbsp;&nbsp;:45
+                        div.schedule-box
+                            div.schedule-cell-quarter.clone(data-row="", data-cell="", data-quarter="", data-column="", data-previous-color="none", data-location="", data-available="", data-time="")
