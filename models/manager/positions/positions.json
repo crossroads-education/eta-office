@@ -1,4 +1,5 @@
 {
   "css": ["https://cdnjs.cloudflare.com/ajax/libs/bootstrap-switch/3.3.2/css/bootstrap3/bootstrap-switch.min.css"],
+  "pageTitleName": "Position Management",
   "permissions": ["access/manager/positions"]
 }
