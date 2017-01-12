@@ -1,0 +1,27 @@
+.schedule-cell[data-location="MA"] {
+    background-color: #56A042;
+}
+
+.schedule-cell[data-location="ST"] {
+    background-color: #BEA84E;
+}
+
+.schedule-cell[data-location="MO"] {
+    background-color: #4B4084;
+}
+
+.schedule-cell[data-location="SO"] {
+    background-color: #B74B58;
+}
+
+.schedule-cell[data-location="AV"] {
+    background-color: #FFFFFF;
+}
+
+.schedule-cell[data-location="UV"] {
+    background-color: #AAAAAA;
+}
+
+.schedule-cell[data-location="XX"] {
+    background-color: #000000;
+}

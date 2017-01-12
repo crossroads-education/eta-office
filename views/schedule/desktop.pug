@@ -1,0 +1,59 @@
+extends ./global.pug
+
+block body
+    div.row
+        table.schedule-container.col-xs-12
+            thead
+                tr.schedule-spacer-row
+                block filterHead
+                tr.schedule-label-row.schedule-filter-row
+                    th(colspan="6")
+                    th(colspan="8")
+                        select.schedule-filter-input.schedule-filter-select2(data-name="day", style="width: 100%;")
+                            each day, index in daysOfWeek
+                                - var selected = index == currentFilters.day ? {"selected": "selected"} : {}
+                                option(value=index)&attributes(selected) #{day}
+                    th(colspan="8")
+                        select.schedule-filter-input.schedule-filter-select2(data-name="term", style="width: 100%;")
+                            each term in terms
+                                - var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
+                                option(value=term.id)&attributes(selected) #{term.name}
+                    block additionalFilter
+                tr.schedule-spacer-row.fixed-head-hide
+                tr.schedule-label-row.schedule-label-row-legend
+                    th(colspan="6")
+                    each legendItem in legendData
+                        th(colspan="4", data-location=legendItem.code) #{legendItem.name}
+                tr.schedule-legend-row
+                    th.schedule-spacer-cell(colspan="6")
+                    each legendItem in legendData
+                        th.schedule-cell(colspan="4", data-location=legendItem.code)
+                tr.schedule-spacer-row.fixed-head-hide
+                -
+                    function toHourNumber(hourString) {
+                        var hour = Number(hourString.substring(0, hourString.length - 1));
+                        return ((hourString.indexOf("p") !== -1 && hour !== 12) ? hour + 12 : hour).toString();
+                    }
+                tr.schedule-label-row.schedule-label-row-hour
+                    th(colspan="6")
+                    each hour in scheduleHours
+                        th(colspan="4", data-hour=toHourNumber(hour)) #{hour}
+                tr.schedule-label-row.schedule-label-row-minute
+                    th(colspan="6") Name
+                    each rawHour in scheduleHours
+                        - var hour = toHourNumber(rawHour)
+                        th(data-time=hour + ":0", data-minute="0") :00
+                        th(data-time=hour + ":15", data-minute="15") :15
+                        th(data-time=hour + ":30", data-minute="30") :30
+                        th(data-time=hour + ":45", data-minute="45") :45
+            tbody
+                each row in scheduleRows
+                    - if (row.dayTotalHours > 0 || canEdit)
+                        tr.schedule-row.schedule-row-filterable(data-id=row.id, data-position-names=JSON.stringify(row.positionNames), data-position-categories=JSON.stringify(row.positionCategories))
+                            td.schedule-name-cell(colspan="6") #{row.firstName} #{row.lastName}
+                            each cell in row.cells
+                                -
+                                    if (cell.center == null) {
+                                        cell.center = cell.isAvailable ? "AV" : "UV";
+                                    }
+                                td.schedule-cell(data-location=cell.center, data-hour=cell.hour, data-minute=cell.minute)

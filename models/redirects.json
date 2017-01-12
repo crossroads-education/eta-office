@@ -15,5 +15,7 @@
   "/master.php": "schedule",
   "/profile.php": "profile",
   "/updateHoursSchedule.php": "manager/centers",
-  "/addCourse.php": "manager/centers"
+  "/addCourse.php": "manager/centers",
+  "/schedule": "schedule/master/index",
+  "/availability": "schedule/availability/index"
 }

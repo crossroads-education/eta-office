@@ -1,0 +1,7 @@
+{
+  "models": [
+    "/schedule/global",
+    "/schedule/desktop",
+    "/schedule/master/global"
+  ]
+}

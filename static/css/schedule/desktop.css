@@ -1,0 +1,93 @@
+.schedule-container {
+    table-layout: fixed;
+    /*border-collapse: separate;*/
+    border-collapse: collapse;
+    /*border-spacing: 2px;*/
+}
+
+.schedule-container tbody {
+    background-color: #EFEFEF;
+}
+
+.schedule-label-row * {
+    text-align: center;
+}
+
+.schedule-spacer-row {
+    height: 25px;
+}
+
+.schedule-legend-row th {
+    text-align: center;
+    border: 2px solid black;
+}
+
+.schedule-filter-row * {
+    font-weight: 400;
+    text-align: left;
+}
+
+.schedule-spacer-cell {
+    border: 0 !important;
+}
+
+.schedule-name-cell {
+    padding-left: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    max-height: 25px;
+    background-color: white;
+}
+
+.schedule-cell {
+    width: 5%;
+    height: 25px;
+    border: 2px solid white;
+}
+
+.schedule-label-row-hour th[data-hour],
+.schedule-label-row th[data-minute='0'],
+.schedule-cell[data-minute='0'] {
+    border-left: 4px solid black;
+}
+
+.schedule-label-row-hour th[data-hour],
+.schedule-label-row th[data-minute='45'],
+.schedule-cell[data-minute='45'] {
+    border-right: 4px solid black;
+}
+
+.schedule-label-row-hour th:not(.border-highlight) {
+    border-top: 1px solid transparent;
+    border-bottom: 1px solid transparent;
+}
+
+.schedule-label-row-minute th:not(.border-highlight):not([data-minute='45']):not([data-minute='0']) {
+    border: 1px solid transparent;
+}
+
+.border-highlight {
+    border: 2px solid blue;
+}
+
+.schedule-name-cell:not(.border-highlight) {
+    border-width: 2px;
+}
+
+#fixed-head .schedule-label-row-minute td {
+    width: 5%;
+}
+
+.select2-selection {
+    border: 1px solid rgb(170, 170, 170) !important;
+    border-radius: 0 !important;
+}
+
+.btn-default:hover,
+.btn-primary:hover {
+    background-color: #FFFFFF;
+}
+
+.btn-submit {
+    text-align: center;
+}

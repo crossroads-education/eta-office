@@ -6,11 +6,11 @@
   "Scheduling": {
     "Master Schedule": {
       "permission": "access/schedule/master",
-      "url": "schedule"
+      "url": "schedule/master/desktop"
     },
     "Personal Availability": {
       "permission": "access/schedule/availability",
-      "url": "availability"
+      "url": "schedule/availability/desktop"
     }
   },
   "Reference": {
