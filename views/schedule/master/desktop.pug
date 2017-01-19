@@ -15,6 +15,7 @@ block filterHead
             if currentFilters.edit
                 th(colspan="8")
                     select.schedule-filter-select2.schedule-palette-input(style="width: 100%;")
+                        option(value="AV") Clear
                         each legendItem in legendData
                             - if (legendItem.code != "AV" && legendItem.code != "UV")
                                 option(value=legendItem.code) #{legendItem.name}

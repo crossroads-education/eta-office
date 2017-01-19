@@ -32,11 +32,17 @@
 }
 
 .schedule-name-cell {
-    padding-left: 4px;
     white-space: nowrap;
     overflow: hidden;
     max-height: 25px;
     background-color: white;
+    text-align: right;
+}
+
+.schedule-total-cell {
+    background-color: white;
+    text-align: right;
+    padding-right: 4px;
 }
 
 .schedule-cell {
