@@ -1,24 +1,30 @@
-.schedule-cell[data-location="MA"] {
+.schedule-cell[data-location="MA"],
+.schedule-legend-cell[data-location="MA"] {
     background-color: #56A042;
 }
 
-.schedule-cell[data-location="ST"] {
+.schedule-cell[data-location="ST"],
+.schedule-legend-cell[data-location="ST"] {
     background-color: #BEA84E;
 }
 
-.schedule-cell[data-location="MO"] {
+.schedule-cell[data-location="MO"],
+.schedule-legend-cell[data-location="MO"] {
     background-color: #4B4084;
 }
 
-.schedule-cell[data-location="SO"] {
+.schedule-cell[data-location="SO"],
+.schedule-legend-cell[data-location="SO"] {
     background-color: #B74B58;
 }
 
-.schedule-cell[data-location="AV"] {
+.schedule-cell[data-location="AV"],
+.schedule-legend-cell[data-location="AV"] {
     background-color: #FFFFFF;
 }
 
-.schedule-cell[data-location="UV"] {
+.schedule-cell[data-location="UV"],
+.schedule-legend-cell[data-location="UV"] {
     background-color: #AAAAAA;
 }
 

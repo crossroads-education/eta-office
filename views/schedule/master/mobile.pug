@@ -1,0 +1,14 @@
+extends ../mobile.pug
+
+block sidebarContent
+    li.sidebar-link-container Choose Day
+        div.sidebar-link-content(data-name="day")
+            each day, index in daysOfWeek
+                - var selected = index == currentFilters.day ? {"data-selected": "true"} : {};
+                span.schedule-filter-link.schedule-filter-cell(data-name="day", data-value=index)&attributes(selected) #{day.toUpperCase()}
+
+block headerContent
+    div.schedule-filter-header(data-name="day")
+        p
+            strong Selected Day:&nbsp;&nbsp;
+            | #{daysOfWeek[currentFilters.day]}

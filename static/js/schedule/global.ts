@@ -72,6 +72,7 @@ export module schedule_global {
     function onLoad(this: HTMLElement): void {
         $(this).find("select.schedule-filter-input").on("change", onFilterSubmit);
         $(this).find("button.schedule-filter-input").on("click", onFilterSubmit);
+        $(this).find("span.schedule-filter-link").on("click", onFilterSubmit);
         $(this).find("select.schedule-hash-input").on("change", onHashSubmit);
         setupHashInputs($(this));
     }

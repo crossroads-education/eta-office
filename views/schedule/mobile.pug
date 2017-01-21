@@ -1,0 +1,66 @@
+extends ./global.pug
+
+block body
+    div.sidebar-toggle(data-toggled="false")
+        span &gt;
+    div.sidebar-container
+        ul.sidebar-content
+            div.sidebar-exit
+                span x
+            li.sidebar-link-container Term
+                div.sidebar-link-content(data-name="term")
+                    select.schedule-filter-input(data-name="term")
+                        each term in terms
+                            - var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
+                            option(value=term.id)&attributes(selected) #{term.name}
+            block sidebarContent
+    div.schedule-container
+        div.schedule-filter-header(data-name="term")
+            p
+                strong Selected Term:&nbsp;&nbsp;
+                each term in terms
+                    if term.id == currentFilters.term
+                        | #{term.name.toUpperCase()}
+        block headerContent
+        each row in scheduleRows
+            div.schedule-box.col-md-4.col-xs-12.schedule-row-filterable(data-id=row.id, data-position-names=JSON.stringify(row.positionNames), data-position-categories=JSON.stringify(row.positionCategories))
+                div.schedule-box-header
+                    p #{row.firstName} #{row.lastName}
+                div.schedule-box-body
+                    div.schedule-col-totals
+                        span Total Hours:&nbsp;&nbsp;&nbsp;&nbsp;
+                        span.schedule-week-hours #{daysOfWeek[currentFilters.day]}
+                        span.schedule-week-hours #{row.dayTotalHours}
+                        span.schedule-week-hours /
+                        span.schedule-week-hours #{row.weekTotalHours}
+                        span.schedule-week-hours Week
+                    div.schedule-col-legend.col-xs-3
+                        each legendItem in legendData
+                            span #{legendItem.name}
+                            div.schedule-legend-cell(data-location=legendItem.code)
+                    div.schedule-col-times.col-xs-2
+                        div
+                            span &nbsp;
+                        div.schedule-cell.schedule-header-cell
+                        each hour in scheduleHours
+                            div.schedule-cell.schedule-header-cell #{hour}
+                    div.schedule-row-container.col-xs-7
+                        div.schedule-row-header-container
+                            span :15&nbsp;&nbsp;&nbsp;
+                            span :30
+                            span &nbsp;&nbsp;&nbsp;:45
+                        div.schedule-cell-box
+                            div.schedule-row
+                                div.schedule-cell(data-location="XX")
+                                div.schedule-cell(data-location="XX")
+                                div.schedule-cell(data-location="XX")
+                                div.schedule-cell(data-location="XX")
+                            - for (var i = 0; i < row.cells.length; i += 4)
+                                div.schedule-row
+                                    - for (var k = 0; k < 4; k++)
+                                        div.schedule-cell(data-location=row.cells[i + k].center)
+                            div.schedule-row
+                                div.schedule-cell(data-location="XX")
+                                div.schedule-cell(data-location="XX")
+                                div.schedule-cell(data-location="XX")
+                                div.schedule-cell(data-location="XX")
