@@ -11,11 +11,7 @@ block body
                 block filterHead
                 tr.schedule-label-row.schedule-filter-row
                     th(colspan="6")
-                    th(colspan="8")
-                        select.schedule-filter-input.schedule-filter-select2(data-name="day", style="width: 100%;")
-                            each day, index in daysOfWeek
-                                - var selected = index == currentFilters.day ? {"selected": "selected"} : {}
-                                option(value=index)&attributes(selected) #{day}
+                    block preFilter
                     th(colspan="8")
                         select.schedule-filter-input.schedule-filter-select2(data-name="term", style="width: 100%;")
                             each term in terms

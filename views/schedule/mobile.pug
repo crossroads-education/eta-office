@@ -38,6 +38,7 @@ block body
                         each legendItem in legendData
                             span #{legendItem.name}
                             div.schedule-legend-cell(data-location=legendItem.code)
+                        block boxLegend
                     div.schedule-col-times.col-xs-2
                         div
                             span &nbsp;
@@ -58,7 +59,12 @@ block body
                             - for (var i = 0; i < row.cells.length; i += 4)
                                 div.schedule-row
                                     - for (var k = 0; k < 4; k++)
-                                        div.schedule-cell(data-location=row.cells[i + k].center)
+                                        -
+                                            var cell = row.cells[i + k];
+                                            if (cell.center == null) {
+                                                cell.center = cell.isAvailable ? "AV" : "UV";
+                                            }
+                                        div.schedule-cell(data-location=cell.center)
                             div.schedule-row
                                 div.schedule-cell(data-location="XX")
                                 div.schedule-cell(data-location="XX")

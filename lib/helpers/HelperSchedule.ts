@@ -56,6 +56,14 @@ export default class HelperSchedule {
                 });
             }
         }
+        if (row.cells.length === 0) {
+            row.cells.push({
+                "center": null,
+                "isAvailable": false,
+                "hour": start.getHours(),
+                "minute": start.getMinutes()
+            });
+        }
         // prepending UV cells
         while (!(row.cells[0].hour == start.getHours() && row.cells[0].minute == start.getMinutes())) {
             let newTime: number = this.getTimeFromCell(row.cells[0]) - 0.25;

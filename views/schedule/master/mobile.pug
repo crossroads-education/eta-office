@@ -12,3 +12,6 @@ block headerContent
         p
             strong Selected Day:&nbsp;&nbsp;
             | #{daysOfWeek[currentFilters.day]}
+
+block boxLegend
+    a.btn.btn-default.btn-availability(href=baseurl + "schedule/availability/mobile?employee=" + row.id + "&term=" + currentFilters.term) Full Schedule

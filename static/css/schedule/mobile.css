@@ -273,3 +273,7 @@ label[for="position-names"], label[for="position-categories"] {
 .schedule-filter-header[data-name="term"] {
     margin-top: 24px;
 }
+
+.btn-availability {
+    margin-top: 10px;
+}
