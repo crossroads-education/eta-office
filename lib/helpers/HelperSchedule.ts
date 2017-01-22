@@ -29,7 +29,7 @@ export default class HelperSchedule {
         }
     }
 
-    public static getFilterOptions(req: express.Request, userid: string = req.session["userid"], bodyName: string = "query"): ScheduleFilterOptions {
+    public static getFilterOptions(req: any, userid: string = req.session["userid"], bodyName: string = "query"): ScheduleFilterOptions {
         let defaults: ScheduleFilterOptions = {
             "day": new Date().getDay(),
             "term": eta.term.getCurrent().id,
