@@ -6,6 +6,14 @@ block sidebarContent
             each day, index in daysOfWeek
                 - var selected = index == currentFilters.day ? {"data-selected": "true"} : {};
                 span.schedule-filter-link.schedule-filter-cell(data-name="day", data-value=index)&attributes(selected) #{day.toUpperCase()}
+    li.sidebar-link-container Filter Positions
+        div.sidebar-link-content(data-name="positions")
+            select.schedule-hash-input.schedule-filter-select2(data-name="position-names", data-placeholder="Position", multiple, style="width: 100%;")
+                each position in positionNames
+                    option(value=position) #{position}
+            select.schedule-hash-input.schedule-filter-select2(data-name="position-categories", data-placeholder="Category", multiple, style="width: 100%;")
+                each category in positionCategories
+                    option(value=category) #{category}
 
 block headerContent
     div.schedule-filter-header(data-name="day")

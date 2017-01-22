@@ -37,7 +37,10 @@ export module schedule_master_desktop {
         $(".btn-submit").on("click", onSubmit);
     });
 
-    $(document).on("schedule.loaded", function() {
+    $(document).on("schedule.loaded", <any>function(type: string) {
+        if (type !== "desktop") {
+            return;
+        }
         // prevent selection of unavailable cells
         let oldFilter: string = $(".schedule-container").selectable("option", "filter");
         $(".schedule-container").selectable("option", "filter", oldFilter + ":not([data-location='UV'])");

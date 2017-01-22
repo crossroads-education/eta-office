@@ -38,7 +38,33 @@ export module schedule_mobile {
         }
     }
 
+    function onFilterChange(): void {
+        let filters: string[] = [];
+        $(".sidebar-link-content[data-name='positions'] select").each(function(index: number, element: HTMLElement) {
+            let values: string[] = $(element).val();
+            if (values === null) {
+                return;
+            }
+            if (values.toString() === <any>values) {
+                filters.push(<any>values);
+            } else {
+                for (let i: number = 0; i < values.length; i++) {
+                    filters.push(values[i]);
+                }
+            }
+        });
+        let $header: JQuery = $(".schedule-filter-header[data-name='positions']");
+        if (filters.length === 0) {
+            $header.find("p").addClass("hidden");
+            $header.find("span").html("");
+        } else {
+            $header.find("span").html(filters.join(", "));
+            $header.find("p").removeClass("hidden");
+        }
+    }
+
     $(document).ready(function() {
+        onFilterChange();
         $(".sidebar-toggle").on("click", function() {
             toggleSidebar();
         });
@@ -58,5 +84,7 @@ export module schedule_mobile {
         });
         $(".sidebar-link-container").on("click", onSidebarLinkToggle);
         $(".schedule-box-header").on("click", onScheduleBoxToggle);
+
+        $(".sidebar-link-content[data-name='positions'] select").on("change", onFilterChange);
     });
 }

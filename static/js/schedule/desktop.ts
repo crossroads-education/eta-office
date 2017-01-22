@@ -1,6 +1,5 @@
 import "schedule/global";
 import "lib/jquery/scrollHead";
-import "select2";
 
 export module schedule_desktop {
     function getPaletteSelection(): string {
@@ -75,14 +74,6 @@ export module schedule_desktop {
     }
 
     function onLoad(this: HTMLElement): void {
-        $(this).find(".schedule-filter-select2").each(function(index: number, element: HTMLElement) {
-            let $element: JQuery = $(element);
-            let placeholder: string = $element.attr("data-placeholder");
-            $element.select2(<any>{
-                "maximumSelectionLength": 4,
-                "placeholder": placeholder ? placeholder : ""
-            });
-        });
         $(this).find(".schedule-legend-row .schedule-cell").on("click", onLegendSelect);
     }
 

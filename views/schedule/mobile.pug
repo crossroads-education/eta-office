@@ -22,6 +22,10 @@ block body
                     if term.id == currentFilters.term
                         | #{term.name.toUpperCase()}
         block headerContent
+        div.schedule-filter-header(data-name="positions")
+            p.hidden
+                strong Filtering By:&nbsp;
+                span
         each row in scheduleRows
             div.schedule-box.col-md-4.col-xs-12.schedule-row-filterable(data-id=row.id, data-position-names=JSON.stringify(row.positionNames), data-position-categories=JSON.stringify(row.positionCategories))
                 div.schedule-box-header
