@@ -15,12 +15,20 @@ block filterHead
             if currentFilters.edit
                 th(colspan="8")
                     select.schedule-filter-select2.schedule-palette-input(style="width: 100%;")
+                        option(value="AV") Clear
                         each legendItem in legendData
                             - if (legendItem.code != "AV" && legendItem.code != "UV")
                                 option(value=legendItem.code) #{legendItem.name}
             - else
                 th(colspan="8")
                     button.btn.btn-default.schedule-filter-input(data-name="edit", value="yes", style="width: 100%;") Manager Access
+
+block preFilter
+    th(colspan="8")
+        select.schedule-filter-input.schedule-filter-select2(data-name="day", style="width: 100%;")
+            each day, index in daysOfWeek
+                - var selected = index == currentFilters.day ? {"selected": "selected"} : {}
+                option(value=index)&attributes(selected) #{day}
 
 block additionalFilter
     th(colspan="4")

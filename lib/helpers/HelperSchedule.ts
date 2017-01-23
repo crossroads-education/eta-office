@@ -29,7 +29,7 @@ export default class HelperSchedule {
         }
     }
 
-    public static getFilterOptions(req: express.Request, userid: string = req.session["userid"], bodyName: string = "query"): ScheduleFilterOptions {
+    public static getFilterOptions(req: any, userid: string = req.session["userid"], bodyName: string = "query"): ScheduleFilterOptions {
         let defaults: ScheduleFilterOptions = {
             "day": new Date().getDay(),
             "term": eta.term.getCurrent().id,
@@ -55,6 +55,14 @@ export default class HelperSchedule {
                     "minute": (newTime % 1) * 60 // get minute component
                 });
             }
+        }
+        if (row.cells.length === 0) {
+            row.cells.push({
+                "center": null,
+                "isAvailable": false,
+                "hour": start.getHours(),
+                "minute": start.getMinutes()
+            });
         }
         // prepending UV cells
         while (!(row.cells[0].hour == start.getHours() && row.cells[0].minute == start.getMinutes())) {

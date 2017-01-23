@@ -1,6 +1,5 @@
 import "schedule/global";
 import "lib/jquery/scrollHead";
-import "select2";
 
 export module schedule_desktop {
     function getPaletteSelection(): string {
@@ -47,37 +46,45 @@ export module schedule_desktop {
         $selecting.attr("data-location", paletteSelection);
     }
 
-    function onCellSelectFinish(event: Event, ui: { selected: Element }): void {
+    function onCellSelectFinish(event: Event, ui: {}): void {
         // only allow this to run once per select (instead of once per element as default)
         if (currentRow === "") {
             return;
         }
         // ensure we're only pulling from the starting row
-        let $selected: JQuery = $(`.schedule-row[data-id='${currentRow}'] .schedule-cell.ui-selecting`);
-        $selected.attr("data-selected", "true");
+        let $selected: JQuery = $(`.schedule-row[data-id='${currentRow}'] .schedule-cell.ui-selected`);
+        $selected.attr("data-changed", "true");
         currentRow = ""; // reset to allow additional selects
     }
 
-    function onLoad(this: HTMLElement): void {
-        $(this).find(".schedule-filter-select2").each(function(index: number, element: HTMLElement) {
-            let $element: JQuery = $(element);
-            let placeholder: string = $element.attr("data-placeholder");
-            $element.select2(<any>{
-                "maximumSelectionLength": 4,
-                "placeholder": placeholder ? placeholder : ""
-            });
+    /**
+    Allows users to click a legend cell to change their palette.
+    */
+    function onLegendSelect(): void {
+        let location: string = $(this).attr("data-location");
+        let isValid: boolean = false;
+        $(".schedule-palette-input option").each(function(index: number, element: HTMLElement): void {
+            if ($(element).attr("value") == location) {
+                isValid = true;
+            }
         });
+        if (isValid) {
+            $(".schedule-palette-input").val($(this).attr("data-location")).trigger("change");
+        }
+    }
+
+    function onLoad(this: HTMLElement): void {
+        $(this).find(".schedule-legend-row .schedule-cell").on("click", onLegendSelect);
     }
 
     $(document).ready(function() {
         $(".schedule-cell").hover(onCellHoverStart);
         $(".schedule-container").scrollHead();
         if ($(".schedule-palette-input").length > 0) { // able to select cells
-            $(".schedule-container").selectable({
+            $(".schedule-container tbody").selectable({
                 "filter": ".schedule-cell:not([data-location='XX'])",
-                "delay": 50, // ms
                 "selecting": onCellSelectProgress, // set classes and such to display while in-progress
-                "selected": onCellSelectFinish
+                "stop": onCellSelectFinish
             });
         }
         $(document.body).on("scrollHead.loaded", function() {

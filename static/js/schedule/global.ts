@@ -1,3 +1,4 @@
+import "select2";
 import { HelperUrl } from "lib/helpers/HelperUrl";
 
 export module schedule_global {
@@ -72,7 +73,16 @@ export module schedule_global {
     function onLoad(this: HTMLElement): void {
         $(this).find("select.schedule-filter-input").on("change", onFilterSubmit);
         $(this).find("button.schedule-filter-input").on("click", onFilterSubmit);
+        $(this).find("span.schedule-filter-link").on("click", onFilterSubmit);
         $(this).find("select.schedule-hash-input").on("change", onHashSubmit);
+        $(this).find(".schedule-filter-select2").each(function(index: number, element: HTMLElement) {
+            let $element: JQuery = $(element);
+            let placeholder: string = $element.attr("data-placeholder");
+            $element.select2(<any>{
+                "maximumSelectionLength": 4,
+                "placeholder": placeholder ? placeholder : ""
+            });
+        });
         setupHashInputs($(this));
     }
 

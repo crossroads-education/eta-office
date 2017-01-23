@@ -5,14 +5,13 @@ block body
         table.schedule-container.col-xs-12
             thead
                 tr.schedule-spacer-row
+                    th(colspan="6")
+                    th.hidden.status-success(colspan="8")
+                    th.hidden.status-error(colspan="8")
                 block filterHead
                 tr.schedule-label-row.schedule-filter-row
                     th(colspan="6")
-                    th(colspan="8")
-                        select.schedule-filter-input.schedule-filter-select2(data-name="day", style="width: 100%;")
-                            each day, index in daysOfWeek
-                                - var selected = index == currentFilters.day ? {"selected": "selected"} : {}
-                                option(value=index)&attributes(selected) #{day}
+                    block preFilter
                     th(colspan="8")
                         select.schedule-filter-input.schedule-filter-select2(data-name="term", style="width: 100%;")
                             each term in terms
@@ -39,7 +38,8 @@ block body
                     each hour in scheduleHours
                         th(colspan="4", data-hour=toHourNumber(hour)) #{hour}
                 tr.schedule-label-row.schedule-label-row-minute
-                    th(colspan="6") Name
+                    th(colspan="5") Name
+                    th
                     each rawHour in scheduleHours
                         - var hour = toHourNumber(rawHour)
                         th(data-time=hour + ":0", data-minute="0") :00
@@ -50,7 +50,8 @@ block body
                 each row in scheduleRows
                     - if (row.dayTotalHours > 0 || canEdit)
                         tr.schedule-row.schedule-row-filterable(data-id=row.id, data-position-names=JSON.stringify(row.positionNames), data-position-categories=JSON.stringify(row.positionCategories))
-                            td.schedule-name-cell(colspan="6") #{row.firstName} #{row.lastName}
+                            td.schedule-name-cell(colspan="5") #{row.firstName} #{row.lastName}
+                            td.schedule-total-cell(colspan="1", title="Weekly Total Hours") #{row.weekTotalHours}
                             each cell in row.cells
                                 -
                                     if (cell.center == null) {
