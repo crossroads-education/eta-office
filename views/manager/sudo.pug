@@ -1,0 +1,15 @@
+extends ../include/layout.pug
+
+block body
+    form(action=baseurl + "post/set-sudo", method="POST")#container
+        h2 Sudo
+        div
+            p Now logged in as: #{username}
+
+        div
+            p Here's some convenient text that Alex is gonna write that explains this page. Hopefully you just know what you're doing for now.
+        div#container-input
+            input(type="text", name="username")
+        div.row
+            //- button Reset
+            button.btn.btn-success(type="submit") Submit
