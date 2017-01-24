@@ -85,3 +85,11 @@ span.employee-name.modal-title {
     float: left;
     display: inline-block;
 }
+
+.permission-remove {
+    text-align: right;
+}
+
+.permission-remove span {
+    cursor: pointer;
+}

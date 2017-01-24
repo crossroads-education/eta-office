@@ -8,6 +8,10 @@
     user-select: none;
 }
 
+.collapsible-header .glyphicon {
+    font-family: 'Source Sans Pro';
+}
+
 .collapsible-title {
     margin-left: 1em;
 }

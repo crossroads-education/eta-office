@@ -51,8 +51,7 @@ export module employees {
         let $row = $("<tr>");
         $row.addClass("permission-row");
         $row.append($("<td>").addClass("permission-name").text(permission));
-        // let $deleteButton = $("<span>").addClass("glyphicon glyphicon-minus-sign");
-        let $deleteButton: JQuery = $("<button>").addClass("btn btn-danger").text("Delete");
+        let $deleteButton = $("<span>").addClass("glyphicon glyphicon-minus-sign");
         $deleteButton.on("click", function(): void {
             $.post("/office/post/remove-permission", {
                 id: $("#modal-positions").attr("data-employee"),
