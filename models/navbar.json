@@ -64,6 +64,10 @@
       "Reporting Tools": {
         "permission": "access/manager/reports",
         "url": "manager/reports"
+      },
+      "Sudo Utility": {
+        "permission": "access/manager/sudo",
+        "url": "manager/sudo"
       }
     }
   },
