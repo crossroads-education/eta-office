@@ -126,7 +126,7 @@ export class Model implements eta.Model {
                             LEFT JOIN Center ON
                                 Position.center = Center.id
                             LEFT JOIN UserPermission ON
-                                Employee.id = UserPermission.id
+                                Employee.id = UserPermission.user
                     WHERE
                         ${whereSql} AND
                         EmployeePosition.start <= CURDATE() AND
@@ -151,6 +151,11 @@ export class Model implements eta.Model {
                     let employeeIDs: string[] = [];
                     for (let i: number = 0; i < employeeRows.length; i++) {
                         employeeIDs.push(employeeRows[i].id);
+                        if (employeeRows[i].permissions) {
+                            employeeRows[i].permissions = employeeRows[i].permissions.split(",");
+                        } else {
+                            employeeRows[i].permissions = [];
+                        }
                     }
                     sql = `
                         SELECT
