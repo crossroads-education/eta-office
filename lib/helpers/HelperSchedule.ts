@@ -253,7 +253,7 @@ export default class HelperSchedule {
                         RIGHT JOIN (
                             SELECT
                                 EmployeeSchedule.id,
-                                COUNT(DISTINCT EmployeeSchedule.time) / 4 AS hours
+                                COUNT(DISTINCT EmployeeSchedule.day, EmployeeSchedule.time) / 4 AS hours
                             FROM
                                 EmployeeSchedule
                             WHERE
