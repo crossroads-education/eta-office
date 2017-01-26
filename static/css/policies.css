@@ -1,0 +1,32 @@
+.collapsible-parent {
+    padding-bottom: 1%;
+}
+
+.collapsible-body {
+    background-color: #EEEEEE;
+    padding: 1%;
+}
+
+.collapsible-title {
+    display: block;
+    height: 60px;
+    width 100%;
+    text-align: left;
+    line-height: 35px;
+    font-size: 20pt;
+    font-weight: 400;
+    background-color: #DDDDDD;
+    padding: 1%;
+    padding-left: 30px;
+}
+
+.collapsible-rotate-plus,
+.collapsible-rotate-minus {
+    float: right;
+    font-size: 30pt;
+    padding: 1%;
+    margin-right: 30px;
+    font-weight: 400;
+    -webkit-text-stroke: 7px #DDDDDD;
+    /*change color to match header bar*/
+}
