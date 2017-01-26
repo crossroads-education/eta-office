@@ -88,6 +88,7 @@ export module schedule_global {
 
     $(document).ready(function() {
         $(document.body).on("scrollHead.loaded", function() {
+            $("#fixed-head").find(".select2-container").remove();
             onLoad.apply(document.getElementById("fixed-head"));
         });
         onLoad.apply(document.body);

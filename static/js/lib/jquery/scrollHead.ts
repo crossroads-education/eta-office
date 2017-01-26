@@ -15,7 +15,7 @@ interface JQuery {
             fixedHead.prop("id", "fixed-head");
             fixedHead.addClass("col-xs-12 schedule-container");
             let fixedHeadContainer: JQuery = $("<div>").append(fixedHead);
-            fixedHeadContainer.prop("id", "fixed-head-container")
+            fixedHeadContainer.prop("id", "fixed-head-container");
             fixedHeadContainer.addClass("row");
             $("#body").append(fixedHeadContainer);
             $(document.body).trigger("scrollHead.loaded");
