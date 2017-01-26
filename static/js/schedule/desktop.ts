@@ -35,7 +35,8 @@ export module schedule_desktop {
     function onCellSelectProgress(event: Event, ui: { selecting: Element }): void {
         let paletteSelection: string = getPaletteSelection();
         let $selecting: JQuery = $(ui.selecting);
-        let id: string = $selecting.parent().attr("data-id");
+        let $row: JQuery = $selecting.parent();
+        let id: string = $row.attr("data-id");
         if (currentRow === "") {
             currentRow = id;
         } else {
@@ -43,6 +44,16 @@ export module schedule_desktop {
                 return;
             }
         }
+        let $totalCell: JQuery = $row.find(".schedule-total-cell");
+        let hourTotal: number = Number($totalCell.text());
+        if (window.location.href.indexOf("/schedule/master/") !== -1) { // only do this on master schedule
+            if (paletteSelection === "AV") {
+                hourTotal -= 0.25;
+            } else {
+                hourTotal += 0.25;
+            }
+        }
+        $totalCell.text(hourTotal.toString());
         $selecting.attr("data-location", paletteSelection);
     }
 
