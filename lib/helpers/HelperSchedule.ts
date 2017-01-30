@@ -253,12 +253,14 @@ export default class HelperSchedule {
                         RIGHT JOIN (
                             SELECT
                                 EmployeeSchedule.id,
-                                COUNT(DISTINCT EmployeeSchedule.day, EmployeeSchedule.time) / 4 AS hours
+                                (COUNT(DISTINCT CASE WHEN
+                                    EmployeeSchedule.center != -1 THEN
+                                    CONCAT(EmployeeSchedule.day, ' ', EmployeeSchedule.time)
+                                    ELSE 0 END) - 1) / 4 AS hours
                             FROM
                                 EmployeeSchedule
                             WHERE
-                                EmployeeSchedule.term = ? AND
-                                EmployeeSchedule.center != -1
+                                EmployeeSchedule.term = ?
                             GROUP BY
                                 EmployeeSchedule.id
                         ) AS ScheduleWeekTotals ON
