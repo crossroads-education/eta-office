@@ -1,0 +1,86 @@
+.collapsible-parent {
+    padding-bottom: 1%;
+}
+
+.collapsible-body {
+    background-color: #EEEEEE;
+    padding: 1%;
+}
+
+.collapsible-title {
+    display: block;
+    height: 60px;
+    width 100%;
+    text-align: left;
+    line-height: 35px;
+    font-size: 17pt;
+    font-weight: 400;
+    background-color: #DDDDDD;
+    padding: 1%;
+    padding-left: 30px;
+}
+
+.collapsible-rotate-plus,
+.collapsible-rotate-minus {
+    float: right;
+    font-size: 30pt;
+    padding: 1%;
+    margin-right: 30px;
+    font-weight: 400;
+    line-height: 30px;
+    -webkit-text-stroke: 7px #DDDDDD;
+    /*change color to match header bar*/
+}
+
+#body li > p {
+    margin-bottom: 0;
+}
+
+.collapsible-body > ul > li {
+    list-style: none;
+    padding-left: 0;
+    padding-bottom: 8px;
+}
+
+li {
+    list-style: disc;
+}
+
+.list-dashed::before {
+    content: "- ";
+    margin-left: -15px;
+}
+
+table {
+  border-collapse: collapse;
+  margin-left: 25px;
+  width: 30%;
+  font-size: 14pt;
+}
+
+table td, table th {
+  border: 1px solid black;
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
+table tr:first-child th {
+  border-top: 0;
+  border-style: none;
+  border-bottom: 2px solid black;
+  font-weight: 600;
+}
+
+table tr:last-child td {
+  border-bottom: 0;
+}
+
+table tr td:first-child,
+table tr th:first-child {
+  border-left: 0;
+}
+
+table tr td:last-child,
+table tr th:last-child {
+  border-right: 0;
+}

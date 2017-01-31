@@ -1,0 +1,8 @@
+extends ./include/layout.pug
+include ./templates/modal.pug
+
+block body
+    each policy in policies
+        div.row
+            div.col-xs-10.col-xs-offset-1
+                +collapsible-parent(policy.category + ": " + policy.name) !{policy.body}
