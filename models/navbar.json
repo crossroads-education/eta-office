@@ -15,7 +15,7 @@
   },
   "Reference": {
     "Policies": {
-      "url": "https://mac.iupui.edu/office/policy/"
+      "url": "policies"
     },
     "Contact List": {
       "permission": "access/contact",

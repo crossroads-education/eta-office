@@ -2,28 +2,7 @@ extends ./include/layout.pug
 include ./templates/modal.pug
 
 block body
-    div.row
-        div.col-xs-10.col-xs-offset-1
-            +collapsible-parent("Work Conduct: Loitering")
-                ul
-                    li Employees are encouraged to hang out and study at the MAC when not on the clock as long as they do not distract from other tutors.
-                    li Employees are to use the break room for their breaks and between their shifts.
-                    li Employees should keep the break room clean.
-                        ul
-                            li The fridge will be cleaned out once a month.
-                            li Clean out the microwave after use.
-                            li Turn off the coffee machine when not in use.
-                    li The break room is not to be used for storage.
-
-    div.row
-        div.col-xs-10.col-xs-offset-1
-            +collapsible-parent("Work Conduct: How You look")
-                ul
-                    li All employees are required to wear their name tags at all times while on the floor.
-                        ul
-                            li <i>Tutors</i>: blue lanyard
-                            li <i>Mentors</i>: red lanyard
-                            li <i>Managers</i>: yellow lanyard
-                    li Anyone wearing inappropriate attire will be asked to change. If this option is not available, they will be sent home and this may result in appropriate disciplinary action.
-                    li Appropriate attire is subjective and is determined by the manager on-duty.
-                    li Shoes must be worn at all times.
+    each policy in policies
+        div.row
+            div.col-xs-10.col-xs-offset-1
+                +collapsible-parent(policy.category + ": " + policy.name) !{policy.body}
