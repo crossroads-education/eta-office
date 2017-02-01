@@ -24,8 +24,8 @@
   "dependencies": {
     "eta-lib": "git+https://git@github.com/crossroads-education/eta-lib.git",
     "marked": "^0.3.6",
-    "node-schedule": "^1.1.1",
-    "simple-git": "^1.47.0"
+    "node-schedule": "^1.2.0",
+    "simple-git": "^1.65.0"
   },
   "engines": {
     "node": ">=4.4.0"
