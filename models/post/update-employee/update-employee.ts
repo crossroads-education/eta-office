@@ -64,6 +64,10 @@ export class Model implements eta.Model {
                         params.push(req.body.id, permissions[i]);
                     }
                     moreSql = moreSql.repeat(params.length / 2);
+                    if (permissions.length === 0) {
+                        // avoid half-formed SQL query
+                        return callback({"raw": "true"});
+                    }
                     sql = `INSERT IGNORE INTO UserPermission (user, permission)
                             VALUES ${moreSql.substring(0, moreSql.length - 1)}`;
                     eta.db.query(sql, params, (err: eta.DBError, rows: any[]) => {
