@@ -13,6 +13,7 @@ export class Model implements eta.Model {
             }
             callback({
                 "commits": log.all,
+                "permissionsUser": req.session["permissions"],
                 "session": req.session
             });
         });
