@@ -1,23 +1,20 @@
 import "bootstrap-switch";
 import { HelperStatus } from "lib/helpers/HelperStatus";
+import "templates/modal";
 
 export module positions {
     let status: HelperStatus;
 
     function onSubmit() {
-        let changed: { [key: string]: boolean } = {};
-        let count: number = 0;
-        $(".input-toggle[data-changed='true']").each(function(index: number, element: HTMLElement) {
-            changed[$(element).data("position")] = <any>$(element).bootstrapSwitch("state");
-            count++;
-        });
-        if (count === 0) {
-            status.error("Please toggle a position before submission.");
-            return;
-        }
-        $.post("/office/post/update-position", {
-            "positions": JSON.stringify(changed)
-        }, function(data) {
+        let $parent : JQuery = $(this).closest(".collapsible-body");
+        let params: any = {
+            "active" : $parent.find("input[data-name='active']").bootstrapSwitch("state"),
+            "open" : $parent.find("input[data-name='open']").bootstrapSwitch("state"),
+            "visible" : $parent.find("input[data-name='visible']").bootstrapSwitch("state"),
+            id : $(this).attr("data-id")
+        };
+        console.log(params);
+        $.post("/office/post/update-position", params, function(data) {
             status.success("Successfully changed positions");
         }).fail(function(data) {
             status.error("Error code " + data.status + " has occurred");
@@ -29,6 +26,6 @@ export module positions {
         $(".input-toggle").bootstrapSwitch().on("switchChange.bootstrapSwitch", function(event: Event, state: string) {
             $(this).attr("data-changed", "true");
         });
-        $("#btn-submit").on("click", onSubmit);
+        $(".btn-submit").on("click", onSubmit);
     });
 }

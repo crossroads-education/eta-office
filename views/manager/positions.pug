@@ -1,18 +1,22 @@
 extends ../include/layout.pug
+include ../templates/modal.pug
+
+mixin input-toggle(position, name, input)
+    div.input-toggle-input
+        span.col-md-10 #{name}
+        - var isChecked = position[name.toLowerCase()] == 1 ? {"checked": "checked"} : {};
+        input.input-toggle(type="checkbox", data-position=position.id, data-name=name.toLowerCase())&attributes(isChecked)
 
 block body
-    div.row
-        each position in positions
-            div.col-xs-6
-                div.row
-                    div.col-xs-6
-                        label.names #{position.name}
-                    div.col-xs-6
-                        - var isChecked = position.open == 1 ? {"checked": "checked"} : {};
-                        input.input-toggle(type="checkbox", data-position=position.name)&attributes(isChecked)
-
     div.text-center#messages
-        button.btn.btn-success.btn-submit#btn-submit Submit
-        br
         span.text-danger#error
         span.text-success#success
+    each position in positions
+        div.row
+            div.col-md-6.col-md-offset-3
+                +collapsible-parent(position.name + " - " + position.category)
+                    +input-toggle(position, "Active")
+                    +input-toggle(position, "Open")
+                    +input-toggle(position, "Visible")
+                    div.text-center
+                        button.btn.btn-success.btn-submit(data-id=position.id) Save
