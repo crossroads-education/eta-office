@@ -26,30 +26,31 @@ block body
                         div.col-xs-4
                             p Position
                 ul#recommendations
-                    li
-                        div.recommendation-container
-                            div.information-container.col-xs-8
-                                div.col-xs-4
-                                    p.recommendee-label  Taylor Swift
-                                div.col-xs-4
-                                    img.recommendee-img(src=baseurl + "img/eye.png")
-                                    span.recommender-label Jack Sparrow
-                                div.col-xs-4
-                                    span.position-label B-Tutor
-                            div.recommendation-action-container.col-xs-4
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/notes.png")
-                                        span Notes
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/report.png")
-                                        span Hiring Report
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/email.png")
-                                        span Email
-                            p.updated Updated: 1/12/17
+                    each row in recommendations
+                        li
+                            div.recommendation-container
+                                div.information-container.col-xs-8
+                                    div.col-xs-4
+                                        p.recommendee-label #{row.recommendee}
+                                    div.col-xs-4
+                                        img.recommendee-img(src=baseurl + "img/eye.png")
+                                        span.recommender-label #{row.recommender}
+                                    div.col-xs-4
+                                        span.position-label #{row.position}
+                                div.recommendation-action-container.col-xs-4
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/notes.png")
+                                            span Notes
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/report.png")
+                                            span Hiring Report
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/email.png")
+                                            span Email
+                                p.updated Updated: #{row.lastUpdated.toLocaleDateString()}
             div.tab-pane.fade.in#applied-container
                 div.information-header-container
                     div.information-header-row
@@ -60,29 +61,30 @@ block body
                         div.col-xs-4
                             p Evaluation Score
                 ul#applications
-                    li
-                        div.recommendation-container
-                            div.information-container.col-xs-8
-                                div.col-xs-4
-                                    p.recommendee-label  Taylor Swift
-                                div.col-xs-4
-                                    p.position-label B-Tutor
-                                div.col-xs-4
-                                    p.eval-label 87/100
-                            div.recommendation-action-container.col-xs-4
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/notes.png")
-                                        span Notes
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/report.png")
-                                        span Hiring Report
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/email.png")
-                                        span Email
-                            p.updated Updated: 1/12/17
+                    each row in applicants
+                        li
+                            div.recommendation-container
+                                div.information-container.col-xs-8
+                                    div.col-xs-4
+                                        p.recommendee-label #{row.name}
+                                    div.col-xs-4
+                                        p.position-label #{row.positions}
+                                    div.col-xs-4
+                                        p.eval-label #{row.evaluationScore} / 100
+                                div.recommendation-action-container.col-xs-4
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/notes.png")
+                                            span Notes
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/report.png")
+                                            span Hiring Report
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/email.png")
+                                            span Email
+                                p.updated Updated: #{row.lastUpdated.toLocaleDateString()}
             div.tab-pane.fade.in#applied-recommended-container
                 div.information-header-container
                     div.information-header-row
@@ -95,29 +97,30 @@ block body
                         div.col-xs-3
                             p Evaluation Score
                 ul#applications-recommendations
-                    li
-                        div.recommendation-container
-                            div.information-container.col-xs-8
-                                div.col-xs-3
-                                    p.recommendee-label  Taylor Swift
-                                div.col-xs-3
-                                    img.recommendee-img(src=baseurl + "img/eye.png")
-                                    span.recommender-label Jack Sparrow
-                                div.col-xs-3
-                                    p.position-label B-Tutor
-                                div.col-xs-3
-                                    p.eval-label 87/100
-                            div.recommendation-action-container.col-xs-4
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/notes.png")
-                                        span Notes
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/report.png")
-                                        span Hiring Report
-                                div.button-container.col-xs-4
-                                    button.btn.btn-default
-                                        img(src=baseurl + "img/email.png")
-                                        span Email
-                            p.updated Updated: 1/12/17
+                    each row in recommendedApplied
+                        li
+                            div.recommendation-container
+                                div.information-container.col-xs-8
+                                    div.col-xs-3
+                                        p.recommendee-label #{row.recommendee}
+                                    div.col-xs-3
+                                        img.recommendee-img(src=baseurl + "img/eye.png")
+                                        span.recommender-label #{row.recommender}
+                                    div.col-xs-3
+                                        p.position-label #{row.positions}
+                                    div.col-xs-3
+                                        p.eval-label #{row.evaluationScore} / 100
+                                div.recommendation-action-container.col-xs-4
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/notes.png")
+                                            span Notes
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/report.png")
+                                            span Hiring Report
+                                    div.button-container.col-xs-4
+                                        button.btn.btn-default
+                                            img(src=baseurl + "img/email.png")
+                                            span Email
+                                p.updated Updated: #{row.lastUpdated.toLocaleDateString()}
