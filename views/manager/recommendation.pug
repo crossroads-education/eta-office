@@ -1,0 +1,123 @@
+extends ../include/layout.pug
+
+block body
+    div#recommend-container
+        ul.nav.nav-tabs#container-tabs
+            li.active
+                a.container-tab(data-toggle="tab" href="#recommended-container")
+                    span Recommended
+            li
+                a.container-tab(data-toggle="tab" href="#applied-container")
+                    span Applied
+            li
+                a.container-tab(data-toggle="tab" href="#applied-recommended-container")
+                    span Recommended + Applied
+            li
+                button.btn.btn-default#manual-hire-button Manual Hire
+                    span.glyphicon.glyphicon-plus(aria-hidden="true")
+        div.tab-content
+            div.tab-pane.fade.in.active#recommended-container
+                div.information-header-container
+                    div.information-header-row
+                        div.col-xs-4
+                            p Name
+                        div.col-xs-4
+                            p Recommended By
+                        div.col-xs-4
+                            p Position
+                ul#recommendations
+                    li
+                        div.recommendation-container
+                            div.information-container.col-xs-8
+                                div.col-xs-4
+                                    p.recommendee-label  Taylor Swift
+                                div.col-xs-4
+                                    img.recommendee-img(src=baseurl + "img/eye.png")
+                                    span.recommender-label Jack Sparrow
+                                div.col-xs-4
+                                    span.position-label B-Tutor
+                            div.recommendation-action-container.col-xs-4
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/notes.png")
+                                        span Notes
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/report.png")
+                                        span Hiring Report
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/email.png")
+                                        span Email
+                            p.updated Updated: 1/12/17
+            div.tab-pane.fade.in#applied-container
+                div.information-header-container
+                    div.information-header-row
+                        div.col-xs-4
+                            p Name
+                        div.col-xs-4
+                            p Position
+                        div.col-xs-4
+                            p Evaluation Score
+                ul#applications
+                    li
+                        div.recommendation-container
+                            div.information-container.col-xs-8
+                                div.col-xs-4
+                                    p.recommendee-label  Taylor Swift
+                                div.col-xs-4
+                                    p.position-label B-Tutor
+                                div.col-xs-4
+                                    p.eval-label 87/100
+                            div.recommendation-action-container.col-xs-4
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/notes.png")
+                                        span Notes
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/report.png")
+                                        span Hiring Report
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/email.png")
+                                        span Email
+                            p.updated Updated: 1/12/17
+            div.tab-pane.fade.in#applied-recommended-container
+                div.information-header-container
+                    div.information-header-row
+                        div.col-xs-3
+                            p Name
+                        div.col-xs-3
+                            p Recommended By
+                        div.col-xs-3
+                            p Position
+                        div.col-xs-3
+                            p Evaluation Score
+                ul#applications-recommendations
+                    li
+                        div.recommendation-container
+                            div.information-container.col-xs-8
+                                div.col-xs-3
+                                    p.recommendee-label  Taylor Swift
+                                div.col-xs-3
+                                    img.recommendee-img(src=baseurl + "img/eye.png")
+                                    span.recommender-label Jack Sparrow
+                                div.col-xs-3
+                                    p.position-label B-Tutor
+                                div.col-xs-3
+                                    p.eval-label 87/100
+                            div.recommendation-action-container.col-xs-4
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/notes.png")
+                                        span Notes
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/report.png")
+                                        span Hiring Report
+                                div.button-container.col-xs-4
+                                    button.btn.btn-default
+                                        img(src=baseurl + "img/email.png")
+                                        span Email
+                            p.updated Updated: 1/12/17

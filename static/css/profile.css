@@ -1,37 +1,270 @@
-div#errors {
-    font-weight: bold;
-    color: red;
+@media (min-width: 992px){
+    #profile-container {
+        width: 970px;
+    }
 }
 
-div#success {
-    font-weight: bold;
-    color: green;
+@media (min-width: 768px){
+    #profile-container {
+        width: 750px;
+    }
 }
 
-.bold {
-    font-weight: bold;
+#workstudy-container {
+    font-size: 14px;
+    color: white;
+    padding-left: 0px;
+    margin-bottom: 22px;
 }
 
-label {
-    cursor: default !important;
-}
-
-select, input[type="checkbox"], .slider-handle {
-    cursor: pointer !important;
-}
-
-.info-field {
-    max-width: 30%;
-}
-
-select.info-field {
-    margin-bottom: 15px;
-}
-
-#container-switch .row {
+#schedule-description {
     margin-bottom: 10px;
 }
 
-#container-switch .row > span {
+#hoodie-container {
+    margin-bottom: 20px;
+}
+
+.radio-button-inactive {
+    opacity: .5;
+}
+
+.radio-size-container {
+    padding-left: 5px;
+}
+
+.size-label {
+    font-size: 14px;
+    color: white;
+    padding-left: 2px;
+    font-style: italic;
+}
+
+#preferences-container {
     padding-left: 0px;
+}
+
+#preferences-container .reminder-text {
+    padding: 0 0 0 1px;
+}
+
+#apparel-container {
+    padding-left: 0px;
+}
+
+#submission-container {
+    margin-top: 15px;
+    padding: 10px 20px 10px 20px;
+}
+
+.btn-submission {
+    height: 50px;
+    background-color: rgba(255,255,255,.3);
+    border-color: transparent;
+    width: 160px;
+    border-radius: 0px;
+}
+
+.btn-submission:hover {
+    border-color: transparent;
+    background-color: rgba(255,255,255,.5)
+}
+
+input[type="radio"] {
+    display: none;
+}
+
+input[type="radio"] + label {
+    color: white;
+    font-size:14px;
+}
+
+#workstudy-resources {
+    font-size: 14px;
+    font-style: italic;
+    color: rgba(255,255,255,.5);
+    bottom: 5px;
+}
+
+#workstudy-resources a{
+    color: rgba(255,255,255,1);
+}
+
+input[type="radio"] + label span {
+    display:inline-block;
+    width: 10px;
+    height: 10px;
+    margin:-1px 4px 0 0;
+    vertical-align:middle;
+    cursor:pointer;
+    -moz-border-radius:  50%;
+    border-radius:  50%;
+    border: 1px solid white;
+    color: white;
+}
+
+#profile-notes {
+    resize: none;
+    background-color: rgba(255,255,255,.3);
+    border-width: 0px;
+    border-color: transparent;
+    color: white;
+    margin-bottom: 16px;
+}
+
+#hoodie-container {
+    margin-bottom: 20px;
+}
+
+#workstudy-container label {
+    margin: 0 0 0 0;
+}
+
+label[for="radio-ineligible"] {
+    padding-left: 5px;
+}
+
+#apparel-container label {
+    margin: 0 0 0 8px;
+}
+
+input[type="radio"] + label span {
+     background-color: transparent;
+}
+
+input[type="radio"]:checked + label span{
+     background-color: white;
+}
+
+input[type="radio"] + label span,
+input[type="radio"]:checked + label span {
+  -webkit-transition:background-color 0.2s linear;
+  -o-transition:background-color 0.2s linear;
+  -moz-transition:background-color 0.2s linear;
+  transition:background-color 0.2s linear;
+}
+
+#profile-container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#profile-container .title-container {
+    margin-bottom: 15px !important;
+}
+
+#emergency-contact-container {
+    margin-top: 15px;
+}
+
+#contact-container {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#ref-container p {
+    background-color: rbga(0,0,0,0.4);
+    padding-left: 0px;
+}
+
+#additional-selections-container a {
+    opacity: 1 !important;
+    color: white;
+    display: inline;
+}
+
+.reminder-text {
+    font-size: 14px;
+    opacity: .5;
+    text-align: left;
+    font-style: italic;
+}
+
+body {
+    background: linear-gradient(to right bottom, #009EE2, #662382 70%) fixed !important;
+}
+
+.field-header {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 5px 0 5px 0;
+}
+
+.title-container {
+    background-color: rgba(255,255,255,.4);
+    height: 40px;
+}
+
+.element-container {
+    background-color: rgba(255,255,255,.2);
+    padding-left: 15px;
+    padding-right: 0px;
+    overflow: auto;
+}
+
+.info-field {
+    background-color: rgba(255,255,255,.4) !important;
+    border-color: transparent !important;
+    color: white !important;
+    padding: 0 0 8 0 !important;
+    height: 24px !important;
+    width: 190px !important;
+}
+
+.field-image-container {
+    padding: 15px 0 0 0;
+}
+
+.field-image {
+    max-height: 21px;
+    max-width: 21px;
+    float: left;
+}
+
+.input-label {
+    font-weight: 600;
+    max-width: 190px;
+}
+
+.input-label:hover {
+    cursor: default;
+}
+
+.input-container {
+    max-width: 190px;
+}
+
+.header-text {
+    top: 50%;
+    margin-left: 30px;
+    font-size: 20px;
+    color: white;
+}
+
+
+
+#extra-container {
+    padding-right: 0px;
+}
+
+hr {
+    opacity: .5;
+}
+
+.body-text {
+    color: white;
+    margin-bottom: 0px;
+}
+
+.break {
+    text-align: center;
+    margin: 0 0 20px 0 !important;
+    border-color: #C7C7D1;
+}
+
+.break-longer {
+    text-align: center;
+    margin: 0 0 5px 0 !important;
+    border-color: #C7C7D1;
+    width: 360px;
 }

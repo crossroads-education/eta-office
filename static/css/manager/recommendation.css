@@ -1,0 +1,165 @@
+body {
+    background: linear-gradient(-30deg, #662381, #009DE1 110%) fixed;
+}
+
+@media (min-width: 1200px) {
+    #recommend-container {
+        width: 1020px;
+        margin-right: auto;
+        margin-left: auto;
+
+    }
+}
+
+#recommend-container {
+    background-color: rgba(255,255,255,0.2);
+}
+
+#container-tabs {
+    padding-left: 35px;
+    border-bottom-color: transparent !important;
+}
+
+#footer-v1 {
+    padding-bottom: 15px !important;
+}
+
+.button-container span {
+    color: white;
+    bottom: 5px;
+}
+
+.information-header-container {
+    background-color: rgba(255,255,255,0.2);
+    height: 30px;
+    border-bottom: white 1px solid;
+    padding-top: 5px;
+}
+
+.button-container button {
+    background-color: rgba(255,255,255,0.2);
+    border: transparent;
+    vertical-align: bottom;
+    font-size: 11px;
+    width: 90%;
+    height: 52px;
+    border-radius: 0px;
+    display: flex;
+    flex-flow: column wrap-reverse;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 5px;
+}
+
+#container-tabs a {
+    padding-top: 20px;
+}
+
+.button-container button:hover {
+    background-color: rgba(255,255,255,0.3);
+}
+
+
+.recommendee-img {
+    margin: 0 5px 4px 0;
+    cursor: pointer;
+}
+
+.button-container button:active {
+    background-color: rgba(255,255,255,0.5);
+    border: transparent !important;
+}
+
+.button-container img {
+    margin: auto;
+}
+
+.container-tab {
+    border-radius: 0px !important;
+    color: rgba(255,255,255,.5);
+    height: 52px;
+    font-size: 15px !important;
+    padding-right: 30px !important;
+    padding-left: 30px !important;
+}
+
+ul {
+    padding-left: 0px;
+}
+
+.recommendation-container {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding-left: 20px;
+    height: 82px;
+    padding-top: 15px;
+    border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+
+
+.updated {
+    font-size: 10px;
+    float: right;
+    color: rgba(255,255,255,0.75);
+    margin-right: 28px;
+}
+
+.descriptor-label {
+    font-size: 12px;
+}
+
+li.active .container-tab {
+    padding: 10px 20px 10px 20px;
+    color: white !important;
+    border-color: transparent !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+li a.container-tab:hover {
+    color: white !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-color: transparent !important;
+}
+
+.information-header-row {
+    width: 685px;
+    padding-left: 20px;
+    color: white;
+}
+
+.button-container {
+    padding: 0px;
+}
+
+.information-container {
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-top: 15px;
+}
+
+#container-tabs li:last-child {
+    float: right;
+}
+
+#manual-hire-button {
+    margin-top: 5px;
+    background-color: transparent;
+    color: rgba(255,255,255,0.5);
+    border: transparent;
+    border-radius: 0px;
+    height: 33px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 15px;
+}
+
+#manual-hire-button span {
+    font-size: 24px;
+    margin-left: 10px;
+    top: 3px;
+}
+
+
+li {
+    list-style-type: none !important;
+}
