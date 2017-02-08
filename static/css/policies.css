@@ -46,7 +46,7 @@
     padding-bottom: 8px;
 }
 
-li {
+.collapsible-body li {
     list-style: disc;
 }
 
