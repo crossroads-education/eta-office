@@ -4,7 +4,7 @@ import * as express from "express";
 
 export class Model implements eta.Model {
     public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
-        if (!eta.params.test(req.body, ["id", "positions", "mentor", "allowances"])) {
+        if (!eta.params.test(req.body, ["id", "positions", "mentor", "allowances", "permissions"])) {
             callback({ errcode: eta.http.InvalidParameters });
             return;
         }
@@ -13,6 +13,7 @@ export class Model implements eta.Model {
         }
         let positions: { id: string, start: string, end: string }[] = JSON.parse(req.body.positions);
         let allowances: { [key: string]: boolean } = JSON.parse(req.body.allowances);
+        let permissions: string[] = JSON.parse(req.body.permissions);
         let moreSql: string = "(?, ?, ?, ?),";
         let params: string[] = [];
         for (let i: number = 0; i < positions.length; i++) {
@@ -57,7 +58,26 @@ export class Model implements eta.Model {
                         callback({ errcode: eta.http.InternalError });
                         return;
                     }
-                    callback({ raw: "true" });
+                    let moreSql: string = "(?, ?),";
+                    params = [];
+                    for (let i: number = 0; i < permissions.length; i++) {
+                        params.push(req.body.id, permissions[i]);
+                    }
+                    moreSql = moreSql.repeat(params.length / 2);
+                    if (permissions.length === 0) {
+                        // avoid half-formed SQL query
+                        return callback({"raw": "true"});
+                    }
+                    sql = `INSERT IGNORE INTO UserPermission (user, permission)
+                            VALUES ${moreSql.substring(0, moreSql.length - 1)}`;
+                    eta.db.query(sql, params, (err: eta.DBError, rows: any[]) => {
+                        if (err) {
+                            eta.logger.dbError(err);
+                            callback({ errcode: eta.http.InternalError });
+                            return;
+                        }
+                        callback({ raw: "true" });
+                    });
                 });
             });
         });

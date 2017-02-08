@@ -1,7 +1,6 @@
 extends ../include/layout.pug
 
 block body
-    pre !{JSON.stringify(session)}
     table.table.table-striped.table-hover#table-commits
         thead
             tr
@@ -15,3 +14,5 @@ block body
                     td.cell-date #{date.toLocaleString()}
                     td.cell-message #{commit.message}
                     td.cell-author #{commit.author_name}
+    if permissionsUser.has("access/system/session")
+        pre !{JSON.stringify(session, null, '\t')}

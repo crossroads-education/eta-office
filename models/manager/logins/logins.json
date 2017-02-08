@@ -1,3 +1,4 @@
 {
+  "pageTitleName": "Login Credentials",
   "permissions": ["access/manager/logins"]
 }

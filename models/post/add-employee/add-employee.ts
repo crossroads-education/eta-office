@@ -15,9 +15,10 @@ export class Model implements eta.Model {
             }
             // some columns are not explicitly listed because they are implicitly null
             let sql: string = `
-                INSERT IGNORE INTO Employee
+                INSERT INTO Employee
                 (id, current, international, maxHours, minHours, shirt, hoodie, mentor, workStudy)
-                VALUES(?, 1, 0, 12, 27, '', '', -1, 0)`;
+                VALUES(?, 1, 0, 12, 27, '', '', -1, 0)
+                ON DUPLICATE KEY UPDATE current = 1`;
             eta.db.query(sql, [person.id], (err: eta.DBError, rows: any[]) => {
                 if (err) {
                     eta.logger.dbError(err);

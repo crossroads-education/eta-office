@@ -110,7 +110,8 @@ export class Model implements eta.Model {
                         EmployeeAllowance.hw3,
                         Person.firstName,
                         Person.lastName,
-                        Person.username
+                        Person.username,
+                        GROUP_CONCAT(DISTINCT UserPermission.permission SEPARATOR ',') AS permissions
                     FROM
                         EmployeePosition
                             LEFT JOIN Employee ON
@@ -124,6 +125,8 @@ export class Model implements eta.Model {
                                 EmployeePosition.position = Position.id
                             LEFT JOIN Center ON
                                 Position.center = Center.id
+                            LEFT JOIN UserPermission ON
+                                Employee.id = UserPermission.user
                     WHERE
                         ${whereSql} AND
                         EmployeePosition.start <= CURDATE() AND
@@ -148,6 +151,11 @@ export class Model implements eta.Model {
                     let employeeIDs: string[] = [];
                     for (let i: number = 0; i < employeeRows.length; i++) {
                         employeeIDs.push(employeeRows[i].id);
+                        if (employeeRows[i].permissions) {
+                            employeeRows[i].permissions = employeeRows[i].permissions.split(",");
+                        } else {
+                            employeeRows[i].permissions = [];
+                        }
                     }
                     sql = `
                         SELECT

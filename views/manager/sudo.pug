@@ -1,0 +1,14 @@
+extends ../include/layout.pug
+
+block body
+    form(action=baseurl + "post/set-sudo", method="POST")
+        div
+            p.label-description Now logged in as:&nbsp;
+                strong #{username}
+        div
+            p This page allows managers and developers to act as another user temporarily.
+        div.row.container-username
+            div.col-xs-2.col-xs-offset-5
+                input.form-control(type="text", name="username", placeholder="Username")
+        div
+            button.btn.btn-success(type="submit") Submit

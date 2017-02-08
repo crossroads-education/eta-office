@@ -2,5 +2,6 @@
   "models": [
     "/templates/select/center"
   ],
+  "pageTitleName": "Center Management",
   "permissions": ["access/manager/centers"]
 }

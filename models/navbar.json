@@ -6,16 +6,16 @@
   "Scheduling": {
     "Master Schedule": {
       "permission": "access/schedule/master",
-      "url": "schedule"
+      "url": "schedule/master"
     },
     "Personal Availability": {
       "permission": "access/schedule/availability",
-      "url": "availability"
+      "url": "schedule/availability"
     }
   },
   "Reference": {
     "Policies": {
-      "url": "https://mac.iupui.edu/office/policy/"
+      "url": "policies"
     },
     "Contact List": {
       "permission": "access/contact",
@@ -64,6 +64,10 @@
       "Reporting Tools": {
         "permission": "access/manager/reports",
         "url": "manager/reports"
+      },
+      "Sudo Utility": {
+        "permission": "access/manager/sudo",
+        "url": "manager/sudo"
       }
     }
   },

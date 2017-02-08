@@ -1,0 +1,37 @@
+extends ../desktop.pug
+
+block filterHead
+    tr.schedule-label-row.schedule-filter-row
+        th(colspan="6")
+        th(colspan="8")
+            select.schedule-hash-input.schedule-filter-select2(data-name="position-names", data-placeholder="Position", multiple, style="width: 100%;")
+                each position in positionNames
+                    option(value=position) #{position}
+        th(colspan="8")
+            select.schedule-hash-input.schedule-filter-select2(data-name="position-categories", data-placeholder="Category", multiple, style="width: 100%;")
+                each category in positionCategories
+                    option(value=category) #{category}
+        if canEdit
+            if currentFilters.edit
+                th(colspan="8")
+                    select.schedule-filter-select2.schedule-palette-input(style="width: 100%;")
+                        option(value="AV") Clear
+                        each legendItem in legendData
+                            - if (legendItem.code != "AV" && legendItem.code != "UV")
+                                option(value=legendItem.code) #{legendItem.name}
+            - else
+                th(colspan="8")
+                    button.btn.btn-default.schedule-filter-input(data-name="edit", value="yes", style="width: 100%;") Manager Access
+
+block preFilter
+    th(colspan="8")
+        select.schedule-filter-input.schedule-filter-select2(data-name="day", style="width: 100%;")
+            each day, index in daysOfWeek
+                - var selected = index == currentFilters.day ? {"selected": "selected"} : {}
+                option(value=index)&attributes(selected) #{day}
+
+block additionalFilter
+    th(colspan="4")
+    th(colspan="4")
+        if canEdit && currentFilters.edit
+            button.btn.btn-success.btn-submit(style="width: 100%;") Submit

@@ -47,6 +47,22 @@ export module employees {
         $("#modal-positions").append($row);
     }
 
+    function addPermissionRow(permission: string): void {
+        let $row = $("<tr>");
+        $row.addClass("permission-row");
+        $row.append($("<td>").addClass("permission-name").text(permission));
+        let $deleteButton = $("<span>").addClass("glyphicon glyphicon-minus-sign");
+        $deleteButton.on("click", function(): void {
+            $.post("/office/post/remove-permission", {
+                id: $("#modal-positions").attr("data-employee"),
+                permission: permission
+            });
+            $row.remove();
+        });
+        $row.append($("<td>").addClass("permission-remove").append($deleteButton));
+        $("#modal-permissions").append($row);
+    }
+
     function addLogRow(log: Log): void {
         let $row: JQuery = $("<tr>");
         let timestamp: Date = new Date(log.timestamp);
@@ -66,13 +82,13 @@ export module employees {
     }
 
     function onEmployeeOpen(): void {
-        $("#modal-positions").html("");
-        $("#table-log").html("");
+        $("#modal-positions, #modal-permissions, #table-log").html("");
         let $this: JQuery = $(this);
         let $data: JQuery = $this.find(".employee-data");
         let name: string = $this.find(".employee-name").text();
         let photoUrl: string = $this.find(".employee-photo").attr("src");
         let positions: any[] = $data.data("positions");
+        let permissions: string[] = $data.data("permissions");
         let allowances: { [key: string]: boolean } = $data.data("allowances");
         let userid: string = $this.attr("data-id");
         $("#modal-title").text(name);
@@ -98,6 +114,9 @@ export module employees {
         for (let i: number = 0; i < positions.length; i++) {
             addPositionRow(positions[i]);
         }
+        for (let i: number = 0; i < permissions.length; i++) {
+            addPermissionRow(permissions[i]);
+        }
         $.post("/office/post/get-log", {
             "userid": userid
         }, function(log) {
@@ -119,6 +138,10 @@ export module employees {
             "name": $selected.data("name"),
             "category": $selected.data("category")
         });
+    }
+
+    function onPermissionAdd() {
+        addPermissionRow($("#input-permission").val());
     }
 
     function onSave() {
@@ -144,6 +167,10 @@ export module employees {
                 "end": endDate
             });
         });
+        let permissions: string[] = [];
+        $("#modal-permissions .permission-row").each(function(index: number, element: HTMLElement) {
+            permissions.push($(this).find(".permission-name").text());
+        });
         let allowances: { [key: string]: boolean } = {};
         $("input.modal-allowance").each(function(index: number, element: HTMLElement) {
             let $this: JQuery = $(this);
@@ -161,7 +188,8 @@ export module employees {
             "id": $("#modal-positions").attr("data-employee"),
             "positions": JSON.stringify(positions),
             "allowances": JSON.stringify(allowances),
-            "mentor": mentor
+            "mentor": mentor,
+            "permissions": JSON.stringify(permissions)
         }, function(data) {
             modalStatus.success("Successfully updated employee data.");
         }).fail(function(data) {
@@ -208,6 +236,7 @@ export module employees {
         $("select.input-filter").on("change", onFilter);
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
+        $("#btn-permission-add").on("click", onPermissionAdd);
         $("#btn-save").on("click", onSave);
         $("#input-log-message").on("keyup", function(evt: any) {
             if (evt.which == 13) {

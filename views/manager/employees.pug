@@ -53,7 +53,8 @@ mixin employee-block(employee)
                 data-mentor=employee.mentor,
                 data-allowances=JSON.stringify(allowances),
                 data-notes=employee.notes,
-                data-timesheet=JSON.stringify(employee.timesheet))
+                data-timesheet=JSON.stringify(employee.timesheet),
+                data-permissions=JSON.stringify(employee.permissions))
     br
 
 block body
@@ -143,6 +144,16 @@ block body
                         textarea(disabled)#output-notes
                     +collapsible-parent("Timesheet")
                         +table-timesheet([], true)
+                    +collapsible-parent("Permissions")
+                        table.table.table-striped.table-hover
+                            thead
+                                tr
+                                    th Permission Name
+                            tbody#modal-permissions
+                        div.col-xs-5
+                            input.form-control#input-permission(type="text")
+                        div
+                            button.btn.btn-success#btn-permission-add Add Permission
                 div.modal-footer
                     //- Part of a nametag generation system that's not finished
                     //- form#form-nametag(method="POST", action="/office/post/generate-nametag")

@@ -1,1 +1,5 @@
-{}
+{
+  "globalDependencies": {
+    "marked": "registry:dt/marked#0.0.0+20160510002910"
+  }
+}

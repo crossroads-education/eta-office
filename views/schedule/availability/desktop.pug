@@ -1,0 +1,9 @@
+extends ../desktop.pug
+
+block additionalFilter
+    th(colspan="8")
+        select.schedule-filter-select2.schedule-palette-input(style="width: 100%;")
+            option(value="AV") Available
+            option(value="UV") Unavailable
+    th(colspan="4")
+        button.btn.btn-success.btn-submit(style="width: 100%;") Submit
