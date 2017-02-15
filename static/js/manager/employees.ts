@@ -94,7 +94,7 @@ export module employees {
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
         $("#modal-positions").attr("data-employee", userid);
-        $("#input-nametag-id").val(userid);
+        $("#input-nametag-name").val(name);
         $("#output-notes").text($data.attr("data-notes"));
         let timesheetRows: timesheet.TimesheetRow[] = $data.data("timesheet");
         timesheet.table.fnClearTable();

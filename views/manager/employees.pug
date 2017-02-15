@@ -156,9 +156,9 @@ block body
                             button.btn.btn-success#btn-permission-add Add Permission
                 div.modal-footer
                     //- Part of a nametag generation system that's not finished
-                    //- form#form-nametag(method="POST", action="/office/post/generate-nametag")
-                    //-     input(type="hidden", name="userid")#input-nametag-id
-                    //-     button.btn.btn-warning Generate Nametag
+                    form#form-nametag(method="POST", action="/office/post/generate-nametag")
+                          input(type="hidden", name="name", )#input-nametag-name
+                          button.btn.btn-warning Generate Nametag
                     button.btn.btn-primary#btn-save Save Changes
     div
         div.col-xs-4.employee-column

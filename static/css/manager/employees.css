@@ -81,10 +81,10 @@ span.employee-name.modal-title {
     font-size: 1.25em;
 }
 
-#form-nametag {
+/*#form-nametag {
     float: left;
     display: inline-block;
-}
+}*/
 
 .permission-remove {
     text-align: right;
