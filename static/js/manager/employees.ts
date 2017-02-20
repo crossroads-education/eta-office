@@ -96,6 +96,7 @@ export module employees {
         $("#modal-positions").attr("data-employee", userid);
         $("#input-nametag-name").val(name);
         $("#output-notes").text($data.attr("data-notes"));
+        $("#input-file-id").val(userid)
         let timesheetRows: timesheet.TimesheetRow[] = $data.data("timesheet");
         timesheet.table.fnClearTable();
         for (let i: number = 0; i < timesheetRows.length; i++) {
@@ -231,12 +232,17 @@ export module employees {
         });
     }
 
+    function onUploadFile() {
+        //upload a file xP
+    }
+
     $(document).ready(function() {
         modalStatus = new HelperStatus("#modal-success", "#modal-error");
         $("select.input-filter").on("change", onFilter);
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-permission-add").on("click", onPermissionAdd);
+        // $("btn-upload-file").on("click", onUploadFile);
         $("#btn-save").on("click", onSave);
         $("#input-log-message").on("keyup", function(evt: any) {
             if (evt.which == 13) {

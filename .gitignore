@@ -3,3 +3,4 @@
 /typings/
 *.js
 *.js.map
+/static/files/employee-files

@@ -93,3 +93,7 @@ span.employee-name.modal-title {
 .permission-remove span {
     cursor: pointer;
 }
+
+#upload-employee-file {
+    float: right;
+}
