@@ -7,11 +7,11 @@ import ScheduleRow from "../../../../lib/interfaces/ScheduleRow";
 
 export class Model implements eta.Model {
     public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
-        // let userid: string = req.session["userid"];
-        // if (req.query.userid) {
-        //     userid = req.query.userid;
-        // }
-        let options: ScheduleFilterOptions = HelperSchedule.getFilterOptions(req);
+        let userid: string = req.session["userid"];
+        if (req.query.userid) {
+            userid = req.query.userid;
+        }
+        let options: ScheduleFilterOptions = HelperSchedule.getFilterOptions(req, userid);
         eta.center.getLongestHoursForWeek(options.term, (err: Error, hours: eta.HoursOfOperation) => {
             if (err) {
                 eta.logger.error(err);

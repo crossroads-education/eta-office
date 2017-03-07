@@ -50,7 +50,9 @@ block body
                 each row in scheduleRows
                     - if (row.dayTotalHours > 0 || canEdit)
                         tr.schedule-row.schedule-row-filterable(data-id=row.id, data-position-names=JSON.stringify(row.positionNames), data-position-categories=JSON.stringify(row.positionCategories))
-                            td.schedule-name-cell(colspan="5") #{row.firstName} #{row.lastName}
+                            td.schedule-name-cell(colspan="5")
+                                block nameCell
+                                    | #{row.firstName} #{row.lastName}
                             td.schedule-total-cell(colspan="1", title="Weekly Total Hours") #{row.weekTotalHours}
                             each cell in row.cells
                                 -
