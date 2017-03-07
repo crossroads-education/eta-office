@@ -22,6 +22,7 @@
     }
   ],
   "dependencies": {
+    "canvas": "^1.6.3",
     "eta-lib": "git+https://git@github.com/crossroads-education/eta-lib.git",
     "jimp": "^0.2.27",
     "marked": "^0.3.6",
