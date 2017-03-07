@@ -1,5 +1,9 @@
 {
   "globalDependencies": {
+    "es2015-promise": "registry:env/es2015-promise#1.0.0+20160526151700",
     "marked": "registry:dt/marked#0.0.0+20160510002910"
+  },
+  "dependencies": {
+    "jimp": "registry:npm/jimp#0.2.27+20161128202008"
   }
 }
