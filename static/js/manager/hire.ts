@@ -103,7 +103,8 @@ export module hire {
         $("#modal-positions").html("");
         $("#modal").attr("data-id", $row.data("id"));
         $("#modal-title").text($row.find(".cell-first-name").text() + " " + $row.find(".cell-last-name").text());
-        $("#input-notes").html($row.data("notes"));
+        let notes: string = $row.data("notes");
+        $("#input-notes").html(notes ? notes : "");
         let positions: any[] = $row.data("positions");
         for (let i: number = 0; i < positions.length; i++) {
             let $positionRow: JQuery = $("<tr>");
