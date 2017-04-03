@@ -32,6 +32,7 @@ block body
             option(value="studentsection") Student Enrollment
             option(value="deviation") Visit Deviation
             option(value="visits-center") Visits By Center
+            option(value="course-enrollment") Enrollment by Courses
     +report-section("schedule")
         h3 Get Scheduled Hours Per Employee
         div.section-input
@@ -91,6 +92,14 @@ block body
                 +select-term()
             div.section-divider
                 +select-physical-center()
+            +report-submit()
+    +report-section("course-enrollment")
+        h3 Get Course Enrollment Counts
+        div.section-input
+            div.section-divider
+                +select-term()
+            div.section-divider
+                select.border-rounded.keep-caret.report-select2#select-enrollment-courses(data-name="courses", data-placeholder="Courses", multiple, style="width: 25%;", data-url="/office/post/get-courses")
             +report-submit()
     //- +report-section("examjam")
     //-     h3 Get Exam Jam Visits
