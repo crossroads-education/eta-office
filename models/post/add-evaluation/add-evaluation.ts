@@ -5,7 +5,6 @@ import * as express from "express";
 export class Model implements eta.Model {
     public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
         if (!eta.params.test(req.body, ["userid", "level", "date", "score"])) {
-            eta.logger.json(req.body);
             callback({ errcode: eta.http.InvalidParameters });
             return;
         }

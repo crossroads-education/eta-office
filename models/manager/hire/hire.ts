@@ -111,6 +111,7 @@ export class Model implements eta.Model {
                             return;
                         }
                         let terms: eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
+                        sql = ``; // TODO: finish
                         callback({
                             "applicants": applicantRows,
                             "currentTerm": req.query.term,
