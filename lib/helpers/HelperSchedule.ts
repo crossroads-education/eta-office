@@ -29,18 +29,20 @@ export default class HelperSchedule {
         }
     }
 
-    public static getFilterOptions(req: any, userid: string = req.session["userid"], bodyName: string = "query"): ScheduleFilterOptions {
+    public static getFilterOptions(req: any, userid?: string, bodyName: string = "query"): ScheduleFilterOptions {
+        if (!userid) {
+            userid = req.session["userid"];
+        }
         let defaults: ScheduleFilterOptions = {
             "day": new Date().getDay(),
             "term": eta.term.getCurrent().id,
             "edit": false,
             "employee": userid
         };
-        req[bodyName] = eta.object.extend(req[bodyName], defaults);
-        req[bodyName].edit = req[bodyName].edit;
-        req[bodyName].day = Number(req[bodyName].day);
-        req[bodyName].term = Number(req[bodyName].term);
-        return req[bodyName];
+        let options: ScheduleFilterOptions = eta.object.extend(eta.object.copy(req[bodyName]), defaults);
+        options.day = Number(options.day);
+        options.term = Number(options.term);
+        return options;
     }
 
     public static fillRow(row: ScheduleRow, start: Date, end: Date, inactiveStart?: Date, inactiveEnd?: Date): ScheduleRow {
