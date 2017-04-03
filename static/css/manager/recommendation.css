@@ -2,12 +2,39 @@ body {
     background: linear-gradient(-30deg, #662381, #009DE1 110%) fixed;
 }
 
+#container-hiring-bar {
+    background-color: rgba(255,255,255,0.5);
+    height: 50px;
+    padding: 10px 20px 10px 20px;
+    margin-bottom: 10px;
+}
+
+#container-hiring-bar span {
+    float: left;
+    color: white;
+    font-size: 21px;
+}
+
+#search-bar {
+    float: right;
+    border-color: transparent;
+    background-color: rgba(255,255,255,0.3);
+    height: 30px;
+    color: white;
+}
+
 @media (min-width: 1200px) {
     #recommend-container {
         width: 1020px;
         margin-right: auto;
         margin-left: auto;
 
+    }
+
+    #container-hiring-bar {
+        width: 1020px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
@@ -16,7 +43,9 @@ body {
 }
 
 #container-tabs {
-    padding-left: 35px;
+
+    padding: 10px 0 0 35px;
+    height: 51px;
     border-bottom-color: transparent !important;
 }
 
@@ -52,8 +81,11 @@ body {
 }
 
 #container-tabs a {
-    padding-top: 20px;
+    height: 41px;
+    padding: 15px 30px 6px 30px;
+
 }
+
 
 .button-container button:hover {
     background-color: rgba(255,255,255,0.3);
@@ -134,7 +166,7 @@ li a.container-tab:hover {
 .information-container {
     padding-left: 0px;
     padding-right: 0px;
-    margin-top: 15px;
+    margin: 0 auto;
 }
 
 #container-tabs li:last-child {
@@ -142,19 +174,17 @@ li a.container-tab:hover {
 }
 
 #manual-hire-button {
-    margin-top: 5px;
+    margin: 5px 0 10px 0;
     background-color: transparent;
     color: rgba(255,255,255,0.5);
     border: transparent;
     border-radius: 0px;
     height: 33px;
     float: right;
-    margin-right: 10px;
-    margin-top: 15px;
 }
 
 #manual-hire-button span {
-    font-size: 24px;
+    font-size: 20px;
     margin-left: 10px;
     top: 3px;
 }

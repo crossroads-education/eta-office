@@ -83,11 +83,26 @@ export class Model implements eta.Model {
                 return;
             }
             let signature: string = this.generateSignature(rows[0]);
+            eta.logger.trace(rows[0].shirt);
+            eta.logger.trace(rows[0].hoodie);
             let env: { [key: string]: any } = {
                 "employee": rows[0],
                 "minHours": 12,
                 "maxHours": 27,
-                "shirtSizes": ["S", "M", "L", "XL", "XXL", "XXXL"],
+                "shirtSizes": {
+                    "S": "Small",
+                    "M": "Medium",
+                    "L": "Large",
+                    "XL": "XLarge",
+                    "XXL": "XXLarge"
+                },
+                "hoodieSizes":{
+                    "S": "Small",
+                    "M": "Medium",
+                    "L": "Large",
+                    "XL": "XLarge",
+                    "XXL": "XXLarge"
+                },
                 "signature": signature
             };
             callback(env);

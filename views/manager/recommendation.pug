@@ -1,126 +1,137 @@
 extends ../include/layout.pug
 
 block body
-    div#recommend-container
-        ul.nav.nav-tabs#container-tabs
-            li.active
-                a.container-tab(data-toggle="tab" href="#recommended-container")
-                    span Recommended
-            li
-                a.container-tab(data-toggle="tab" href="#applied-container")
-                    span Applied
-            li
-                a.container-tab(data-toggle="tab" href="#applied-recommended-container")
-                    span Recommended + Applied
-            li
-                button.btn.btn-default#manual-hire-button Manual Hire
-                    span.glyphicon.glyphicon-plus(aria-hidden="true")
-        div.tab-content
-            div.tab-pane.fade.in.active#recommended-container
-                div.information-header-container
-                    div.information-header-row
-                        div.col-xs-4
-                            p Name
-                        div.col-xs-4
-                            p Recommended By
-                        div.col-xs-4
-                            p Position
-                ul#recommendations
-                    each row in recommendations
-                        li
-                            div.recommendation-container
-                                div.information-container.col-xs-8
-                                    div.col-xs-4
-                                        p.recommendee-label #{row.recommendee}
-                                    div.col-xs-4
-                                        img.recommendee-img(src=baseurl + "img/eye.png")
-                                        span.recommender-label #{row.recommender}
-                                    div.col-xs-4
-                                        span.position-label #{row.position}
-                                div.recommendation-action-container.col-xs-4
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/notes.png")
-                                            span Notes
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/report.png")
-                                            span Hiring Report
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/email.png")
-                                            span Email
-                                p.updated Updated: #{row.lastUpdated.toLocaleDateString()}
-            div.tab-pane.fade.in#applied-container
-                div.information-header-container
-                    div.information-header-row
-                        div.col-xs-4
-                            p Name
-                        div.col-xs-4
-                            p Position
-                        div.col-xs-4
-                            p Evaluation Score
-                ul#applications
-                    each row in applicants
-                        li
-                            div.recommendation-container
-                                div.information-container.col-xs-8
-                                    div.col-xs-4
-                                        p.recommendee-label #{row.name}
-                                    div.col-xs-4
-                                        p.position-label #{row.positions}
-                                    div.col-xs-4
-                                        p.eval-label #{row.evaluationScore} / 100
-                                div.recommendation-action-container.col-xs-4
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/notes.png")
-                                            span Notes
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/report.png")
-                                            span Hiring Report
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/email.png")
-                                            span Email
-                                p.updated Updated: #{row.lastUpdated.toLocaleDateString()}
-            div.tab-pane.fade.in#applied-recommended-container
-                div.information-header-container
-                    div.information-header-row
-                        div.col-xs-3
-                            p Name
-                        div.col-xs-3
-                            p Recommended By
-                        div.col-xs-3
-                            p Position
-                        div.col-xs-3
-                            p Evaluation Score
-                ul#applications-recommendations
-                    each row in recommendedApplied
-                        li
-                            div.recommendation-container
-                                div.information-container.col-xs-8
-                                    div.col-xs-3
-                                        p.recommendee-label #{row.recommendee}
-                                    div.col-xs-3
-                                        img.recommendee-img(src=baseurl + "img/eye.png")
-                                        span.recommender-label #{row.recommender}
-                                    div.col-xs-3
-                                        p.position-label #{row.positions}
-                                    div.col-xs-3
-                                        p.eval-label #{row.evaluationScore} / 100
-                                div.recommendation-action-container.col-xs-4
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/notes.png")
-                                            span Notes
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/report.png")
-                                            span Hiring Report
-                                    div.button-container.col-xs-4
-                                        button.btn.btn-default
-                                            img(src=baseurl + "img/email.png")
-                                            span Email
-                                p.updated Updated: #{row.lastUpdated.toLocaleDateString()}
+    div#content-container
+        div#container-hiring-bar
+            span Hiring System
+            div#container-searchbar
+                input.search(type="text")#search-bar
+        div#recommend-container
+            ul.nav.nav-tabs#container-tabs
+                li.active
+                    a.container-tab(data-toggle="tab" href="#recommended-container")
+                        span Recommended
+                li
+                    a.container-tab(data-toggle="tab" href="#applied-container")
+                        span Applied
+                li
+                    a.container-tab(data-toggle="tab" href="#applied-recommended-container")
+                        span Recommended + Applied
+                li
+                    button.btn.btn-default#manual-hire-button Manual Hire
+                        span.glyphicon.glyphicon-plus(aria-hidden="true")
+            div.tab-content
+                div.tab-pane.fade.in.active#recommended-container
+                    div.information-header-container
+                        div.information-header-row
+                            div.col-xs-4
+                                span Name
+                            div.col-xs-4
+                                span Recommended By
+                            div.col-xs-4
+                                span Position
+                    ul.hire-list.list#recommendations
+                        each row in recommendations
+                            li
+                                div.recommendation-container
+                                    div.information-container.col-xs-8
+                                        div.text-container.col-xs-4
+                                            span.recommendee-label #{row.recommendee}
+                                        div.text-container.col-xs-4
+                                            img.recommendee-img(src=baseurl + "img/eye.png")
+                                            span.recommender-label #{row.recommender}
+                                        div.text-container.col-xs-4
+                                            span.position-label #{row.position}
+                                    div.recommendation-action-container.col-xs-4
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/notes.png")
+                                                span Notes
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/report.png")
+                                                span Hiring Report
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/email.png")
+                                                span Email
+                                    span.updated Updated: #{row.lastUpdated.toLocaleDateString()}
+                div.tab-pane.fade#applied-container
+                    div.information-header-container
+                        div.information-header-row
+                            div.col-xs-4
+                                span Name
+                            div.col-xs-4
+                                span Position
+                            div.col-xs-4
+                                span Evaluation Score
+                    ul.hire-list#applications
+                        each row in applicants
+                            li
+                                div.recommendation-container
+                                    div.information-container.col-xs-8
+                                        div.text-container.col-xs-4
+                                            span.recommendee-label #{row.name}
+                                        div.text-container.col-xs-4
+                                            span.position-label #{row.positions}
+                                        div.text-container.col-xs-4
+                                            if row.evaluationScore
+                                                span.eval-label #{row.evaluationScore} / 100
+                                            else
+                                                span.eval-label NA
+                                    div.recommendation-action-container.col-xs-4
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/notes.png")
+                                                span Notes
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/report.png")
+                                                span Hiring Report
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/email.png")
+                                                span Email
+                                    span.updated Updated: #{row.lastUpdated.toLocaleDateString()}
+                div.tab-pane.fade#applied-recommended-container
+                    div.information-header-container
+                        div.information-header-row
+                            div.col-xs-3
+                                span Name
+                            div.col-xs-3
+                                span Recommended By
+                            div.col-xs-3
+                                span Position
+                            div.col-xs-3
+                                span Evaluation Score
+                    ul.hire-list#applications-recommendations
+                        each row in recommendedApplied
+                            li
+                                div.recommendation-container
+                                    div.information-container.col-xs-8
+                                        div.text-container.col-xs-3
+                                            span.recommendee-label #{row.recommendee}
+                                        div.text-container.col-xs-3
+                                            img.recommendee-img(src=baseurl + "img/eye.png")
+                                            span.recommender-label #{row.recommender}
+                                        div.text-container.col-xs-3
+                                            span.position-label #{row.positions}
+                                        div.col-xs-3
+                                            if row.evaluationScore
+                                                span.eval-label #{row.evaluationScore} / 100
+                                            else
+                                                span.eval-label NA
+                                    div.recommendation-action-container.col-xs-4
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/notes.png")
+                                                span Notes
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/report.png")
+                                                span Hiring Report
+                                        div.button-container.col-xs-4
+                                            button.btn.btn-default
+                                                img(src=baseurl + "img/email.png")
+                                                span Email
+                                    span.updated Updated: #{row.lastUpdated.toLocaleDateString()}

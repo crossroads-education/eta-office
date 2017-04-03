@@ -4,6 +4,19 @@ import "bootstrap-switch";
 
 export module profile {
 
+    function onRadioChange() {
+        let label = $(".radio-label");
+        label.each(function() {
+            let input = $("#" + $(this).attr("for"));
+            if(!input.prop("checked")){
+                $(this).addClass("radio-button-inactive");
+            }
+            if(input.prop("checked")){
+                $(this).removeClass("radio-button-inactive");
+            }
+        })
+    }
+
     function onInfoSubmit() {
         var params: { [key: string]: string } = {};
         $("#info-container .info-field").each(function() {
@@ -42,12 +55,8 @@ export module profile {
                 onInfoSubmit.apply(this);
             }
         });
-        $("input.info-field[type='checkbox']").each(function(index: number, element: HTMLElement) {
-            let $element: JQuery = $(element);
-            $element.bootstrapSwitch({
-                "state": $element.prop("checked")
-            });
-        });
+        onRadioChange();
+        $(".radio-input").on("click", onRadioChange);
         $("button.iu-button[type='submit']").on("click", onInfoSubmit);
     });
 }

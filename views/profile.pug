@@ -1,53 +1,148 @@
 extends ./include/layout.pug
 
 block body
-    h4 Profile: #{employee.firstName} #{employee.lastName}
-    div.hidden#errors
-    div.hidden#success Your profile was updated successfully.
-    div#info-container
-        label Badge Name
-            input.info-field(type="text", name="badgeName", value=employee.badgeName)
-        label Non-IUPUI Email
-            input.info-field(type="email", name="altEmail", value=employee.altEmail)
-        label Phone Number
-            input.info-field(type="tel", name="phone", value=employee.phone)
-        label Emergency Contact Name
-            input.info-field(type="text", name="emergencyName", value=employee.emergencyName)
-        label Emergency Contact Phone Number
-            input.info-field(type="tel", name="emergencyPhone", value=employee.emergencyPhone)
-        label Emergency Contact Relationship
-            input.info-field(type="text", name="emergencyRelationship", value=employee.emergencyRelationship)
-        div#container-switch
-            div.row
-                span.form-label.col-xs-3 Work-Study Eligible?
-                - var isChecked = employee.workStudy === 1 ? {"checked": "checked"} : {};
-                input.info-field.col-xs-3(type="checkbox", name="workStudy")&attributes(isChecked)
-            div.row
-                span.form-label.col-xs-3 International Student?
-                - var isChecked = employee.international === 1 ? {"checked": "checked"} : {};
-                input.info-field.col-xs-3(type="checkbox", name="international")&attributes(isChecked)
-        label Shirt Size
-            br
-            select.info-field(name="shirt")
-                for size in shirtSizes
-                    - var isSelected = employee.shirt == size ? {"selected": "selected"} : {};
-                    option(value=size)&attributes(isSelected) #{size}
-        label Hoodie Size
-            br
-            select.info-field(name="hoodie")
-                for size in shirtSizes
-                    - var isSelected = employee.hoodie == size ? {"selected": "selected"} : {};
-                    option(value=size)&attributes(isSelected) #{size}
-        label Education / Biography (maximum 400 characters)
-            textarea.info-field(name="biography", maxlength="400") !{employee.biography}
-        label Preferences / Notes (maximum 300 characters)
-            textarea.info-field(name="notes", maxlength="300") !{employee.notes}
-        label Minimum / Maximum Desired Hours
-            br
-            - var value = JSON.stringify([employee.minHours, employee.maxHours]);
-            span.bold #{minHours} &nbsp; &nbsp;
-            input.info-field.info-slider#hours-slider(name="hours", type="number", data-slider-min=minHours, data-slider-max=maxHours, data-slider-value=value)
-            span.bold &nbsp; &nbsp; #{maxHours}
-        label Email Signature
-            textarea.info-field(readonly, rows=signature.split("\n").length + 1) !{signature}
-        button.iu-button(type="submit") Update Information
+    div#profile-container
+        div.title-container
+            p.header-text #{employee.firstName} #{employee.lastName}
+        div.col-xs-5#contact-container
+            div.element-container#contact-info-container
+                p.body-text.field-header Contact Information
+                hr.break.col-xs-10
+                div.row
+                    div.col-xs-1.field-image-container
+                        img.field-image(src="img/contact-time.png")
+                    div.input-container.col-xs-11
+                        label.body-text.input-label Preferred Name
+                        input.info-field(type="text", name="badgeName", value=employee.badgeName)
+                div.row
+                    div.col-xs-1.field-image-container
+                        img.field-image(src="/itrac/images/analytics/contact/info-email.png")
+                    div.input-container.col-xs-11
+                        label.body-text.input-label Preferred e-Mail
+                        input.info-field(type="email", name="altEmail", value=employee.altEmail)
+                div.row
+                    div.col-xs-1.field-image-container
+                        img.field-image(src="img/contact-phone.png")
+                    div.input-container.col-xs-11
+                        label.body-text.input-label Phone Number
+                        input.info-field(type="tel", name="phone", value=employee.phone)
+            div.element-container#emergency-contact-container
+                p.body-text.field-header Emergency Contact Information
+                hr.break.col-xs-10
+                div.row
+                    div.col-xs-1.field-image-container
+                        img.field-image(src="img/contact-time.png")
+                    div.input-container.col-xs-11
+                        label.body-text.input-label Contact Name
+                        input.info-field(type="text", name="emergencyName", value=employee.emergencyName)
+                div.row
+                    div.col-xs-1.field-image-container
+                        img.field-image(src="/itrac/images/analytics/contact/info-email.png")
+                    div.input-container.col-xs-11
+                        label.body-text.input-label Contact Relationship
+                        input.info-field(type="text", name="emergencyRelationship", value=employee.emergencyRelationship)
+                div.row
+                    div.col-xs-1.field-image-container
+                        img.field-image(src="img/contact-phone.png")
+                    div.input-container.col-xs-11
+                        label.body-text.input-label Contact Phone Number
+                        input.info-field(type="text", name="emergencyPhone", value=employee.emergencyPhone)
+        div.col-xs-7#extra-container
+            div.element-container#additional-selections-container
+                p.body-text.field-header Work Study Eligibility
+                hr.col-xs-10.break-longer
+                div#ref-container
+                    p.body-text.col-xs-12#workstudy-resources For more information on work study, click
+                        a(href=baseurl)  here
+                div.col-xs-12#workstudy-container
+                    -var eligible = employee.workStudy === 1 ? {"checked" : "checked"} : {};
+                    input.radio-input(type="radio", name="workstudy-eligibility", value="eligible")&attributes(eligible)#radio-eligible
+                    label.radio-label(for="radio-eligible")
+                        span
+                        |I am work study eligible
+                    -var eligible = employee.workStudy === 0 ? {"checked" : "checked"} : {};
+                    input.radio-input(type="radio", name="workstudy-eligibility", value="not eligible")&attributes(eligible)#radio-ineligible
+                    label.radio-label(for="radio-ineligible")
+                        span
+                        |I am not work study eligible
+                div.col-xs-12#preferences-container
+                    p.body-text.field-header Notes and Preferences
+                    hr.col-xs-10.break-longer
+                    p.body-text.col-xs-12.reminder-text#schedule-description Please let the managers know of any scheduling preferences.
+                    textarea(rows='2', cols='25')#profile-notes
+                        |#{employee.notes}
+                div.col-xs-12#apparel-container
+                    p.body-text.field-header MAC Apparel
+                    hr.col-xs-10.break-longer
+                    div#shirt-container
+                        p.body-text.size-label.col-xs-12 T-Shirt
+                        div.radio-size-container
+                            each name, size in shirtSizes
+                                - var isSelected = employee.shirt == size ? {"checked": "checked"} : {};
+                                input.radio-input(type="radio", name="t-shirt", value=name.toLowerCase(), id="radio-shirt" + name.toLowerCase())&attributes(isSelected)
+                                label.radio-label(for="radio-shirt" + name.toLowerCase())
+                                    span
+                                    |#{name}
+                    div#hoodie-container
+                        p.body-text.size-label.col-xs-12 Hoodie
+                        div.radio-size-container
+                            each name, size in hoodieSizes
+                                - var isSelected = employee.hoodie == size ? {"checked": "checked"} : {};
+                                input.radio-input(type="radio", name="hoodie", value=name.toLowerCase(), id="radio-hoodie" + name.toLowerCase())&attributes(isSelected)
+                                label.radio-label(for="radio-hoodie" + name.toLowerCase())
+                                    span
+                                    |#{name}
+            div.col-xs-12.element-container#submission-container
+                button.btn.btn-primary.btn-submission.disabled Revert Changes
+                button.btn.btn-primary.btn-submission#update-information Update Information
+                    span.glyphicon.glyphicon-arrow-right
+    //- h4 Profile: #{employee.firstName} #{employee.lastName}
+    //- div.hidden#errors
+    //- div.hidden#success Your profile was updated successfully.
+    //- div#info-container
+    //-     label Badge Name
+    //-         input.info-field(type="text", name="badgeName", value=employee.badgeName)
+    //-     label Non-IUPUI Email
+    //-         input.info-field(type="email", name="altEmail", value=employee.altEmail)
+    //-     label Phone Number
+    //-         input.info-field(type="tel", name="phone", value=employee.phone)
+    //-     label Emergency Contact Name
+    //-         input.info-field(type="text", name="emergencyName", value=employee.emergencyName)
+    //-     label Emergency Contact Phone Number
+    //-         input.info-field(type="tel", name="emergencyPhone", value=employee.emergencyPhone)
+    //-     label Emergency Contact Relationship
+    //-         input.info-field(type="text", name="emergencyRelationship", value=employee.emergencyRelationship)
+    //-     div#container-switch
+    //-         div.row
+    //-             span.form-label.col-xs-3 Work-Study Eligible?
+    //-             - var isChecked = employee.workStudy === 1 ? {"checked": "checked"} : {};
+    //-             input.info-field.col-xs-3(type="checkbox", name="workStudy")&attributes(isChecked)
+    //-         div.row
+    //-             span.form-label.col-xs-3 International Student?
+    //-             - var isChecked = employee.international === 1 ? {"checked": "checked"} : {};
+    //-             input.info-field.col-xs-3(type="checkbox", name="international")&attributes(isChecked)
+    //-     label Shirt Size
+    //-         br
+    //-         select.info-field(name="shirt")
+    //-             for size in shirtSizes
+    //-                 - var isSelected = employee.shirt == size ? {"selected": "selected"} : {};
+    //-                 option(value=size)&attributes(isSelected) #{size}
+    //-     label Hoodie Size
+    //-         br
+    //-         select.info-field(name="hoodie")
+    //-             for size in shirtSizes
+    //-                 - var isSelected = employee.hoodie == size ? {"selected": "selected"} : {};
+    //-                 option(value=size)&attributes(isSelected) #{size}
+    //-     label Education / Biography (maximum 400 characters)
+    //-         textarea.info-field(name="biography", maxlength="400") !{employee.biography}
+    //-     label Preferences / Notes (maximum 300 characters)
+    //-         textarea.info-field(name="notes", maxlength="300") !{employee.notes}
+    //-     label Minimum / Maximum Desired Hours
+    //-         br
+    //-         - var value = JSON.stringify([employee.minHours, employee.maxHours]);
+    //-         span.bold #{minHours} &nbsp; &nbsp;
+    //-         input.info-field.info-slider#hours-slider(name="hours", type="number", data-slider-min=minHours, data-slider-max=maxHours, data-slider-value=value)
+    //-         span.bold &nbsp; &nbsp; #{maxHours}
+    //-     label Email Signature
+    //-         textarea.info-field(readonly, rows=signature.split("\n").length + 1) !{signature}
+    //-     button.iu-button(type="submit") Update Information
