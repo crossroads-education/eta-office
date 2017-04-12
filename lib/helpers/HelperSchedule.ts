@@ -157,7 +157,7 @@ export default class HelperSchedule {
             let latestClose: Date = null;
             for (let i in hours) {
                 let open: Date = eta.time.getDateFromTime(hours[i].open);
-                if (hours[i].open == hours[i].close) {
+                if (!hours[i] || hours[i].open == hours[i].close) {
                     continue;
                 }
                 if (earliestOpen === null || open.getTime() < earliestOpen.getTime()) {
@@ -171,7 +171,7 @@ export default class HelperSchedule {
             }
             for (let i: number = 0; i < rows.length; i++) {
                 rows[i].weekTotalHours = weekTotalHours;
-                if (hours[i].open == hours[i].close) {
+                if (!hours[i] || hours[i].open == hours[i].close) {
                     rows.splice(i, 1);
                     continue; // closed, so remove the row
                 }
