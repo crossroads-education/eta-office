@@ -15,8 +15,13 @@ block body
                     th(colspan="8")
                         select.schedule-filter-input.schedule-filter-select2(data-name="term", style="width: 100%;")
                             each term in terms
-                                - var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
-                                option(value=term.id)&attributes(selected) #{term.name}
+                                -
+                                    var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
+                                    var termName = term.name;
+                                    if (term.session != '1') {
+                                        termName += ` (${term.session.substring(2)})`;
+                                    }
+                                option(value=term.id)&attributes(selected) #{termName}
                     block additionalFilter
                 tr.schedule-spacer-row.fixed-head-hide
                 tr.schedule-label-row.schedule-label-row-legend

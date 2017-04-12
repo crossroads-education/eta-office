@@ -11,8 +11,13 @@ block body
                 div.sidebar-link-content(data-name="term")
                     select.schedule-filter-input(data-name="term")
                         each term in terms
-                            - var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
-                            option(value=term.id)&attributes(selected) #{term.name}
+                            -
+                                var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
+                                var termName = term.name;
+                                if (term.session != '1') {
+                                    termName += ` (${term.session.substring(2)})`;
+                                }
+                            option(value=term.id)&attributes(selected) #{termName}
             block sidebarContent
     div.schedule-container
         div.schedule-filter-header(data-name="term")

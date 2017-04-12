@@ -26,7 +26,6 @@ export class Model implements eta.Model {
                     eta.logger.error(err);
                     return callback({ errcode: eta.http.InternalError });
                 }
-                eta.logger.json(options);
                 HelperSchedule.getAllForEmployee(req.session["department"], options.term, options.employee, allDayHours, (err: Error, rows: ScheduleRow[]) => {
                     if (err) {
                         eta.logger.error(err);

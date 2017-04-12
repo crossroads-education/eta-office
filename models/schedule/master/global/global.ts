@@ -13,6 +13,9 @@ export class Model implements eta.Model {
                 eta.logger.error(err);
                 return callback({ errcode: eta.http.InternalError });
             }
+            if (hours.open == hours.close) {
+                return callback({ errcode: eta.http.NotFound });
+            }
             let open: Date = eta.time.getDateFromTime(hours.open);
             let close: Date = eta.time.getDateFromTime(hours.close);
             close.setMinutes(close.getMinutes() - 15);
