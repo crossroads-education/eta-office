@@ -38,6 +38,6 @@ block additionalFilter
 
 block nameCell
     if canEdit
-        a(href=baseurl + "schedule/availability/desktop?userid=" + row.id) #{row.firstName} #{row.lastName}
+        a(href=baseurl + "schedule/availability/desktop?userid=" + row.id + "&term=" + currentFilters.term) #{row.firstName} #{row.lastName}
     - else
         | #{row.firstName} #{row.lastName}
