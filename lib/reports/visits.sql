@@ -1,6 +1,7 @@
 -- id,id
 SELECT
     DATE_FORMAT(`Visit`.`timeIn`, '%b %e, %Y') AS "Date",
+    `Center`.`name` AS "Center",
     DATE_FORMAT(`Visit`.`timeIn`, GET_FORMAT(TIME, 'USA')) AS "Sign-In Time",
     IF(
         `Visit`.`timeOut` IS NOT NULL,
@@ -21,6 +22,8 @@ FROM
             `Visit`.`section` REGEXP `Section`.`id`
         LEFT JOIN `Course` ON
             `Section`.`course` = `Course`.`id`
+        LEFT JOIN `Center` ON
+            `Visit`.`center` = `Center`.`id`
 WHERE
     (
         `Person`.`username` = ? OR
