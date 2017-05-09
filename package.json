@@ -29,5 +29,8 @@
   },
   "engines": {
     "node": ">=4.4.0"
+  },
+  "devDependencies": {
+    "@types/marked": "0.0.28"
   }
 }
