@@ -31,6 +31,9 @@
     "node": ">=4.4.0"
   },
   "devDependencies": {
-    "@types/marked": "0.0.28"
+    "@types/es6-shim": "^0.31.33",
+    "@types/express-session": "0.0.32",
+    "@types/marked": "0.0.28",
+    "@types/node-schedule": "^1.2.0"
   }
 }
