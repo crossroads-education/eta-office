@@ -1,3 +1,5 @@
+/// <reference path="../typings/index.d.ts"/>
+
 import "datatables.net";
 import "datatables.net-bs";
 import "datatables.net-buttons";
@@ -16,7 +18,7 @@ export module system {
 
     $(document).ready(function() {
         $("#table-log .cell-time").each(fixTimeCell);
-        $("#table-log").dataTable(<any>{
+        $("#table-log").DataTable(<any>{
             "order": [[0, "desc"]]
         });
     });

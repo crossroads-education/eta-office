@@ -12,7 +12,7 @@ export module dev {
         $("#table-commits tbody tr").each(function(index: number, element: HTMLElement) {
             setupRow($(element));
         });
-        $("#table-commits").dataTable(<any>{
+        $("#table-commits").DataTable(<any>{
             "order": [[0, "desc"]]
         });
     });

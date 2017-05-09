@@ -1,4 +1,4 @@
-/// <amd-dependency path="./typings/index.d.ts"/>
+declare var requirejs: any;
 
 requirejs.config({
     "baseUrl": "/office/js/"

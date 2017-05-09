@@ -2,7 +2,7 @@ import "datatables.net";
 import "datatables.net-bs";
 
 export module timesheet {
-    export let table: DataTables.DataTable;
+    export let table: DataTables.Api;
     let useIP: boolean;
 
     export interface TimesheetRow {
@@ -27,7 +27,8 @@ export module timesheet {
             data.push(row.ipIn);
             data.push(row.ipOut);
         }
-        table.fnAddData(data, true);
+        table.row.add(data);
+        table.draw();
     }
 
     function getWeekOfTheYear(date : Date = new Date){
@@ -50,7 +51,7 @@ export module timesheet {
         }
     }
     $(document).ready(function() {
-        table = $("#table-timesheet").dataTable(<any>{
+        table = $("#table-timesheet").DataTable({
             "order": [[0, "desc"], [1, "desc"]]
         });
         $("#table-timesheet").on("draw.dt", function () {

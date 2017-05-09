@@ -97,11 +97,11 @@ export module employees {
         $("#input-nametag-id").val(userid);
         $("#output-notes").text($data.attr("data-notes"));
         let timesheetRows: timesheet.TimesheetRow[] = $data.data("timesheet");
-        timesheet.table.fnClearTable();
+        timesheet.table.clear();
         for (let i: number = 0; i < timesheetRows.length; i++) {
             timesheet.addRow(timesheetRows[i]);
         }
-        timesheet.table.fnDraw();
+        timesheet.table.draw();
         for (let name in allowances) {
             $(`input.modal-allowance[data-name="${name}"]`).bootstrapSwitch("state", allowances[name]);
         }
