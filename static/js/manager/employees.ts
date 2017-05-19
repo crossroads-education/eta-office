@@ -118,6 +118,7 @@ export module employees {
         for (let i: number = 0; i < permissions.length; i++) {
             addPermissionRow(permissions[i]);
         }
+        // For loop to add all rows to the files tab
         $.post("/office/post/get-log", {
             "userid": userid
         }, function(log) {
@@ -233,7 +234,7 @@ export module employees {
     }
 
     function onUploadFile() {
-        //upload a file xP
+        //upload a file and add it to the table
     }
 
     $(document).ready(function() {
