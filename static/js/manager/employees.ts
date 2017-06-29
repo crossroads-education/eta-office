@@ -90,6 +90,7 @@ export module employees {
         let positions: any[] = $data.data("positions");
         let permissions: string[] = $data.data("permissions");
         let allowances: { [key: string]: boolean } = $data.data("allowances");
+        // let file: string[] = $data.data("files");
         let userid: string = $this.attr("data-id");
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
@@ -118,7 +119,9 @@ export module employees {
         for (let i: number = 0; i < permissions.length; i++) {
             addPermissionRow(permissions[i]);
         }
-        // For loop to add all rows to the files tab
+        // for (let i: number = 0; i < files.length; i++) {
+        //     addFileRow(files[i]);
+        // }
         $.post("/office/post/get-log", {
             "userid": userid
         }, function(log) {
@@ -234,7 +237,23 @@ export module employees {
     }
 
     function onUploadFile() {
-        //upload a file and add it to the table
+        // call post to upload the new file
+    }
+
+    function addFileRow(file: string) {
+        let $row = $("<tr>");
+        $row.addClass("file-row");
+        $row.append($("<td>").addClass("file-name").text(file));
+        let $deleteButton = $("<span>").addClass("glyphicon glyphicon-minus-sign");
+        $deleteButton.on("click", function(): void {
+            $.post("/office/post/remove-file", {
+                id: $("#modal-positions").attr("data-employee"),
+                file: file
+            });
+            $row.remove();
+        });
+        $row.append($("<td>").addClass("permission-remove").append($deleteButton));
+        $("#modal-permissions").append($row);
     }
 
     $(document).ready(function() {
