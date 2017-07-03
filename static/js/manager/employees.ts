@@ -90,7 +90,7 @@ export module employees {
         let positions: any[] = $data.data("positions");
         let permissions: string[] = $data.data("permissions");
         let allowances: { [key: string]: boolean } = $data.data("allowances");
-        // let file: string[] = $data.data("files");
+        let files: string[] = $data.data("files");
         let userid: string = $this.attr("data-id");
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
@@ -119,9 +119,9 @@ export module employees {
         for (let i: number = 0; i < permissions.length; i++) {
             addPermissionRow(permissions[i]);
         }
-        // for (let i: number = 0; i < files.length; i++) {
-        //     addFileRow(files[i]);
-        // }
+        for (let i: number = 0; i < files.length; i++) {
+            addFileRow(files[i]);
+        }
         $.post("/office/post/get-log", {
             "userid": userid
         }, function(log) {
@@ -253,7 +253,7 @@ export module employees {
             $row.remove();
         });
         $row.append($("<td>").addClass("permission-remove").append($deleteButton));
-        $("#modal-permissions").append($row);
+        $("#modal-files").append($row);
     }
 
     $(document).ready(function() {

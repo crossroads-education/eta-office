@@ -254,12 +254,16 @@ export class Model implements eta.Model {
                                     }
                                     employees[employeeIndex].timesheet.push(timesheetRows[i]);
                                 }
+
+                                let files = ["computerscience_degreemap.pdf", "geology_degreemap.pdf"];
+                                
                                 callback({
                                     "employees": employees,
                                     "positions": positionRows,
                                     "positionCounts": positionCounts,
                                     "shirtSizes": shirtSizes,
-                                    "filters": req.query
+                                    "filters": req.query,
+                                    "files": files
                                 });
                             });
                         });

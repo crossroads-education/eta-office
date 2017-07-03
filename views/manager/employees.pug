@@ -54,8 +54,8 @@ mixin employee-block(employee)
                 data-allowances=JSON.stringify(allowances),
                 data-notes=employee.notes,
                 data-timesheet=JSON.stringify(employee.timesheet),
-                data-permissions=JSON.stringify(employee.permissions))
-                //- data-files= SOMETHING, gotta get files from list
+                data-permissions=JSON.stringify(employee.permissions),
+                data-files=JSON.stringify(files))
     br
 
 block body
@@ -160,7 +160,7 @@ block body
                             thead
                                 tr
                                     th File Name
-                            tbody#uploaded-employee-files
+                            tbody#modal-files
                                 tr
 
                         form(action="/office/post/upload-employee-file" method="POST" enctype="multipart/form-data")
