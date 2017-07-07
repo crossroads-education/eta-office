@@ -256,7 +256,7 @@ export class Model implements eta.Model {
                                 }
 
                                 let files = ["computerscience_degreemap.pdf", "geology_degreemap.pdf"];
-                                
+                                // Make this pull from that id's list of files
                                 callback({
                                     "employees": employees,
                                     "positions": positionRows,

@@ -237,7 +237,16 @@ export module employees {
     }
 
     function onUploadFile() {
-        // call post to upload the new file
+        // post to upload-employee-file to upload the new file
+        $.post("office/post/upload-employee-file", {
+            "file" : "file-name" //get file name
+        }, function(file: string) {
+            // addFileRow(file);
+            // put it on the table
+            modalStatus.success("Successfully uploaded employee file.");
+        }, "json").fail(function(data) {
+            modalStatus.error("Error code " + data.status + " occurred.");
+        });
     }
 
     function addFileRow(file: string) {
@@ -262,7 +271,7 @@ export module employees {
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-permission-add").on("click", onPermissionAdd);
-        // $("btn-upload-file").on("click", onUploadFile);
+        $("btn-upload-file").on("click", onUploadFile);
         $("#btn-save").on("click", onSave);
         $("#input-log-message").on("keyup", function(evt: any) {
             if (evt.which == 13) {

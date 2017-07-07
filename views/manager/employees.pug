@@ -163,13 +163,13 @@ block body
                             tbody#modal-files
                                 tr
 
-                        form(action="/office/post/upload-employee-file" method="POST" enctype="multipart/form-data")
+                        form(action="/office/models/post/upload-employee-file" method="POST" enctype="multipart/form-data")
                         div#upload-employee-file
                             div.col-xs-8
                                 input(type="file" accept="application/pdf" name="file" class="filestyle")
                                 input(type="hidden" name="id" id="input-file-id", style="display: inline")
                             div.col-xs-2
-                                input.btn.btn-success#btn-upload-file(type="submit")
+                                button.btn.btn-success#btn-upload-file(type="submit") Submit
 
                 div.modal-footer
                     //- //- Part of a nametag generation system that's not finished
