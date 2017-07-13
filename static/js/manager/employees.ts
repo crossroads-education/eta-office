@@ -82,7 +82,8 @@ export module employees {
     }
 
     function onEmployeeOpen(): void {
-        $("#modal-positions, #modal-permissions, #table-log").html("");
+        $("#modal-positions, #modal-permissions, #table-log, #modal-files").html("");
+        $("#file-upload").trigger("reset");
         let $this: JQuery = $(this);
         let $data: JQuery = $this.find(".employee-data");
         let name: string = $this.find(".employee-name").text();
@@ -90,7 +91,6 @@ export module employees {
         let positions: any[] = $data.data("positions");
         let permissions: string[] = $data.data("permissions");
         let allowances: { [key: string]: boolean } = $data.data("allowances");
-        let files: string[] = $data.data("files");
         let userid: string = $this.attr("data-id");
         $("#modal-title").text(name);
         $("#modal-photo").attr("src", photoUrl);
@@ -119,9 +119,17 @@ export module employees {
         for (let i: number = 0; i < permissions.length; i++) {
             addPermissionRow(permissions[i]);
         }
-        for (let i: number = 0; i < files.length; i++) {
-            addFileRow(files[i]);
-        }
+
+        $.post("/office/post/get-files", {
+            "id" : $("#modal-positions").attr("data-employee")
+        }, function(files) {
+            for (let i: number = 0; i < files.length; i++) {
+                addFileRow(files[i]);
+            }
+        }, "json").fail(function() {
+            modalStatus.error("Couldn't fetch files");
+        });
+
         $.post("/office/post/get-log", {
             "userid": userid
         }, function(log) {
@@ -236,23 +244,20 @@ export module employees {
         });
     }
 
-    function onUploadFile() {
-        // post to upload-employee-file to upload the new file
-        $.post("office/post/upload-employee-file", {
-            "file" : "file-name" //get file name
-        }, function(file: string) {
-            // addFileRow(file);
-            // put it on the table
-            modalStatus.success("Successfully uploaded employee file.");
-        }, "json").fail(function(data) {
-            modalStatus.error("Error code " + data.status + " occurred.");
-        });
+    function onUploadFile(): void {
+        let file = $(".filestyle").val().split("\\").pop().split("/").pop();
+        addFileRow(file);
     }
 
-    function addFileRow(file: string) {
+    function addFileRow(file: string): void {
         let $row = $("<tr>");
         $row.addClass("file-row");
         $row.append($("<td>").addClass("file-name").text(file));
+        let $location = window.location.origin + "/office/files/employee-files/" + $("#modal-positions").attr("data-employee") + "/" + file;
+        let $downloadButton = $("<a>").addClass("glyphicon glyphicon-download");
+        $downloadButton[0].setAttribute("href", $location);
+        $downloadButton[0].setAttribute("target", "_blank");
+        $row.append($("<td>").addClass("file-download").append($downloadButton));
         let $deleteButton = $("<span>").addClass("glyphicon glyphicon-minus-sign");
         $deleteButton.on("click", function(): void {
             $.post("/office/post/remove-file", {
@@ -261,7 +266,7 @@ export module employees {
             });
             $row.remove();
         });
-        $row.append($("<td>").addClass("permission-remove").append($deleteButton));
+        $row.append($("<td>").addClass("file-remove").append($deleteButton));
         $("#modal-files").append($row);
     }
 
@@ -271,7 +276,8 @@ export module employees {
         $("img.employee-photo").each(onImageSetup);
         $("#btn-position-add").on("click", onPositionAdd);
         $("#btn-permission-add").on("click", onPermissionAdd);
-        $("btn-upload-file").on("click", onUploadFile);
+        $("#file-upload").on("submit", onUploadFile);
+
         $("#btn-save").on("click", onSave);
         $("#input-log-message").on("keyup", function(evt: any) {
             if (evt.which == 13) {

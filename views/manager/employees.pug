@@ -54,8 +54,7 @@ mixin employee-block(employee)
                 data-allowances=JSON.stringify(allowances),
                 data-notes=employee.notes,
                 data-timesheet=JSON.stringify(employee.timesheet),
-                data-permissions=JSON.stringify(employee.permissions),
-                data-files=JSON.stringify(files))
+                data-permissions=JSON.stringify(employee.permissions))
     br
 
 block body
@@ -163,13 +162,15 @@ block body
                             tbody#modal-files
                                 tr
 
-                        form(action="/office/post/upload-employee-file" method="POST" enctype="multipart/form-data")
-                        div#upload-employee-file
-                            div.col-xs-8
-                                input(type="file" accept="application/pdf" name="file" class="filestyle")
-                                input(type="hidden" name="id" id="input-file-id", style="display: inline")
-                            div.col-xs-2
-                                button.btn.btn-success#btn-upload-file(type="submit") Submit
+                        form(action="/office/post/upload-employee-file" method="POST" enctype="multipart/form-data" id="file-upload" target="hidden-iframe")
+                            div#upload-employee-file
+                                div.col-xs-8
+                                    input(type="file" accept="application/pdf" name="file" class="filestyle")
+                                    input(type="hidden" name="id" id="input-file-id", style="display: inline")
+                                div.col-xs-2
+                                    button.btn.btn-success#btn-upload-file(type="submit") Submit
+                                    
+                        iframe(name="hidden-iframe" style="display: none")
 
                 div.modal-footer
                     //- //- Part of a nametag generation system that's not finished

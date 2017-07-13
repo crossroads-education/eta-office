@@ -94,6 +94,18 @@ span.employee-name.modal-title {
     cursor: pointer;
 }
 
+.file-remove, .file-download {
+    text-align: right;
+}
+
+.file-download a {
+    color: black;
+}
+
+.file-remove span, .file-download span {
+    cursor: pointer;
+}
+
 #upload-employee-file {
     float: right;
 }

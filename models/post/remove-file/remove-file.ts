@@ -10,8 +10,14 @@ export class Model implements eta.Model {
             callback({ errcode: eta.http.InvalidParameters });
             return;
         }
-
-        // delete the file from id folder
-
+        let dir: string = eta.server.modules["office"].baseDir + "static/files/employee-files/" + req.body.id + "/";
+        fs.unlink(dir + req.body.file, function(err) {
+            if (err) {
+                eta.logger.error(err);
+                callback({ errcode: eta.http.InternalError });
+                return;
+            }
+            callback({ raw: "true" });
+        });
     }
 }
