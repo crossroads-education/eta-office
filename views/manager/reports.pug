@@ -33,6 +33,7 @@ block body
             option(value="deviation") Visit Deviation
             option(value="visits-center") Visits By Center
             option(value="course-enrollment") Enrollment by Courses
+            option(value="employee-time") Employee Timesheet Totals
     +report-section("schedule")
         h3 Get Scheduled Hours Per Employee
         div.section-input
@@ -101,16 +102,19 @@ block body
             div.section-divider
                 select.border-rounded.keep-caret.report-select2#select-enrollment-courses(data-name="courses", data-placeholder="Courses", multiple, style="width: 25%;", data-url="/office/post/get-courses")
             +report-submit()
-    //- +report-section("examjam")
-    //-     h3 Get Exam Jam Visits
-    //-     div.section-input
-    //-         div.section-divider
-    //-             +select-term()
-    //-         div.section-divider
-    //-             select.border-rounded.keep-caret(data-name="level")
-    //-                 each level in examJamLevels
-    //-                     option(value=level) level
-
+    +report-section("employee-time")
+        h3 Get Employee Timesheet Information
+        div.section-input
+            div.section-divider
+                +select-physical-center()
+            div.section-divider.row
+                div.col-xs-2.no-col-padding
+                    label.form-label Start Date
+                    input.form-control(type="date", data-name="start")
+                div.col-xs-2.no-col-padding
+                    label.form-label End Date
+                    input.form-control(type="date", data-name="end")
+            +report-submit()
     div
         span.text-success#success
         span.text-error#error
