@@ -154,11 +154,30 @@ block body
                             input.form-control#input-permission(type="text")
                         div
                             button.btn.btn-success#btn-permission-add Add Permission
+                    +collapsible-parent("Files Uploaded")
+                        table.table.table-striped.table-hover
+                            thead
+                                tr
+                                    th File Name
+                            tbody#modal-files
+                                tr
+
+                        form(action="/office/post/upload-employee-file" method="POST" enctype="multipart/form-data" id="file-upload" target="hidden-iframe")
+                            div#upload-employee-file
+                                div.col-xs-8
+                                    input(type="file" accept="application/pdf" name="file" class="filestyle")
+                                    input(type="hidden" name="id" id="input-file-id", style="display: inline")
+                                div.col-xs-2
+                                    button.btn.btn-success#btn-upload-file(type="submit") Submit
+                                    
+                        iframe(name="hidden-iframe" style="display: none")
+
                 div.modal-footer
-                    //- Part of a nametag generation system that's not finished
+                    //- //- Part of a nametag generation system that's not finished
                     //- form#form-nametag(method="POST", action="/office/post/generate-nametag")
-                    //-     input(type="hidden", name="userid")#input-nametag-id
-                    //-     button.btn.btn-warning Generate Nametag
+                    //-       input(type="hidden", name="firstName", )#input-nametag-id
+                    //-       input(type="hidden", )
+                    //-       button.btn.btn-warning Generate Nametag
                     button.btn.btn-primary#btn-save Save Changes
     div
         div.col-xs-4.employee-column

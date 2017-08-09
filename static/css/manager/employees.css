@@ -81,10 +81,10 @@ span.employee-name.modal-title {
     font-size: 1.25em;
 }
 
-#form-nametag {
+/*#form-nametag {
     float: left;
     display: inline-block;
-}
+}*/
 
 .permission-remove {
     text-align: right;
@@ -92,4 +92,20 @@ span.employee-name.modal-title {
 
 .permission-remove span {
     cursor: pointer;
+}
+
+.file-remove, .file-download {
+    text-align: right;
+}
+
+.file-download a {
+    color: black;
+}
+
+.file-remove span, .file-download span {
+    cursor: pointer;
+}
+
+#upload-employee-file {
+    float: right;
 }

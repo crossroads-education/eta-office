@@ -1,0 +1,8 @@
+{
+  "globalDependencies": {
+    "marked": "registry:dt/marked#0.0.0+20160510002910"
+  },
+  "dependencies": {
+    "multer": "registry:dt/multer#0.0.0+20170119150739"
+  }
+}

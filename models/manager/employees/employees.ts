@@ -1,5 +1,7 @@
 import * as eta from "eta-lib";
 
+import * as fs from "fs";
+
 import * as express from "express";
 import * as querystring from "querystring";
 
@@ -254,12 +256,34 @@ export class Model implements eta.Model {
                                     }
                                     employees[employeeIndex].timesheet.push(timesheetRows[i]);
                                 }
+
+                                // Pull the files from each employees' directory
+                                let employeeFiles: string[][] = [];
+                                let dir: string = eta.server.modules["office"].baseDir + "static/files/employee-files/";
+
+                                for (let i: number = 0; i < employees.length; i++) {
+                                    let fileDir: string = dir + employees[i].id + "/";
+                                    try {
+                                        let filesRead: string[] = fs.readdirSync(fileDir);
+                                        for(let j: number = 0; j < filesRead.length; j++) {
+                                            employees[i].files = filesRead;
+                                        }
+                                    } catch (err) {
+                                        if(err.code === 'ENOENT') {
+                                            let filesRead: string[] = []
+                                            employees[i].files = filesRead;
+                                        } else {
+                                            eta.logger.error(err);
+                                            callback({ errcode: eta.http.InternalError });
+                                        }
+                                    }
+                                }
                                 callback({
                                     "employees": employees,
                                     "positions": positionRows,
                                     "positionCounts": positionCounts,
                                     "shirtSizes": shirtSizes,
-                                    "filters": req.query
+                                    "filters": req.query,
                                 });
                             });
                         });
