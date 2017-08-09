@@ -43,3 +43,9 @@
     font-weight : 500;
     margin-bottom: 10px;
 }
+
+.filters {
+    position: relative;
+    left: 43%;
+    margin-bottom: 20px;
+}
