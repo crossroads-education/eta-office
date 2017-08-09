@@ -75,7 +75,7 @@ export module positions {
         $(".input-toggle").bootstrapSwitch().on("switchChange.bootstrapSwitch", function(event: Event, state: string) {
             $(this).attr("data-changed", "true");
         });
-        setFilters();   
+        setFilters();
         $(".btn-submit").on("click", onSubmit);
     });
 }

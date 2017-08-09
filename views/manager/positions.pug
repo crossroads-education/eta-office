@@ -15,9 +15,9 @@ block body
             | Your filter did not match any positions!   
         br 
     div.filters
-        select.input-filter.border-rounded#filter-names(data-filter="positionName")
+        select.input-filter.border-rounded#filter-names
             option(value="" selected="selected") All
-        select.input-filter.border-rounded#filter-categories(data-filter="positionCategory")
+        select.input-filter.border-rounded#filter-categories
             option(value="" selected="selected") All
     each position in positions
         div.row.position
