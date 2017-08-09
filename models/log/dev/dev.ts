@@ -1,7 +1,7 @@
 import * as eta from "eta-lib";
 
 import * as express from "express";
-import * as git from "simple-git";
+var git: any = require("simple-git");
 
 export class Model implements eta.Model {
     public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {

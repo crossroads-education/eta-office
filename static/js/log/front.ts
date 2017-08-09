@@ -1,10 +1,9 @@
-/// <reference path="../typings/index.d.ts"/>
 import "datatables.net";
 import "datatables.net-bs";
 import "select2";
 
 export module front {
-    let table: DataTables.DataTable;
+    let table: DataTables.Api;
     function onSubmit(): void {
         let about: string = $("#input-about").val();
         let message: string = $("#input-message").val();
@@ -21,7 +20,7 @@ export module front {
             $row.append($("<td>").text(log.author));
             $row.append($("<td>").text(log.about));
             $row.append($("<td>").text(log.message));
-            table.fnAddData($row);
+            table.row.add($row);
         }, "json").fail(function(data) {
             $("#modal-success").html("");
             $("#modal-error").html("Error code " + data.status + " occurred - could not log message.");
@@ -32,7 +31,7 @@ export module front {
             "placeholder": "Employee"
         });
         $("#btn-submit").on("click", onSubmit);
-        table = $("#logs").closest("table").dataTable(<any>{
+        table = $("#logs").closest("table").DataTable(<any>{
             "order": [[0, "desc"]]
         });
     });

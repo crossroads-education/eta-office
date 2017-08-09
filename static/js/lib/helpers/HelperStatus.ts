@@ -21,6 +21,7 @@ export class HelperStatus {
     }
 
     public success(message: string): void {
+        console.log(message);
         this.fadeOut(this.$error, () => {
             this.$success.removeClass("hidden").fadeIn().text(message);
             setTimeout(() => {
@@ -30,6 +31,7 @@ export class HelperStatus {
     }
 
     public error(message: string): void {
+        console.log(message);
         this.fadeOut(this.$success, () => {
             this.$error.removeClass("hidden").fadeIn().text(message);
             setTimeout(() => {

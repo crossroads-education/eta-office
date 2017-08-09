@@ -35,3 +35,9 @@ block additionalFilter
     th(colspan="4")
         if canEdit && currentFilters.edit
             button.btn.btn-success.btn-submit(style="width: 100%;") Submit
+
+block nameCell
+    if canEdit
+        a(href=baseurl + "schedule/availability/desktop?userid=" + row.id + "&term=" + currentFilters.term) #{row.firstName} #{row.lastName}
+    - else
+        | #{row.firstName} #{row.lastName}

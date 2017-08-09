@@ -1,4 +1,3 @@
-/// <reference path="./typings/index.d.ts"/>
 import "datatables.net";
 import "datatables.net-bs";
 import "datatables.net-buttons";

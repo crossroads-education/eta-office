@@ -15,8 +15,13 @@ block body
                     th(colspan="8")
                         select.schedule-filter-input.schedule-filter-select2(data-name="term", style="width: 100%;")
                             each term in terms
-                                - var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
-                                option(value=term.id)&attributes(selected) #{term.name}
+                                -
+                                    var selected = term.id == currentFilters.term ? {"selected": "selected"} : {};
+                                    var termName = term.name;
+                                    if (term.session != '1') {
+                                        termName += ` (${term.session.substring(2)})`;
+                                    }
+                                option(value=term.id)&attributes(selected) #{termName}
                     block additionalFilter
                 tr.schedule-spacer-row.fixed-head-hide
                 tr.schedule-label-row.schedule-label-row-legend
@@ -50,7 +55,9 @@ block body
                 each row in scheduleRows
                     - if (row.dayTotalHours > 0 || canEdit)
                         tr.schedule-row.schedule-row-filterable(data-id=row.id, data-position-names=JSON.stringify(row.positionNames), data-position-categories=JSON.stringify(row.positionCategories))
-                            td.schedule-name-cell(colspan="5") #{row.firstName} #{row.lastName}
+                            td.schedule-name-cell(colspan="5")
+                                block nameCell
+                                    | #{row.firstName} #{row.lastName}
                             td.schedule-total-cell(colspan="1", title="Weekly Total Hours") #{row.weekTotalHours}
                             each cell in row.cells
                                 -

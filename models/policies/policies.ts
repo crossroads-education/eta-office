@@ -1,6 +1,3 @@
-/// <reference path="../../typings/index.d.ts"/>
-// For "marked" typings
-
 import * as eta from "eta-lib";
 
 import * as express from "express";

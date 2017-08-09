@@ -102,9 +102,16 @@ export module reports {
         $(".select-2-all").on("click", onSelect2All);
         $(".report-select2").each(function() {
             let $this: JQuery = $(this);
-            $this.select2(<any>{
+            let select2Params: any = {
                 "placeholder": $this.attr("data-placeholder")
-            });
+            };
+            let url: string = $this.attr("data-url");
+            if (url) {
+                select2Params.ajax = {
+                    url: url
+                };
+            }
+            $this.select2(select2Params);
         });
         onReportChange();
     });

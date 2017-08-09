@@ -1,5 +1,4 @@
-/// <reference path="./typings/index.d.ts"/>
-/// <amd-dependency path="bootstrap-slider"/>
+import "bootstrap-slider";
 import "bootstrap-switch";
 
 export module profile {

@@ -13,10 +13,18 @@ block body
         div.col-xs-2
             //- Select2 only likes in-line styling, unfortunately.
             select#input-hire-positions(style="width: 100%;", multiple)
-                td
                 each position in hirePositions
                     option(value=position.id) #{position.name} - #{position.category}
         button.btn.btn-success#btn-submit-hire Hire
+    //- span.form-label Manually add applicant
+    //- div.row#container-apply
+    //-     div.col-xs-1
+    //-         input.form-control#input-apply-user(type="text", placeholder="Username / User ID")
+    //-     div.col-xs-2
+    //-         select#input-apply-positions(style="width: 100%;", multiple)
+    //-             each position in applyLevels
+    //-                 option(value=position.name) #{position.name}
+    //-     button.btn.btn-success#btn-submit-apply Add Applicant
     div
         span.form-label Term
         select.border-rounded.keep-caret.input-filter(data-param="term")

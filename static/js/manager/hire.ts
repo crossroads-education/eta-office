@@ -98,12 +98,24 @@ export module hire {
         })
     }
 
+    function onManualApplySubmit() {
+        $.post("/office/post/add-applicant", {
+            "userid": $("#input-apply-user").val(),
+            "positions": JSON.stringify($("#input-apply-positions").val())
+        }, function(data) {
+            status.success("Successfully added applicant. Please reload this page.");
+        }).fail(function(data) {
+            status.error("Error code " + data.status + " has occurred.");
+        });
+    }
+
     function onApplicantOpen() {
         let $row: JQuery = $(this).closest(".applicant-row");
         $("#modal-positions").html("");
         $("#modal").attr("data-id", $row.data("id"));
         $("#modal-title").text($row.find(".cell-first-name").text() + " " + $row.find(".cell-last-name").text());
-        $("#input-notes").html($row.data("notes"));
+        let notes: string = $row.data("notes");
+        $("#input-notes").html(notes ? notes : "");
         let positions: any[] = $row.data("positions");
         for (let i: number = 0; i < positions.length; i++) {
             let $positionRow: JQuery = $("<tr>");
@@ -112,17 +124,24 @@ export module hire {
             $positionRow.append($("<td>").text(lastApplied));
             $positionRow.append($("<td>").text(positions[i].count.toString()));
             $("#modal-positions").append($positionRow);
-            if (positions[i].evalScore) {
-                addEvaluationRow(
-                    positions[i].position,
-                    new Date(positions[i].evalDate).toLocaleDateString(),
-                    positions[i].evalScore
-                );
-            }
         }
 
         // evaluations
         (<any>$("#input-evaluation-date")[0]).valueAsDate = new Date(); // reset to today
+        $.post("/office/post/get-evaluations", {
+            "userid": $row.data("id")
+        }, function(data) {
+            console.log(data);
+            for (let i: number = 0; i < data.length; i++) {
+                addEvaluationRow(
+                    data[i].position,
+                    new Date(data[i].date).toLocaleDateString(),
+                    data[i].score
+                );
+            }
+        }, "json").fail(function(data) {
+            status.error("Error code " + data.status + " has occurred.");
+        });
     }
 
     function setupFlagSwitches(): void {
@@ -135,25 +154,32 @@ export module hire {
     function onPageChange() {
         setTimeout(function() {
             setupFlagSwitches();
-            $(".btn-toggle-notes").on("click", onApplicantOpen);
-            $(".btn-update").on("click", onApplicantFlagSubmit);
-            $(".input-applicant").on("switchChange.bootstrapSwitch", onApplicantFlagChange);
+            $(".btn-toggle-notes")
+                .off("click")
+                .on("click", onApplicantOpen);
+            $(".btn-update")
+                .off("click")
+                .on("click", onApplicantFlagSubmit);
+            $(".input-applicant")
+                .off("switchChange.bootstrapSwitch")
+                .on("switchChange.bootstrapSwitch", onApplicantFlagChange);
         }, 100);
     }
 
     function onPageSetup() {
-        $("#input-hire-positions").select2({
+        $("#input-hire-positions,#input-apply-positions").select2({
             "placeholder": "Positions"
         });
         $("#table-applicants").dataTable(<any>{
             "buttons": ["csv", "print"],
             "dom": "Blftipr",
-            "order": [[1, "asc"], [2, "asc"]]
+            "order": [[2, "asc"], [1, "asc"]]
         });
         onPageChange();
         $(".input-filter").on("change", onFilter);
         $("#btn-evaluation-submit").on("click", onEvaluationSubmit);
         $("#btn-submit-hire").on("click", onManualHireSubmit);
+        $("#btn-submit-apply").on("click", onManualApplySubmit);
         $("#btn-save").on("click", onApplicantSave);
     }
 
