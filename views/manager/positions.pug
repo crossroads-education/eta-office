@@ -11,8 +11,16 @@ block body
     div.text-center#messages
         span.text-danger#error
         span.text-success#success
+        div.text-danger.hidden#filter-error
+            | Your filter did not match any positions!
+        br
+    div.filters
+        select.input-filter.border-rounded#filter-names
+            option(value="" selected="selected") All
+        select.input-filter.border-rounded#filter-categories
+            option(value="" selected="selected") All
     each position in positions
-        div.row
+        div.row.position
             div.col-md-6.col-md-offset-3
                 +collapsible-parent(position.name + " - " + position.category)
                     +input-toggle(position, "Active")
@@ -20,3 +28,6 @@ block body
                     +input-toggle(position, "Visible")
                     div.text-center
                         button.btn.btn-success.btn-submit(data-id=position.id) Save
+                span.hidden.position-data(
+                    data-name=JSON.stringify(position.name),
+                    data-category=JSON.stringify(position.category))
