@@ -53,7 +53,7 @@ export class Model implements eta.Model {
                     centers[i].name = eta.time.daysOfWeek[rows[i].day];
                 }
             }
-            let terms: eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term), true);
+            let terms: eta.Term[] = eta.term.getClosest(eta.term.get(req.query.term));
             callback({
                 "currentCenter": req.query.center,
                 "currentTerm": req.query.term,
