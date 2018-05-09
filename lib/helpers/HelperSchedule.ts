@@ -132,8 +132,9 @@ export default class HelperSchedule {
                 EmployeeSchedule.day ASC,
                 EmployeeSchedule.time ASC`;
         eta.db.query(sql, [employeeID, term], (err: Error, rawCells: any[]) => {
+            let message: string = null;
             if (err) {
-                return callback(err);
+                message = "No one has been scheduled yet";
             }
             let rows: ScheduleRow[] = [];
             for (let i: number = 0; i < eta.time.daysOfWeek.length; i++) {
@@ -182,7 +183,8 @@ export default class HelperSchedule {
             }
             callback(null, rows, {
                 "start": earliestOpen,
-                "end": latestClose
+                "end": latestClose,
+                "message": message
             });
         });
     }

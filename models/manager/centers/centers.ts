@@ -12,7 +12,7 @@ interface HoursOfOperation {
 export class Model implements eta.Model {
     public render(req: express.Request, res: express.Response, callback: (env: { [key: string]: any }) => void): void {
         if (!req.query.term) {
-            req.query.term = eta.term.getCurrent(true).id;
+            req.query.term = eta.term.getCurrent().id;
         }
         if (!req.query.center) {
             req.query.center = eta.setting.get("/center", "main").value;
